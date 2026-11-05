@@ -3616,6 +3616,29 @@ details[open] > .consulta__gerar-botao svg {
 }
 
 
+/* --- Ligações que trocavam de cor de um fotograma para o outro ---
+   A moldura já não viaja entre páginas, mas dentro dela cada ligação que
+   acende ao passar o rato continuava a saltar: numa página parada, isso lê-se
+   como um pixel a piscar. A cor e o fundo passam a assentar em 120ms, o tempo
+   do botão; o sublinhado continua a aparecer de uma vez, que é como deve ser —
+   uma linha que cresce por baixo da palavra faz o texto dançar.
+
+   Só estas: são as que hoje mudam de cor ou de fundo ao rato. Os botões e as
+   pílulas já tinham a sua transição própria. */
+@media (prefers-reduced-motion: no-preference) {
+    .migalhas a,
+    .tabela__ligacao,
+    .ligacao-acao,
+    .historico__etiqueta--ligacao,
+    .filtro__remover,
+    .nota-ordem__dispensar,
+    .grafico__nome {
+        transition: color 120ms ease, background-color 120ms ease,
+                    border-color 120ms ease;
+    }
+}
+
+
 /* =====================================================================
    14. MOVIMENTO REDUZIDO
    ===================================================================== */

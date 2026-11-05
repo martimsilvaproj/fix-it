@@ -1332,17 +1332,111 @@
 
 /* =====================================================================
    08. MOVIMENTO
+
+   O site lê-se como uma folha que se troca, não como um ecrã que salta. A
+   travessia entre páginas usa as transições de vista nativas — as mesmas
+   que o painel já usa —, sem JavaScript: cada parte do documento leva o
+   seu nome e o browser sabe o que pousa e o que atravessa. Onde o browser
+   não as conhece, a navegação continua exactamente como era.
+
+   A moldura — cabeçalho, fita, rodapé — é igual de página para página. Leva
+   nome para não entrar no retrato da raiz e não se dissolver, e leva
+   `animation: none` porque não há nada para mover. Só a folha se mexe: sai
+   depressa, entra a subir 6 px, como o conteúdo do painel.
    ===================================================================== */
+@view-transition {
+    navigation: auto;
+}
+
+.site-topo {
+    view-transition-name: barra-site;
+}
+
+.fita {
+    view-transition-name: fita-site;
+}
+
+.site-main {
+    view-transition-name: folha;
+}
+
+.site-rodape {
+    view-transition-name: rodape-site;
+}
+
+::view-transition-group(barra-site),
+::view-transition-old(barra-site),
+::view-transition-new(barra-site),
+::view-transition-group(fita-site),
+::view-transition-old(fita-site),
+::view-transition-new(fita-site),
+::view-transition-group(rodape-site),
+::view-transition-old(rodape-site),
+::view-transition-new(rodape-site) {
+    animation: none;
+}
+
+::view-transition-group(folha) {
+    animation-duration: 200ms;
+    animation-timing-function: cubic-bezier(.16, 1, .3, 1);
+}
+
+::view-transition-old(folha) {
+    animation: folha-sai 120ms cubic-bezier(.4, 0, 1, 1) both;
+}
+
+::view-transition-new(folha) {
+    animation: folha-entra 200ms cubic-bezier(.16, 1, .3, 1) both;
+}
+
+@keyframes folha-sai {
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes folha-entra {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+}
+
+/* Os controlos trocavam de cor de um fotograma para o outro, o que numa
+   página parada se lê como um pixel a piscar. 120ms é o tempo do botão: a
+   tinta assenta. */
 @media (prefers-reduced-motion: no-preference) {
     .site-body .botao {
         transition: transform 120ms ease, box-shadow 120ms ease,
                     background-color 120ms ease, color 120ms ease;
+    }
+
+    .site-nav__ligacao,
+    .site-nav__botao-menu,
+    .site-nav__submenu a,
+    .site-menu-botao,
+    .site-rodape a,
+    .ligacao-texto,
+    .site-body .tipos__botao,
+    .site-body .entrada {
+        transition: color 120ms ease, background-color 120ms ease,
+                    border-color 120ms ease, box-shadow 120ms ease,
+                    transform 120ms ease;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .percurso__regua {
         background: var(--b-tinta);
+    }
+
+    /* A troca de página passa a ser um corte seco: sem subida e sem
+       desvanecimento, mas a página nova aparece na mesma. As molduras já
+       não se mexiam. */
+    ::view-transition-old(folha),
+    ::view-transition-new(folha),
+    ::view-transition-group(folha) {
+        animation: none;
     }
 
     .site-body .botao--primario {

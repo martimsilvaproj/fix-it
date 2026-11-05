@@ -129,10 +129,21 @@ cortam entre folhas. Sem bibliotecas: o botão só chama `window.print()`.
 
 ## 7. Movimento
 
-- Só o botão primário se mexe (120ms): o carimbo a assentar.
+- **A moldura não viaja.** Site e painel trocam de página com as transições de
+  vista nativas, sem JavaScript. O que é igual nos dois documentos — cabeçalho,
+  fita e rodapé no site; barra e barra lateral no painel — leva o mesmo nome e
+  fica parado; só o conteúdo atravessa.
+- **A folha sobe 6 px.** O conteúdo novo entra em 200ms
+  (`cubic-bezier(.16,1,.3,1)`) depois de o antigo sair em 120ms. É o mesmo
+  compasso dos dois lados, para o site e o painel lerem como a mesma casa.
+- **Num recorte da mesma lista** — um filtro, outra página, outra ordem — a
+  página não viaja: só a tabela se atravessa.
+- **Ligações e controlos** trocam de cor e de fundo em 120ms. O botão primário
+  é o único que muda de sombra: o carimbo a assentar.
 - A barra do percurso preenche-se com o scroll — informação, não decoração.
 - `prefers-reduced-motion: reduce`: barra em tinta lisa, sombra fixa em `4px`,
-  transições a `.01ms`. Nada desaparece.
+  transições a `.01ms` e a troca de página em corte seco — sem subida e sem
+  desvanecimento, mas o conteúdo novo aparece na mesma. Nada desaparece.
 
 ## 8. Voz
 
