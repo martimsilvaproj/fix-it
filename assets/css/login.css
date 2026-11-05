@@ -41,7 +41,11 @@
     --porta-aviso: #8a5a0f;
     --porta-tinta: #0d1117;
     --porta-tinta-suave: #5b6472;
+    /* `--porta-linha` desenha divisores, onde a WCAG não pede contraste.
+       `--porta-linha-campo` desenha o limite de um controlo, e esse limite
+       tem de se ver: 3:1 sobre o branco, o que uma linha de 1,2:1 não dá. */
     --porta-linha: #dfe2ea;
+    --porta-linha-campo: #8b929f;
     --porta-erro: #c0392b;
 
     margin: 0;
@@ -111,7 +115,7 @@
 .porta__descritor {
     display: block;
     margin-top: 3px;
-    color: rgba(255, 255, 255, .72);
+    color: rgba(255, 255, 255, .9);
     font-size: .625rem;
     font-weight: 600;
     letter-spacing: .16em;
@@ -148,7 +152,7 @@
 .porta__apoio {
     max-width: 42ch;
     margin: 0;
-    color: rgba(255, 255, 255, .84);
+    color: rgba(255, 255, 255, .9);
     font-size: clamp(.9375rem, .9rem + .2vw, 1.0625rem);
     line-height: 1.55;
 }
@@ -164,9 +168,11 @@
     background: rgba(255, 255, 255, .07);
 }
 
+/* Branco e não damasco: o damasco sobre o cobalto fica em 3,7:1, e este
+   rótulo tem 10 px. A cor do destaque fica na régua à esquerda. */
 .porta__facto-rotulo {
     display: block;
-    color: var(--porta-apricot);
+    color: rgba(255, 255, 255, .92);
     font-size: .625rem;
     font-weight: 600;
     letter-spacing: .15em;
@@ -182,7 +188,7 @@
 
 .porta__facto figcaption {
     margin-top: 7px;
-    color: rgba(255, 255, 255, .66);
+    color: rgba(255, 255, 255, .88);
     font-size: .75rem;
 }
 
@@ -202,7 +208,7 @@
     flex: 1 1 0;
     min-width: 0;
     padding-top: 15px;
-    color: rgba(255, 255, 255, .78);
+    color: rgba(255, 255, 255, .9);
     font-size: .625rem;
     font-weight: 600;
     letter-spacing: .12em;
@@ -223,7 +229,7 @@
 .porta__estagios li span {
     display: block;
     margin-bottom: 3px;
-    color: rgba(255, 255, 255, .5);
+    color: rgba(255, 255, 255, .9);
     font-variant-numeric: tabular-nums;
     letter-spacing: .14em;
 }
@@ -234,7 +240,7 @@
 
 .porta__gama-rotulo {
     margin: 0 0 10px;
-    color: rgba(255, 255, 255, .6);
+    color: rgba(255, 255, 255, .9);
     font-size: .625rem;
     font-weight: 600;
     letter-spacing: .16em;
@@ -251,7 +257,7 @@
 }
 
 .porta__gama li {
-    color: rgba(255, 255, 255, .88);
+    color: #ffffff;
     font-size: .9375rem;
     font-weight: 600;
     letter-spacing: .01em;
@@ -286,7 +292,7 @@
     min-width: 40px;
     padding: 0 12px;
     justify-content: center;
-    border: 1px solid var(--porta-linha);
+    border: 1px solid var(--porta-linha-campo);
     border-radius: 8px;
     background: transparent;
     color: var(--porta-tinta-suave);
@@ -298,8 +304,13 @@
 }
 
 .porta .tema-botao:hover {
-    border-color: var(--porta-tinta-suave);
+    border-color: var(--porta-tinta);
     color: var(--porta-tinta);
+}
+
+.porta .tema-botao:focus-visible {
+    outline: 2px solid var(--porta-cobalto);
+    outline-offset: 2px;
 }
 
 .porta__voltar {
@@ -316,6 +327,12 @@
     color: var(--porta-cobalto);
     text-decoration: underline;
     text-underline-offset: 3px;
+}
+
+.porta__voltar:focus-visible {
+    outline: 2px solid var(--porta-cobalto);
+    outline-offset: 3px;
+    border-radius: 3px;
 }
 
 .porta__voltar svg {
@@ -394,7 +411,7 @@
     gap: 10px;
     min-height: 50px;
     padding: 0 12px;
-    border: 1px solid var(--porta-linha);
+    border: 1px solid var(--porta-linha-campo);
     border-radius: 10px;
     background: var(--porta-campo);
     transition: border-color .15s ease, box-shadow .15s ease;
@@ -431,7 +448,7 @@
 }
 
 .porta__input::placeholder {
-    color: #9aa3af;
+    color: #6b7480;
 }
 
 .porta__revelar {
@@ -512,8 +529,8 @@
 }
 
 .porta__botao:focus-visible {
-    outline: 3px solid rgba(39, 67, 255, .35);
-    outline-offset: 2px;
+    outline: 2px solid var(--porta-cobalto);
+    outline-offset: 3px;
 }
 
 .porta__nota {
@@ -547,6 +564,35 @@
 
 .porta__legal a:hover {
     color: var(--porta-cobalto);
+}
+
+.porta__legal a:focus-visible {
+    outline: 2px solid var(--porta-cobalto);
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
+/* Primeira paragem do Tab: sai da página em vez de a percorrer. Só existe
+   quando tem foco — deixa de haver um bloco a mais para quem usa o rato. */
+.porta__salto {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    z-index: 10;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: var(--porta-tinta);
+    color: var(--porta-fundo);
+    font-size: .8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    transform: translate(-50%, -200%);
+}
+
+.porta__salto:focus-visible {
+    outline: 2px solid var(--porta-cobalto);
+    outline-offset: 2px;
+    transform: translate(-50%, 0);
 }
 
 
@@ -603,7 +649,21 @@
     --porta-tinta: #e9eff5;
     --porta-tinta-suave: #9ab0c3;
     --porta-linha: #22374a;
+    --porta-linha-campo: #4e6c88;
     --porta-erro: #f1a0a0;
+}
+
+/* Quem pediu menos movimento fica com a página quieta. O anel de foco
+   não desaparece: só a transição é que sai. */
+@media (prefers-reduced-motion: reduce) {
+    .porta__controlo,
+    .porta__botao {
+        transition: none;
+    }
+
+    .porta__botao:active {
+        transform: none;
+    }
 }
 
 [data-tema="tinta"] .porta__controlo svg {

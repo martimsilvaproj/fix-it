@@ -7,7 +7,8 @@ cinza-azulado, regras grossas, cantos vivos e números de boletim. O back office
 
 Fonte de verdade: `assets/css/front.css` (site), `assets/css/publico.css`
 (consulta por PIN), `assets/css/painel.css` (tokens do painel, que o site não
-altera). O `formulario.css` é partilhado; o site sobrepõe com `.site-body`.
+altera) e `assets/css/login.css` (só a entrada, §10). O `formulario.css` é
+partilhado; o site sobrepõe com `.site-body`.
 
 ---
 
@@ -223,7 +224,49 @@ as regras de campo vivem em `formulario.css` e a do botão de entrada em
 `login.css` — é aí que fecham a cascata. E `consulta.php` continua a sobrepor-se
 dentro de `.pagina-publica`, para a consulta pública não herdar o painel.
 
-## 10. Limites
+## 10. A entrada
+
+`login.php` é a única página que não veste o talão, e é de propósito: o painel é
+uma folha de serviço, a porta é o cartão que se entrega a quem chega. A partir
+de 900 px são duas metades iguais; abaixo disso empilham.
+
+- **Cobalto sólido** `#2743ff` à esquerda, com uma grelha de pontos a 1 px em
+  `#1b34c9`. É textura, não gradiente: sem vidro, sem desfoque, sem aurora.
+  Levam-no a marca, a frase («Cada reparação, do balcão à entrega.»), a linha
+  de apoio, o bilhete do balcão, a pauta das cinco fases (só no ecrã largo) e a
+  oferta.
+- **Papel branco** à direita, coluna de 26rem: «Bem-vindo de volta», email e
+  palavra-passe, Mostrar/Ocultar, o aviso de Caps Lock, a nota de que a
+  reposição é feita em Utilizadores e o botão cobalto.
+- **Duas famílias, servidas daqui.** Bricolage Grotesque 600–800 na marca e no
+  título, Inter 400–600 no resto. Os dois `.woff2` vivem em `assets/fonts/` e
+  são pré-carregados: a entrada não faz um único pedido a terceiros, e o resto
+  do painel continua com a tipografia do sistema.
+- **Uma palavra sublinhada, e uma só.** «entrega», a damasco `#ffc95c` com
+  `text-decoration-thickness: .085em`. O damasco não serve para texto pequeno —
+  sobre o cobalto fica em 3,7:1 —, por isso os rótulos de 10 px são brancos e
+  só os pontos da pauta e a régua do bilhete usam a cor.
+- **O que não existe não se desenha.** Sem SSO, sem «lembrar-me», sem ligação
+  de recuperação de palavra-passe: não há OAuth, a sessão não é persistente e a
+  reposição é um administrador a mudar a palavra-passe em Utilizadores. O lugar
+  do depoimento é um facto do balcão; o lugar dos logótipos é a oferta real
+  (Portáteis, Desktops, Telemóveis, Tablets). Ambos saem de
+  `frontoffice/dados-oficina.php`, nenhum é inventado.
+- **O tema tinta continua cá.** `[data-tema="tinta"]` escurece só a metade do
+  papel (`#0b1622`, campos `#12202e`): quem entra à noite não leva um clarão, e
+  o cobalto da marca não muda.
+
+Três decisões são só desta página e todas se medem:
+
+- os limites dos campos e do botão do tema usam `--porta-linha-campo`, 3:1
+  sobre o branco, e não `--porta-linha`, que é uma linha de 1,2:1 boa para
+  divisores e má para dizer «isto é um campo»;
+- o cursor começa no email a partir de 900 px e nunca abaixo disso — no
+  telemóvel o teclado tapava a faixa da marca antes de a página ser lida;
+- a primeira paragem do Tab é «Saltar para o formulário», que só aparece com
+  foco.
+
+## 11. Limites
 
 - Sem fotografia. As oficinas não têm imagem própria e o `PRODUCT.md`
   proíbe inventá-la. O que existe são desenhos: as quatro abas de
@@ -238,10 +281,10 @@ dentro de `.pagina-publica`, para a consulta pública não herdar o painel.
 - Abaixo de 380px a assinatura fica só com o nome, para o cabeçalho não partir.
 - **O site não liga ao back office.** O painel é software interno da empresa e
   não tem porta de entrada pública; só o PIN do talão abre o estado do pedido.
-- O painel e o site partilham a paleta **e** a gramática (ver §10), mas não o
-  conteúdo: o painel é software interno e não tem porta de entrada pública.
+- O painel e o site partilham a paleta **e** a gramática (ver §1 e §5), mas não
+  o conteúdo: o painel é software interno e não tem porta de entrada pública.
 
-## 10. Acessibilidade medida, não prometida
+## 12. Acessibilidade medida, não prometida
 
 O `PRODUCT.md` promete alvos a partir de 44 px e contraste WCAG AA. Estas são
 as decisões que fazem disso uma afirmação verificável:

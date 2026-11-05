@@ -218,6 +218,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <main class="porta" id="conteudo">
 
+    <!-- Primeira paragem do Tab. A página tem duas metades e a marca vem
+         antes do formulário: sem isto, quem usa teclado atravessa a
+         apresentação toda para chegar ao email. -->
+    <a class="porta__salto" href="#formulario">Saltar para o formulário</a>
+
     <!-- =============================================================
          A METADE DO COBALTO
          ============================================================= -->
@@ -325,7 +330,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
 
-            <form class="porta__form" method="post" action="login.php" novalidate>
+            <form class="porta__form" id="formulario" method="post" action="login.php" novalidate>
 
                 <input type="hidden" name="csrf" value="<?= h(Sessao::csrf('csrf_entrada')) ?>">
 
