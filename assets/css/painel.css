@@ -5133,16 +5133,25 @@ body {
     border-top: 2px dashed var(--tinta-400);
 }
 
-/* O canvas fica com a largura toda; a altura vem da proporção que o
-   Chart.js mantém (2,5:1 no ecrã grande, 1,45:1 no telemóvel). */
+/* A proporção é da moldura e vive em CSS: o canvas enche-a e o gráfico
+   nunca estica para uma tira. 2,5:1 no ecrã grande, 1,45:1 no telemóvel,
+   e a troca é imediata — não passa pelo ciclo de desenho da biblioteca. */
 .receita__tela {
     position: relative;
     width: 100%;
+    aspect-ratio: 2.5;
 }
 
 .receita__tela canvas {
     display: block;
-    width: 100%;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+@media (max-width: 720px) {
+    .receita__tela {
+        aspect-ratio: 1.45;
+    }
 }
 
 .receita__falha,

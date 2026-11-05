@@ -247,11 +247,12 @@
         options: {
             responsive: true,
 
-            // A proporção é a mesma em qualquer largura e volta a ser
-            // recalculada no resize (ver em baixo): o gráfico não estica
-            // para uma tira nem para um quadrado.
-            maintainAspectRatio: true,
-            aspectRatio: window.innerWidth < 720 ? 1.45 : 2.5,
+            // A proporção é da moldura, não do canvas: `.receita__tela` tem
+            // `aspect-ratio` em CSS e muda no breakpoint dos 720 px. Assim a
+            // área acompanha qualquer largura na mesma pintura, sem esperar
+            // pelo ciclo interno do Chart.js (que aplicava a proporção
+            // anterior e deixava o gráfico um passo atrás).
+            maintainAspectRatio: false,
 
             interaction: {
                 mode: 'index',
@@ -277,6 +278,10 @@
                         color: coresIniciais.texto,
                         font: { family: coresIniciais.mono, size: 11 },
                         maxTicksLimit: 5,
+
+                        // Contagens não têm meios pedidos: sem isto o eixo
+                        // dos pedidos e dos clientes escrevia «0,5».
+                        precision: 0,
                         callback: function (valor) {
                             return vista === 'receita'
                                 ? moedaEixo.format(valor)
@@ -377,19 +382,18 @@
         });
     }
 
-    // A proporção muda uma vez por breakpoint, não a cada pixel de arrasto.
+    // A proporção vive no CSS (`aspect-ratio` em `.receita__tela`), mas o
+    // gradiente é medido em pixels do canvas: depois de uma mudança de
+    // largura tem de ser refeito, ou a área fica curta em cima e comprida
+    // em baixo. Só isto se recalcula no resize — a geometria não.
     var temporizador = null;
 
     window.addEventListener('resize', function () {
         window.clearTimeout(temporizador);
 
         temporizador = window.setTimeout(function () {
-            var nova = window.innerWidth < 720 ? 1.45 : 2.5;
-
-            if (grafico.options.aspectRatio !== nova) {
-                grafico.options.aspectRatio = nova;
-                grafico.resize();
-            }
+            grafico.data.datasets[0].backgroundColor = gradiente(paleta().azul);
+            grafico.update('none');
         }, 180);
     });
 
