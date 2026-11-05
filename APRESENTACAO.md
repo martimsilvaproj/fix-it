@@ -102,10 +102,14 @@ tabelas de histórico à volta).
 
 **Mostrar:** painel a 1440 px e a 390 px, lado a lado.
 
-**Dizer:** «A identidade vem do talão: cantos rectos, réguas de 2 px,
-monoespaçadas em maiúsculas, sombra de carimbo. Sem imagens decorativas, sem
-bibliotecas, sem fontes externas. O menu recolhe em ecrã estreito e as tabelas
-passam a cartões.»
+**Dizer:** «Há dois registos, e a passagem de um ao outro é o login. A entrada e o
+site público vestem o talão: cantos rectos, réguas de 2 px, monoespaçadas em
+maiúsculas, sombra de carimbo. Por dentro, o painel é um produto de gestão —
+papel `#f8f9fc`, cartões de 24 px, Plus Jakarta Sans servida de casa, o azul no
+que se pode carregar. Nenhum pedido a terceiros, nem de fontes. A coluna da
+direita mostra o perfil, a semana e o que falta tratar; o gráfico de receita
+passou a barras de uma cor por vista. O menu recolhe em ecrã estreito e as
+tabelas passam a cartões.»
 
 **Mostrar:** a lista sem resultados, para provar que o estado vazio explica o que
 fazer.

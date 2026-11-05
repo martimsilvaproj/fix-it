@@ -170,7 +170,7 @@ está a oficina agora?».
 
 ![Painel com pedidos em curso](screenshots/manual-painel.png)
 
-De cima para baixo:
+De cima para baixo, e depois a coluna da direita:
 
 - **Total de pedidos**, **Pedidos ativos** (tudo o que ainda não está
   «Entregue») e **Clientes registados**. Cada número traz a variação da semana
@@ -183,6 +183,17 @@ De cima para baixo:
   para os recortes que interessam (por atribuir, prontos, entregues).
 - **Avisos**: pedidos cujo PIN não é consultado há mais de uma semana. Não é
   erro do cliente — é sinal de que o talão pode ter ficado na gaveta.
+
+- A **coluna da direita** — em ecrãs largos — traz o teu perfil, os sete dias da
+  semana com o dia de hoje marcado a rosa, e a lista **Por tratar**: os pedidos
+  do site por contactar, os que ainda não têm técnico e os que estão abertos há
+  mais de uma semana. Cada linha leva à lista já filtrada.
+- A **receita** aparece em barras, uma cor por vista (pedidos, entregues,
+  recebida), com o ano anterior em linha tracejada. A legenda ao lado tem os
+  mesmos números em texto.
+
+O tema do painel muda entre **papel** (claro) e **tinta** (escuro) no botão no
+topo. A escolha fica guardada neste browser.
 
 ![Gráfico e legenda do painel](screenshots/painel-grafico-1440.png)
 

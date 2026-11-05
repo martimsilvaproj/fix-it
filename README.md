@@ -135,7 +135,7 @@ frontoffice/           site público (12 ficheiros, incluindo front-comum.php)
 nucleo/                código partilhado: conexão, sessão, texto, estados, solicitações
 sql/                   esquema, migrações e contas iniciais
 testes/correr.php      50 verificações automáticas
-screenshots/           43 capturas de ecrã
+screenshots/           44 capturas de ecrã
 uploads/               fotografias dos equipamentos (fora do repositório)
 DESIGN.md              sistema visual: cor, tipografia, espaço, componentes
 PRODUCT.md             produto, utilizadores, princípios

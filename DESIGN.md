@@ -309,3 +309,71 @@ A auditoria corre no browser a 390 e a 1440 px: sem transbordo horizontal, um
 `h1` por página, imagens com `alt`, nenhum texto abaixo de 4,5:1 (3:1 em texto
 grande) e nenhum controlo abaixo de 44 px. Ligações dentro de frases ficam com
 o alvo do próprio texto, como a WCAG 2.5.8 admite para ligações em linha.
+
+---
+
+## 13. O interior do painel — a linguagem de produto
+
+O painel deixou de vestir o talão. A partir do login, o back office segue a
+linguagem de um produto de gestão: superfícies claras, cantos suaves e uma cor
+de acção. A entrada e o site público mantêm o talão — a diferença é deliberada
+e marca o momento em que se entra «por dentro».
+
+### A camada
+
+Tudo isto vive em `assets/css/painel-saas.css`, carregada depois de `painel.css`
+e de `formulario.css`. É uma camada de cima: a geometria, o HTML dos formulários
+e as consultas não mudaram. Para que os componentes antigos acompanhassem sem
+serem reescritos, os tokens do talão (`--fundo`, `--branco`, `--linha`,
+`--tinta-*`, `--azul-*`) foram remapeados para os novos.
+
+| Peça | Valor |
+| --- | --- |
+| Papel | `#f8f9fc` |
+| Superfície | `#ffffff`, borda `#f3f4f6` |
+| Tinta | `#1e293b`, suave `#64748b` |
+| Azul | `#0d6efd` em traço, ícone e barra; `#0b5ed7` onde há texto branco em cima |
+| Laranja · Verde · Rosa · Roxo | `#f97316` · `#10b981` · `#ec4899` · `#8b5cf6` |
+| Raio | 24 px em cartões, 12 px em botões e campos |
+| Sombra | `0 1px 2px rgba(30,41,59,.04)` e `0 8px 24px -12px rgba(30,41,59,.12)` |
+| Tipo | Plus Jakarta Sans variável (400–800), servida de `assets/fonts/` |
+
+A fonte é um ficheiro WOFF2 de 27 KB, pré-carregado, sem pedidos a terceiros.
+
+### O que se acrescentou
+
+- **Selector da oficina** no topo da barra lateral, em laranja suave. É um bloco
+  e não um botão: há uma só oficina, e um selector a fingir seria uma promessa
+  que não se cumpre.
+- **Cartão da consulta por PIN** no rodapé da lateral — o único ecrã que o
+  cliente também vê, e a forma de confirmar o que ele tem à frente.
+- **Coluna lateral** no painel, a partir de 1280 px: perfil, a semana corrente e
+  o que está por tratar. Abaixo disso desce para o fim da página, em três
+  cartões.
+  - A semana começa na segunda e marca o dia de hoje com a pílula rosa levantada
+    4 px; as datas vêm do servidor, como as idades do resto do painel.
+  - Os pendentes são ligações com círculo, não caixas de selecção: uma caixa que
+    não guarda nada é uma promessa vazia. Os números são os das consultas já
+    feitas na mesma página.
+- **Receita em barras**: 12 px de raio, 26 px de espessura máxima, uma cor por
+  vista lida dos tokens, e o ano anterior em linha tracejada por cima.
+
+### Medido, não suposto
+
+A 390 px: fonte carregada, papel `#f8f9fc`, cartões com 24 px, botão `#0b5ed7`
+com raio 12, pílula da ligação activa 3×20 px, sem transbordo. A 1440 px: barra
+lateral de 256 px, coluna de 300 px (755 px para o conteúdo), sete dias na
+semana com um marcado, `Chart.getChart(...).config.type` = `bar`, `borderRadius`
+12 e 12 pontos no ano corrente.
+
+### O tema tinta
+
+O tema escuro tem bloco próprio de tokens. A primeira passagem deixou doze
+textos abaixo do mínimo: a tinta do tema claro sobrevivia no selector da
+oficina, no botão do tema e nas ligações do conteúdo, e o branco sobre `#4f8cff`
+dava 3,2:1. A segunda passagem escurece o azul de superfície para `#2563eb`
+(branco a 5,2:1) e guarda o azul claro `#a5c4ff` para texto sobre fundo escuro.
+
+O mesmo cuidado foi aplicado ao tema papel: `#0d6efd` com branco em cima dá
+4,49:1, um fio abaixo do mínimo, por isso as superfícies com texto usam
+`#0b5ed7`, o mesmo azul um degrau mais fundo.

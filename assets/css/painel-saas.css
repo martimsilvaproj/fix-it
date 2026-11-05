@@ -821,3 +821,284 @@ a.metrica:hover {
     background: #2b1220;
     color: #f9a8d4;
 }
+
+/* --- Correções medidas no tema tinta -------------------------------
+   A primeira passagem pela folha escura deixou doze textos abaixo do
+   mínimo: o selector da oficina, o botão do tema e as ligações do
+   conteúdo continuavam a usar a tinta do tema claro, e o branco sobre o
+   azul claro dava 3,2:1. Aqui o azul de superfície escurece para o
+   branco passar a 5,2:1, e o azul claro fica só para texto.
+   ------------------------------------------------------------------ */
+[data-tema="tinta"] {
+    --saas-azul-fundo-botao: #2563eb;
+}
+
+[data-tema="tinta"] .navegacao__ligacao[aria-current="page"] {
+    color: #a5c4ff;
+}
+
+[data-tema="tinta"] .metrica__icone {
+    color: #a5c4ff;
+}
+
+[data-tema="tinta"] .migalhas a:hover {
+    color: #a5c4ff;
+}
+
+[data-tema="tinta"] .principal a:not(.botao):not(.navegacao__ligacao) {
+    color: #bfdbfe;
+}
+
+[data-tema="tinta"] .organizacao {
+    border-color: #4a2c14;
+    background: #2a1c10;
+}
+
+[data-tema="tinta"] .organizacao__nome,
+[data-tema="tinta"] .organizacao__nota {
+    color: #fdba74;
+}
+
+[data-tema="tinta"] .tema-botao {
+    border-color: #263449;
+    color: #cbd5e1;
+}
+
+[data-tema="tinta"] .receita__chave li,
+[data-tema="tinta"] .receita__aviso,
+[data-tema="tinta"] .receita__nota,
+[data-tema="tinta"] .cartao-lateral__acao {
+    color: #a9bdd6;
+}
+
+[data-tema="tinta"] .botao--primario {
+    background: #2563eb;
+}
+
+/* =====================================================================
+   10. COLUNA LATERAL DO PAINEL
+   Perfil, semana e pendentes. Abaixo de 1280 px desce para o fim da
+   página, em cartões iguais; a partir daí encosta à direita e acompanha
+   o scroll. Só o `painel.php` a tem — é a visão geral que precisa dela.
+   ===================================================================== */
+.lateral-painel {
+    display: grid;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+@media (min-width: 1280px) {
+    .principal {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 300px;
+        align-items: start;
+        column-gap: 24px;
+    }
+
+    .principal > * {
+        min-width: 0;
+    }
+
+    .principal > *:not(.lateral-painel) {
+        grid-column: 1;
+    }
+
+    .principal > .lateral-painel {
+        grid-column: 2;
+        grid-row: 1 / span 40;
+        position: sticky;
+        top: 84px;
+        margin-top: 0;
+    }
+}
+
+@media (min-width: 720px) and (max-width: 1279px) {
+    .lateral-painel {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.cartao-lateral {
+    padding: 18px;
+    border: 1px solid var(--saas-linha);
+    border-radius: var(--saas-raio-cartao);
+    background: var(--saas-superficie);
+    box-shadow: var(--saas-sombra-sm);
+}
+
+.cartao-lateral__titulo {
+    margin: 0;
+    color: var(--saas-tinta);
+    font-size: .8125rem;
+    font-weight: 700;
+    letter-spacing: -.01em;
+}
+
+.cartao-lateral__acao {
+    display: inline-block;
+    margin-top: 14px;
+    color: var(--saas-azul);
+    font-size: .75rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.cartao-lateral__acao:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.perfil-lateral {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.perfil-lateral__avatar {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #0b5ed7;
+    color: #ffffff;
+    font-size: .8125rem;
+    font-weight: 700;
+}
+
+.perfil-lateral__nome {
+    color: var(--saas-tinta);
+    font-size: .875rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.perfil-lateral__cargo {
+    color: var(--saas-suave);
+    font-size: .75rem;
+}
+
+/* A semana: sete dias, o de hoje a rosa e levantado 4 px. */
+.semana {
+    display: flex;
+    justify-content: space-between;
+    gap: 4px;
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.semana__dia {
+    display: grid;
+    place-items: center;
+    gap: 2px;
+    min-width: 32px;
+    padding: 8px 0;
+    border-radius: var(--saas-raio-botao);
+}
+
+.semana__letra {
+    color: var(--saas-suave);
+    font-size: .625rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+}
+
+.semana__numero {
+    color: var(--saas-tinta);
+    font-size: .8125rem;
+    font-weight: 700;
+}
+
+.semana__dia--hoje {
+    background: #db2777;
+    box-shadow: 0 8px 16px -8px rgba(219, 39, 119, .8);
+    transform: translateY(-4px);
+}
+
+.semana__dia--hoje .semana__letra,
+.semana__dia--hoje .semana__numero {
+    color: #ffffff;
+}
+
+.semana__nota {
+    margin-top: 14px;
+    color: var(--saas-suave);
+    font-size: .6875rem;
+}
+
+/* Pendentes: um círculo por item, preenchido só ao passar o rato. Não é
+   uma caixa de selecção porque não guarda nada — um check que não
+   persiste é uma promessa vazia. */
+.por-tratar {
+    display: grid;
+    gap: 12px;
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.por-tratar a {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    color: var(--saas-tinta);
+    font-size: .8125rem;
+    line-height: 1.4;
+    text-decoration: none;
+}
+
+.por-tratar a:hover {
+    color: var(--saas-azul);
+}
+
+.por-tratar__marca {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    border: 2px solid #cbd5e1;
+    border-radius: 6px;
+}
+
+.por-tratar a:hover .por-tratar__marca {
+    border-color: var(--saas-azul);
+    background: var(--saas-azul-fundo);
+}
+
+.por-tratar__vazio {
+    color: var(--saas-suave);
+    font-size: .75rem;
+    line-height: 1.5;
+}
+
+/* O azul de acção sobre branco: #0d6efd com texto branco dá 4,49:1, um
+   fio abaixo do mínimo. O tom de carregar é o mesmo azul um degrau mais
+   fundo, e aí o branco passa a 5,1:1. O #0d6efd fica para traço, ícone
+   e barra do gráfico, onde não há texto em cima. */
+.botao--primario,
+.perfil__avatar,
+.perfil-lateral__avatar {
+    background: #0b5ed7;
+}
+
+.botao--primario:hover {
+    background: #0a58ca;
+}
+
+[data-tema="tinta"] .perfil__avatar,
+[data-tema="tinta"] .perfil-lateral__avatar {
+    background: #2563eb;
+}
+
+/* A régua azul de 4 px vive no contentor `.cabecalho`, não no `h1`, e
+   sobrevivia escondida atrás do título. Sai também o recuo que ela pedia. */
+.cabecalho::before,
+.cabecalho__texto::before {
+    display: none !important;
+}
+
+.cabecalho h1 {
+    padding-left: 0;
+}

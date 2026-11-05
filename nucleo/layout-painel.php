@@ -127,7 +127,7 @@ function painelAbrir(
     <link rel="stylesheet" href="../assets/css/painel.css">
     <link rel="stylesheet" href="../assets/css/formulario.css">
     <!-- A camada de cima: a pele de produto do interior do painel. -->
-    <link rel="stylesheet" href="../assets/css/painel-saas.css">
+    <link rel="stylesheet" href="../assets/css/painel-saas.css?v=<?= (int) @filemtime(__DIR__ . '/../assets/css/painel-saas.css') ?>">
 </head>
 <body>
 

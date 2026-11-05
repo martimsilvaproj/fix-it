@@ -1075,6 +1075,31 @@ $descricaoTopo = $erroDados === '' && $totalPedidos === 0
     ? 'A oficina ainda não tem pedidos registados — os atalhos e o gráfico de'
         . ' estados ficam a zero até ao primeiro.'
     : 'Estado da oficina e pedidos em curso, atualizado a cada consulta.';
+
+// ---------------------------------------------------------------------
+// A semana corrente, para a coluna lateral. As datas são as do servidor
+// — a mesma régua das idades do resto do painel — e começam na segunda.
+// ---------------------------------------------------------------------
+$hojeSemana      = new DateTimeImmutable('today');
+$segundaDaSemana = $hojeSemana->modify('monday this week');
+$letrasDaSemana  = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'];
+$diasDaSemana    = [];
+
+for ($indiceDia = 0; $indiceDia < 7; $indiceDia++) {
+    $diaCorrente = $segundaDaSemana->modify('+' . $indiceDia . ' days');
+
+    $diasDaSemana[] = [
+        'letra'  => $letrasDaSemana[$indiceDia],
+        'numero' => (int) $diaCorrente->format('j'),
+        'hoje'   => $diaCorrente->format('Y-m-d') === $hojeSemana->format('Y-m-d'),
+    ];
+}
+
+$mesesLongos = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+                'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+
+$hojePorExtenso = (int) $hojeSemana->format('j') . ' de '
+    . $mesesLongos[(int) $hojeSemana->format('n') - 1];
 ?>
 <?php painelAbrir(
     'painel',
@@ -1849,6 +1874,93 @@ $descricaoTopo = $erroDados === '' && $totalPedidos === 0
             <?php endif; ?>
 
             <?php endif; ?>
+
+            <!-- =====================================================
+                 COLUNA LATERAL
+                 Perfil, semana e o que está por tratar. Os números são
+                 das consultas já feitas acima — nenhum é inventado aqui.
+                 ===================================================== -->
+            <aside class="lateral-painel" aria-label="Resumo pessoal e pendentes">
+
+                <section class="cartao-lateral">
+                    <div class="perfil-lateral">
+                        <span class="perfil-lateral__avatar" aria-hidden="true"><?= h(Sessao::iniciais((string) $utilizador['nome'])) ?></span>
+                        <div>
+                            <p class="perfil-lateral__nome"><?= h((string) $utilizador['nome']) ?></p>
+                            <p class="perfil-lateral__cargo"><?= h((string) $utilizador['cargo']) ?></p>
+                        </div>
+                    </div>
+                    <a class="cartao-lateral__acao" href="conta.php">A minha conta</a>
+                </section>
+
+                <section class="cartao-lateral">
+                    <h2 class="cartao-lateral__titulo">Esta semana</h2>
+                    <ol class="semana" aria-label="Dias desta semana">
+                        <?php foreach ($diasDaSemana as $diaDaSemana): ?>
+                            <li class="semana__dia<?= $diaDaSemana['hoje'] ? ' semana__dia--hoje' : '' ?>"<?= $diaDaSemana['hoje'] ? ' aria-current="date"' : '' ?>>
+                                <span class="semana__letra" aria-hidden="true"><?= h($diaDaSemana['letra']) ?></span>
+                                <span class="semana__numero"><?= (int) $diaDaSemana['numero'] ?></span>
+                            </li>
+                        <?php endforeach; ?>
+                    </ol>
+                    <p class="semana__nota">Hoje é <?= h($hojePorExtenso) ?>.</p>
+                </section>
+
+                <section class="cartao-lateral">
+                    <h2 class="cartao-lateral__titulo">Por tratar</h2>
+
+                    <?php if ($abertosPorAtribuir === 0 && $abertosEsperaLonga === 0
+                              && $abertosPorConsultar === 0 && $solicitacoesNovas === 0): ?>
+                        <p class="por-tratar__vazio">
+                            Nada a pedir atenção: sem pedidos do site por contactar e
+                            sem pedidos em aberto há mais de uma semana.
+                        </p>
+                    <?php else: ?>
+                        <ul class="por-tratar">
+                            <?php if ($solicitacoesNovas > 0): ?>
+                                <li>
+                                    <a href="solicitacoes.php?estado=Nova">
+                                        <span class="por-tratar__marca" aria-hidden="true"></span>
+                                        <span><strong><?= (int) $solicitacoesNovas ?></strong>
+                                            <?= $solicitacoesNovas === 1 ? 'pedido do site por contactar' : 'pedidos do site por contactar' ?></span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+
+                            <?php if ($abertosPorAtribuir > 0): ?>
+                                <li>
+                                    <a href="pedidos.php">
+                                        <span class="por-tratar__marca" aria-hidden="true"></span>
+                                        <span><strong><?= (int) $abertosPorAtribuir ?></strong>
+                                            <?= $abertosPorAtribuir === 1 ? 'pedido sem técnico' : 'pedidos sem técnico' ?></span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+
+                            <?php if ($abertosEsperaLonga > 0): ?>
+                                <li>
+                                    <a href="painel.php#abertos">
+                                        <span class="por-tratar__marca" aria-hidden="true"></span>
+                                        <span><strong><?= (int) $abertosEsperaLonga ?></strong>
+                                            <?= $abertosEsperaLonga === 1 ? 'pedido aberto há mais de uma semana' : 'pedidos abertos há mais de uma semana' ?></span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+
+                            <?php if ($abertosPorConsultar > 0): ?>
+                                <li>
+                                    <a href="pedidos.php">
+                                        <span class="por-tratar__marca" aria-hidden="true"></span>
+                                        <span><strong><?= (int) $abertosPorConsultar ?></strong>
+                                            <?= $abertosPorConsultar === 1 ? 'cliente ainda não abriu o PIN' : 'clientes ainda não abriram o PIN' ?></span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+                    <?php endif; ?>
+                </section>
+
+            </aside>
 
         </main>
     </div>

@@ -171,7 +171,7 @@ clientes 1 ──── N equipamentos 1 ──── N pedidos
 
 ## 5. Interface e decisões visuais
 
-A identidade vem do talão de oficina: cantos rectos, réguas de 2 px, tipografia
+A identidade do site público e da entrada vem do talão de oficina: cantos rectos, réguas de 2 px, tipografia
 monoespaçada em maiúsculas nos rótulos e uma sombra sólida nos botões, como um
 carimbo. A cor é uma família de azuis institucionais; não há imagens
 decorativas, ícones de banco de imagens nem fontes externas.
@@ -194,6 +194,34 @@ Decisões que resultaram de testes:
   e os alvos de toque ficam acima de 44 px.
 
 ![Lista em ecrã estreito](screenshots/lista-360-cartoes.png)
+
+### O interior do painel
+
+O back office muda de registo a partir do login. Lá dentro a linguagem é a de
+um produto de gestão — papel `#f8f9fc`, superfícies brancas com 24 px de raio,
+sombras curtas, azul só no que se pode carregar — e a fonte passa a ser a Plus
+Jakarta Sans, um ficheiro WOFF2 de 27 KB servido de `assets/fonts/`, com
+preload. A camada vive em `assets/css/painel-saas.css`, por cima de
+`painel.css`: a geometria, os formulários e as consultas ficaram como estavam.
+
+O painel ganhou uma coluna à direita, a partir de 1280 px, com o perfil de quem
+está autenticado, os sete dias da semana (hoje marcado a rosa) e a lista **Por
+tratar** — pedidos do site por contactar, pedidos sem técnico, pedidos abertos
+há mais de uma semana e clientes que ainda não abriram o PIN. Cada número vem
+das consultas já feitas na mesma página; nenhum é calculado à parte. A semana
+começa na segunda e as datas são as do servidor.
+
+![Painel com a coluna lateral](screenshots/painel-saas-lateral.png)
+
+A receita passou de área a barras: 12 px de raio, uma cor por vista lida dos
+tokens do tema, e o ano anterior em linha tracejada. Duas notas de acessibilidade
+saíram desta revisão. A primeira: `#0d6efd` com texto branco em cima dá 4,49:1,
+um fio abaixo do mínimo, por isso as superfícies com texto usam `#0b5ed7`
+(5,1:1) e o `#0d6efd` fica no traço, nos ícones e nas barras. A segunda: a
+primeira passagem pelo tema tinta deixou doze textos ilegíveis — a tinta do
+tema claro sobrevivia no selector da oficina, no botão do tema e nas ligações do
+conteúdo, e o branco sobre o azul claro dava 3,2:1. A correcção escurece o azul
+de superfície e reserva o azul claro para texto sobre fundo escuro.
 
 ### A porta da oficina
 
