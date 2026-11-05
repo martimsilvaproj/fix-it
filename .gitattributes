@@ -7,6 +7,7 @@
 # --- Binários ------------------------------------------------------------
 # O Git não tenta tratar estes como texto: nada de conversões, nada de diff.
 *.png binary
+*.pptx binary
 *.jpg binary
 *.jpeg binary
 *.gif binary
