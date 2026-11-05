@@ -188,7 +188,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Entrar — FixIt</title>
     <meta name="description" content="Entrada na área da oficina FixIt.">
     <meta name="robots" content="noindex">
-    <meta name="theme-color" content="#0C2038">
+    <meta name="theme-color" content="#2743ff">
+
+    <!-- As duas fontes desta página são servidas daqui: a entrada não faz
+         um único pedido a terceiros. `crossorigin` é obrigatório nos
+         preloads de fontes, mesmo com o ficheiro na mesma origem. -->
+    <link rel="preload" href="../assets/fonts/bricolage-grotesque-latin.woff2" as="font"
+          type="font/woff2" crossorigin>
+    <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font"
+          type="font/woff2" crossorigin>
 
     <link rel="stylesheet" href="../assets/css/painel.css">
     <link rel="stylesheet" href="../assets/css/formulario.css">
@@ -208,144 +216,171 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body class="pagina-entrada">
 
-<main class="acesso" id="conteudo">
+<main class="porta" id="conteudo">
 
     <!-- =============================================================
-         APRESENTAÇÃO
+         A METADE DO COBALTO
          ============================================================= -->
-    <section class="acesso__apresentacao" aria-label="FixIt, assistência técnica">
-        <a class="marca" href="../frontoffice/index.php">
-            <span class="marca__simbolo" aria-hidden="true">
+    <section class="porta__marca" aria-label="FixIt, assistência técnica">
+
+        <a class="porta__logotipo" href="../frontoffice/index.php">
+            <span class="porta__simbolo" aria-hidden="true">
                 <!-- Marca: cabeça de parafuso em cruz. -->
-                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round">
                     <circle cx="12" cy="12" r="8.25"/>
                     <path d="M12 7.5v9M7.5 12h9"/>
                 </svg>
             </span>
-            <span class="marca__texto">
-                <span class="marca__nome">FixIt</span>
-                <span class="marca__descricao">Assistência técnica</span>
+            <span>
+                <span class="porta__nome">FixIt</span>
+                <span class="porta__descritor">Assistência técnica</span>
             </span>
         </a>
 
-        <div class="acesso__miolo">
-            <p class="acesso__etiqueta">Oficina · back office</p>
+        <div class="porta__discurso">
+            <h1 class="porta__titulo">
+                Cada reparação, do balcão à <span class="porta__sublinhado">entrega</span>.
+            </h1>
 
-            <p class="acesso__frase">
-                Cada pedido, orçamento e reparação com o histórico à mão.
+            <p class="porta__apoio">
+                Receção com fotografias, diagnóstico, orçamento antes de mexer e o
+                PIN do cliente para acompanhar cada passo. Tudo no mesmo sítio.
             </p>
 
-            <!-- O mesmo ciclo de vida que o cliente lê no talão. É
-                 decorativo para quem ouve a página: a informação está no
-                 site público, e a lista não acrescenta nada ao formulário. -->
-            <ol class="acesso__fluxo" aria-hidden="true">
-                <li><span>01</span> Recebido</li>
-                <li><span>02</span> Em diagnóstico</li>
-                <li><span>03</span> Em reparação</li>
-                <li><span>04</span> Pronto</li>
-                <li><span>05</span> Entregue</li>
-            </ol>
+            <!-- No lugar do depoimento: o que é verdade sobre o balcão. Não
+                 há estrelas nem citações que ninguém disse. -->
+            <figure class="porta__facto">
+                <span class="porta__facto-rotulo">No balcão</span>
+                <p>O equipamento é entregue e levantado na oficina. Não há recolha nem envio.</p>
+                <figcaption>FixIt · assistência técnica</figcaption>
+            </figure>
         </div>
 
-        <p class="acesso__rodape">
-            <a href="../frontoffice/index.php">Consulta pública de reparações</a>
-        </p>
+        <div class="porta__gama">
+            <p class="porta__gama-rotulo">Entram na oficina</p>
+            <ul>
+                <li>Portáteis</li>
+                <li>Desktops</li>
+                <li>Telemóveis</li>
+                <li>Tablets</li>
+            </ul>
+        </div>
     </section>
 
     <!-- =============================================================
-         FORMULÁRIO
+         A METADE DO PAPEL
          ============================================================= -->
-    <section class="acesso__zona" aria-labelledby="titulo-entrada">
+    <section class="porta__lado" aria-labelledby="titulo-entrada">
 
-        <button class="tema-botao acesso__tema" type="button" data-alternar-tema
-                aria-pressed="false" aria-label="Tema escuro (tinta)">
-            <svg class="tema-botao__sol" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="3.6"/>
-                <path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6"/>
-            </svg>
-            <svg class="tema-botao__lua" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2Z"/>
-            </svg>
-            <span class="tema-botao__texto">Tema</span>
-        </button>
+        <div class="porta__topo">
+            <button class="tema-botao" type="button" data-alternar-tema
+                    aria-pressed="false" aria-label="Tema escuro (tinta)">
+                <svg class="tema-botao__sol" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="3.6"/>
+                    <path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6"/>
+                </svg>
+                <svg class="tema-botao__lua" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2Z"/>
+                </svg>
+                <span class="tema-botao__texto">Tema</span>
+            </button>
 
-        <div class="acesso__caixa">
+            <a class="porta__voltar" href="../frontoffice/index.php">
+                Voltar ao site
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M7 17 17 7"/>
+                    <path d="M9 7h8v8"/>
+                </svg>
+            </a>
+        </div>
 
-            <p class="acesso__cartao-etiqueta">Acesso à oficina</p>
+        <div class="porta__caixa">
 
-            <h1 id="titulo-entrada">Entra na oficina</h1>
-            <p class="acesso__sub">
-                Usa a conta que foi criada para ti na área da oficina.
-            </p>
+            <h2 class="porta__titulo-form" id="titulo-entrada">Bem-vindo de volta</h2>
+            <p class="porta__sub">Entra na área da oficina para continuares o dia.</p>
 
             <?php if ($erroGeral !== ''): ?>
-                <div class="alerta acesso__alerta" role="alert">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M12 4.5 21 20H3L12 4.5Z"/>
-                        <path d="M12 10v4"/>
-                        <path d="M12 17h.01"/>
-                    </svg>
+                <div class="alerta porta__alerta porta__alerta--erro" role="alert">
                     <p class="alerta__texto"><?= h($erroGeral) ?></p>
                 </div>
             <?php elseif ($aviso !== ''): ?>
-                <div class="alerta alerta--sucesso acesso__alerta" role="status">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="m5 12.5 4.5 4.5L19 7"/>
-                    </svg>
+                <div class="alerta porta__alerta porta__alerta--ok" role="status">
                     <p class="alerta__texto"><?= h($aviso) ?></p>
                 </div>
             <?php endif; ?>
 
-            <form class="acesso__formulario" method="post" action="login.php" novalidate>
+            <form class="porta__form" method="post" action="login.php" novalidate>
 
                 <input type="hidden" name="csrf" value="<?= h(Sessao::csrf('csrf_entrada')) ?>">
 
                 <div class="campo<?= $erroEmail !== '' ? ' campo--invalido' : '' ?>">
-                    <label class="campo__rotulo" for="email">
-                        Email<span class="obrigatorio" aria-hidden="true"> *</span>
-                    </label>
-                    <input class="entrada" type="email" id="email" name="email"
-                           value="<?= h($email) ?>"
-                           autocomplete="username" inputmode="email"
-                           maxlength="190" spellcheck="false"
-                           aria-describedby="erro-email"
-                           <?= $erroEmail !== '' ? 'aria-invalid="true"' : '' ?>
-                           required>
+                    <label class="porta__campo-label" for="email">Email</label>
+                    <div class="porta__controlo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="3" y="5" width="18" height="14" rx="2.5"/>
+                            <path d="m3.8 7.2 8.2 5.8 8.2-5.8"/>
+                        </svg>
+                        <input class="porta__input" type="email" id="email" name="email"
+                               value="<?= h($email) ?>"
+                               placeholder="nome@fixit.pt"
+                               autocomplete="username" inputmode="email"
+                               maxlength="190" spellcheck="false"
+                               aria-describedby="erro-email"
+                               <?= $erroEmail !== '' ? 'aria-invalid="true"' : '' ?>
+                               required>
+                    </div>
                     <p class="campo__erro" id="erro-email" <?= $erroEmail === '' ? 'hidden' : '' ?>><?= h($erroEmail) ?></p>
                 </div>
 
                 <div class="campo<?= $erroPassword !== '' ? ' campo--invalido' : '' ?>">
-                    <label class="campo__rotulo" for="palavra_passe">
-                        Palavra-passe<span class="obrigatorio" aria-hidden="true"> *</span>
-                    </label>
-                    <input class="entrada" type="password" id="palavra_passe" name="palavra_passe"
-                           autocomplete="current-password"
-                           maxlength="200"
-                           aria-describedby="erro-palavra-passe"
-                           <?= $erroPassword !== '' ? 'aria-invalid="true"' : '' ?>
-                           required>
+                    <label class="porta__campo-label" for="palavra_passe">Palavra-passe</label>
+                    <div class="porta__controlo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="4" y="10" width="16" height="10" rx="2.5"/>
+                            <path d="M8 10V7.6a4 4 0 0 1 8 0V10"/>
+                        </svg>
+                        <input class="porta__input" type="password" id="palavra_passe" name="palavra_passe"
+                               placeholder="A tua palavra-passe"
+                               autocomplete="current-password"
+                               maxlength="200"
+                               aria-describedby="erro-palavra-passe"
+                               <?= $erroPassword !== '' ? 'aria-invalid="true"' : '' ?>
+                               required>
+                        <button class="porta__revelar" type="button"
+                                data-alternar-palavra-passe
+                                aria-pressed="false" aria-controls="palavra_passe">Mostrar</button>
+                    </div>
                     <p class="campo__erro" id="erro-palavra-passe" <?= $erroPassword === '' ? 'hidden' : '' ?>><?= h($erroPassword) ?></p>
                 </div>
 
-                <button class="botao botao--primario acesso__submeter" type="submit">
-                    Entrar
-                </button>
+                <p class="porta__ajuda">
+                    Esqueceste-te da palavra-passe? Um administrador repõe-na em
+                    <strong>Utilizadores</strong>, dentro do painel.
+                </p>
+
+                <button class="porta__botao" type="submit">Entrar</button>
             </form>
 
-            <p class="acesso__nota">
-                Ainda não tens conta? Um administrador cria-a em
-                <span>Utilizadores</span>, dentro do painel.
+            <p class="porta__nota">
+                <strong>Sem conta?</strong> É um administrador que a cria, em
+                Utilizadores — esta entrada não tem registo próprio.
             </p>
 
+            <p class="porta__legal">
+                <a href="../frontoffice/privacidade.php">Privacidade</a>
+                <a href="../frontoffice/index.php">Site público</a>
+            </p>
         </div>
     </section>
 </main>
 
 <script src="../assets/js/tema.js" defer></script>
+<script src="../assets/js/entrada.js" defer></script>
 
 </body>
 </html>

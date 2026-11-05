@@ -1,253 +1,558 @@
 /* =====================================================================
-   FixIt — Entrada na oficina
-   Só esta página. Os tokens, botões e campos vêm de painel.css e
-   formulario.css; aqui fica o desenho da porta: à esquerda o talão escuro
-   com o ciclo de vida de um pedido, à direita a folha onde se entra. No
-   telemóvel fica uma coluna, e a lista do ciclo sai — quem está a entrar
-   quer o formulário, não a explicação.
+   FixIt — a porta da oficina
+
+   Uma folha só para esta página. Duas metades: à esquerda o cobalto
+   sólido com a marca e a frase; à direita o papel branco com o
+   formulário. Sem vidro, sem desfoques, sem gradientes de malha: cor
+   plana, contraste real e uma única palavra sublinhada a damasco.
+
+   As duas fontes são servidas daqui (`assets/fonts/`), não do Google:
+   a entrada não faz um único pedido a terceiros. O resto do painel
+   continua com a tipografia do sistema — esta folha é a exceção, e é
+   por isso que estas regras vivem todas debaixo de `.pagina-entrada`.
+
+   O tema «Tinta» continua a existir: a metade do formulário escurece,
+   o cobalto fica. Quem entra no escuro não leva com um clarão.
    ===================================================================== */
 
-/* Herda a folha do painel, mas a entrada não é uma página do back office:
-   o salto para o painel depois de entrar é um carregamento, não uma
-   transição entre secções. */
-@view-transition {
-    navigation: none;
+@font-face {
+    font-family: 'Bricolage Grotesque';
+    src: url('../fonts/bricolage-grotesque-latin.woff2') format('woff2');
+    font-weight: 600 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/inter-latin.woff2') format('woff2');
+    font-weight: 400 600;
+    font-style: normal;
+    font-display: swap;
 }
 
 .pagina-entrada {
-    background: var(--fundo);
+    --porta-cobalto: #2743ff;
+    --porta-cobalto-fundo: #1b34c9;
+    --porta-apricot: #ffc95c;
+    --porta-fundo: #ffffff;
+    --porta-superficie: #f6f7fb;
+    --porta-tinta: #0d1117;
+    --porta-tinta-suave: #5b6472;
+    --porta-linha: #dfe2ea;
+    --porta-erro: #c0392b;
+
+    margin: 0;
+    background: var(--porta-fundo);
+    background-image: none;
+    color: var(--porta-tinta);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
 }
 
-/* A página inteira é a grelha: coluna da marca + zona do formulário. */
-.acesso {
+.porta {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     min-height: 100dvh;
 }
 
 
 /* =====================================================================
-   01. COLUNA DA MARCA
-   A mesma tinta da barra lateral, para que a entrada pareça a porta da
-   área que vem a seguir. As linhas horizontais são a pauta do talão,
-   desenhada com um gradiente — nenhuma imagem, nenhum pedido de rede.
+   01. A METADE DO COBALTO
    ===================================================================== */
-.acesso__apresentacao {
+.porta__marca {
     display: flex;
     flex-direction: column;
-    gap: 22px;
-    padding: 22px 20px 24px;
-    background-color: #101C28;
-    background-image: repeating-linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, .055) 0 1px,
-        transparent 1px 30px
-    );
-    border-bottom: 2px solid var(--carimbo);
-    color: #C9D6E3;
+    gap: 26px;
+    padding: clamp(22px, 4vw, 38px) clamp(20px, 4vw, 46px);
+    background-color: var(--porta-cobalto);
+
+    /* A grelha de pontos: cobalto fundo sobre cobalto, a 1 px. É textura,
+       não desenho — fica sempre abaixo do tipo, sem competir com ele. */
+    background-image: radial-gradient(var(--porta-cobalto-fundo) 1px, transparent 1.1px);
+    background-size: 22px 22px;
+    background-position: -1px -1px;
+    color: #ffffff;
 }
 
-.acesso__apresentacao .marca__nome,
-.acesso__apresentacao .marca__descricao {
-    color: #FFFFFF;
+.porta__logotipo {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 10px;
+    color: #ffffff;
+    text-decoration: none;
 }
 
-.acesso__miolo {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+.porta__logotipo:focus-visible {
+    outline: 2px solid var(--porta-apricot);
+    outline-offset: 4px;
 }
 
-.acesso__etiqueta {
-    color: #7FB8EC;
-    font-family: var(--fonte-mono);
-    font-size: .625rem;
+.porta__simbolo svg {
+    display: block;
+    width: 28px;
+    height: 28px;
+    stroke-width: 1.7;
+}
+
+.porta__nome {
+    display: block;
+    font-family: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
+    font-size: 1.375rem;
     font-weight: 700;
-    letter-spacing: .18em;
+    line-height: 1;
+    letter-spacing: -.03em;
+}
+
+.porta__descritor {
+    display: block;
+    margin-top: 3px;
+    color: rgba(255, 255, 255, .72);
+    font-size: .625rem;
+    font-weight: 600;
+    letter-spacing: .16em;
     text-transform: uppercase;
 }
 
-.acesso__frase {
-    max-width: 24ch;
-    color: #FFFFFF;
-    font-size: 1.35rem;
+.porta__discurso {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* A frase grande, em Bricolage: é ela que diz que esta entrada não é
+   mais um formulário genérico. Duas a três linhas, nunca mais. */
+.porta__titulo {
+    max-width: 15ch;
+    margin: 0;
+    font-family: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
+    font-size: clamp(1.95rem, 1.25rem + 2.6vw, 3.5rem);
     font-weight: 700;
-    line-height: 1.18;
-    letter-spacing: -.022em;
+    line-height: .99;
+    letter-spacing: -.035em;
     text-wrap: balance;
 }
 
-/* O ciclo de vida, como sai impresso no talão do cliente. */
-.acesso__fluxo {
-    display: none;
-    margin: 8px 0 0;
-    padding: 0;
-    border-top: 1px solid rgba(255, 255, 255, .22);
-    list-style: none;
+/* Uma palavra. Só uma. */
+.porta__sublinhado {
+    text-decoration: underline;
+    text-decoration-color: var(--porta-apricot);
+    text-decoration-thickness: .085em;
+    text-underline-offset: .07em;
 }
 
-.acesso__fluxo li {
-    display: flex;
-    align-items: baseline;
-    gap: 14px;
-    padding: 9px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, .22);
-    color: #B7C8D8;
-    font-family: var(--fonte-mono);
-    font-size: .6875rem;
-    letter-spacing: .14em;
+.porta__apoio {
+    max-width: 42ch;
+    margin: 0;
+    color: rgba(255, 255, 255, .84);
+    font-size: clamp(.9375rem, .9rem + .2vw, 1.0625rem);
+    line-height: 1.55;
+}
+
+/* O bilhete com o que é verdade sobre o balcão. Ocupe o lugar do
+   depoimento — sem estrelas, sem citações que ninguém disse. */
+.porta__facto {
+    max-width: 40ch;
+    margin: 0;
+    padding: 13px 16px;
+    border: 1px solid rgba(255, 255, 255, .34);
+    border-left: 3px solid var(--porta-apricot);
+    background: rgba(255, 255, 255, .07);
+}
+
+.porta__facto-rotulo {
+    display: block;
+    color: var(--porta-apricot);
+    font-size: .625rem;
+    font-weight: 600;
+    letter-spacing: .15em;
     text-transform: uppercase;
 }
 
-.acesso__fluxo li span {
-    color: #7FB8EC;
-    font-weight: 700;
+.porta__facto p {
+    margin: 5px 0 0;
+    color: #ffffff;
+    font-size: .9375rem;
+    line-height: 1.45;
 }
 
-.acesso__rodape {
+.porta__facto figcaption {
+    margin-top: 7px;
+    color: rgba(255, 255, 255, .66);
+    font-size: .75rem;
+}
+
+.porta__gama {
     margin-top: auto;
 }
 
-.acesso__rodape a {
-    color: #A9BCCE;
-    font-family: var(--fonte-mono);
+.porta__gama-rotulo {
+    margin: 0 0 10px;
+    color: rgba(255, 255, 255, .6);
     font-size: .625rem;
-    letter-spacing: .1em;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 4px;
+    font-weight: 600;
+    letter-spacing: .16em;
     text-transform: uppercase;
 }
 
-.acesso__rodape a:hover {
-    color: #FFFFFF;
+.porta__gama ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 22px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.porta__gama li {
+    color: rgba(255, 255, 255, .88);
+    font-size: .9375rem;
+    font-weight: 600;
+    letter-spacing: .01em;
 }
 
 
 /* =====================================================================
-   02. FORMULÁRIO
+   02. A METADE DO PAPEL
    ===================================================================== */
-.acesso__zona {
+.porta__lado {
     position: relative;
     display: grid;
-    place-items: center;
-    padding: 66px 20px 48px;
+    align-content: center;
+    justify-items: center;
+    padding: clamp(76px, 8vw, 104px) clamp(20px, 5vw, 56px) clamp(34px, 5vw, 56px);
+    background: var(--porta-fundo);
+    color: var(--porta-tinta);
 }
 
-/* O mesmo botão de tema do painel, no canto da folha: quem prefere o
-   escuro escolhe-o já na entrada, e a escolha vale para o painel. */
-.acesso__tema {
+.porta__topo {
     position: absolute;
-    top: 18px;
-    right: 18px;
-}
-
-.acesso__caixa {
-    width: 100%;
-    max-width: 420px;
-    padding: 30px 26px 26px;
-    border: 2px solid var(--traco);
-    background: var(--branco);
-    box-shadow: 6px 6px 0 var(--carimbo);
-}
-
-.acesso__cartao-etiqueta {
-    margin-bottom: 10px;
-    color: var(--tinta-500);
-    font-family: var(--fonte-mono);
-    font-size: .625rem;
-    font-weight: 700;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-}
-
-.acesso__caixa h1 {
-    color: var(--tinta-900);
-    font-size: clamp(1.5rem, 1.25rem + 1vw, 1.75rem);
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: -.035em;
-    text-transform: uppercase;
-}
-
-.acesso__sub {
-    max-width: 42ch;
-    margin-top: 10px;
-    color: var(--tinta-500);
-    font-size: var(--texto-base);
-}
-
-.acesso__alerta {
-    margin-top: 18px;
-    margin-bottom: 0;
-}
-
-.acesso__formulario {
+    inset: 20px clamp(18px, 4vw, 32px) auto;
     display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 22px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
 }
 
-.acesso__submeter {
+/* O botão do tema, na língua desta página: discreto, de canto. */
+.porta .tema-botao {
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--porta-linha);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--porta-tinta-suave);
+    font-family: inherit;
+    font-size: .75rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.porta .tema-botao:hover {
+    border-color: var(--porta-tinta-suave);
+    color: var(--porta-tinta);
+}
+
+.porta__voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--porta-tinta-suave);
+    font-size: .8125rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.porta__voltar:hover {
+    color: var(--porta-cobalto);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.porta__voltar svg {
+    width: 14px;
+    height: 14px;
+}
+
+.porta__caixa {
     width: 100%;
+    max-width: 26rem;
+}
+
+.porta__titulo-form {
+    margin: 0;
+    color: var(--porta-tinta);
+    font-size: clamp(1.5rem, 1.32rem + .6vw, 1.75rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -.025em;
+}
+
+.porta__sub {
+    margin: 8px 0 0;
+    color: var(--porta-tinta-suave);
+    font-size: .9375rem;
+    line-height: 1.5;
+}
+
+.porta__alerta {
+    margin-top: 20px;
+    padding: 11px 14px;
+    border: 1px solid var(--porta-linha);
+    border-left: 3px solid var(--porta-linha);
+    border-radius: 8px;
+    background: var(--porta-superficie);
+}
+
+.porta__alerta--erro {
+    border-left-color: var(--porta-erro);
+}
+
+.porta__alerta--ok {
+    border-left-color: #1a7f4b;
+}
+
+.porta .alerta__texto {
+    margin: 0;
+    color: var(--porta-tinta);
+    font-size: .875rem;
+    line-height: 1.45;
+}
+
+.porta .alerta svg {
+    display: none;
+}
+
+.porta__form {
+    display: grid;
+    gap: 15px;
+    margin-top: 24px;
+}
+
+.porta__campo-label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--porta-tinta);
+    font-size: .8125rem;
+    font-weight: 500;
+}
+
+/* A moldura do campo é que dá o foco: uma linha de 1 px e um anel de
+   cobalto a 4 px, nunca um contorno grosso por cima da linha. */
+.porta__controlo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 50px;
+    padding: 0 12px;
+    border: 1px solid var(--porta-linha);
+    border-radius: 10px;
+    background: var(--porta-fundo);
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.porta__controlo:focus-within {
+    border-color: var(--porta-cobalto);
+    box-shadow: 0 0 0 4px rgba(39, 67, 255, .14);
+}
+
+.porta__controlo svg {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    color: #98a1af;
+    stroke-width: 1.7;
+}
+
+/* 16 px e não 15: abaixo disso o iOS amplia a página ao tocar no campo,
+   e o formulário salta para debaixo do dedo. */
+.porta__input {
+    flex: 1;
+    min-width: 0;
     height: 48px;
-    margin-top: 4px;
-    font-family: var(--fonte-mono);
-    font-size: var(--texto-xs);
-    font-weight: 700;
-    letter-spacing: .1em;
-    text-transform: uppercase;
+    border: 0;
+    background: transparent;
+    color: var(--porta-tinta);
+    font: inherit;
+    font-size: 1rem;
 }
 
-.pagina-entrada .acesso__submeter:focus-visible {
-    outline: 2px solid var(--azul-500);
-    outline-offset: 3px;
+.porta__input:focus {
+    outline: none;
 }
 
-/* A nota de quem cria as contas: sem ela, quem não tem conta fica a olhar
-   para um formulário que nunca vai aceitar o email dele. */
-.acesso__nota {
-    margin-top: 22px;
-    padding-top: 14px;
-    border-top: 1px solid var(--linha);
-    color: var(--tinta-500);
-    font-size: var(--texto-sm);
+.porta__input::placeholder {
+    color: #9aa3af;
 }
 
-.acesso__nota span {
-    color: var(--tinta-700);
-    font-family: var(--fonte-mono);
-    font-size: .6875rem;
-    letter-spacing: .06em;
-    text-transform: uppercase;
+.porta__revelar {
+    flex: none;
+    min-height: 44px;
+    padding: 0 4px;
+    border: 0;
+    background: none;
+    color: var(--porta-cobalto);
+    font: inherit;
+    font-size: .8125rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.porta__revelar:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.porta__revelar:focus-visible {
+    outline: 2px solid var(--porta-cobalto);
+    outline-offset: 2px;
+}
+
+.porta .campo--invalido .porta__controlo {
+    border-color: var(--porta-erro);
+    box-shadow: 0 0 0 4px rgba(192, 57, 43, .12);
+}
+
+.porta .campo__erro {
+    margin: 6px 0 0;
+    font-size: .8125rem;
+}
+
+.porta__ajuda {
+    margin: -2px 0 0;
+    color: var(--porta-tinta-suave);
+    font-size: .8125rem;
+    line-height: 1.5;
+}
+
+.porta__ajuda strong {
+    color: var(--porta-tinta);
+    font-weight: 600;
+}
+
+.porta__botao {
+    width: 100%;
+    min-height: 50px;
+    margin-top: 3px;
+    padding: 0 18px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--porta-cobalto);
+    color: #ffffff;
+    font: inherit;
+    font-size: .9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color .15s ease, transform .1s ease;
+}
+
+.porta__botao:hover {
+    background: var(--porta-cobalto-fundo);
+}
+
+.porta__botao:active {
+    transform: translateY(1px);
+}
+
+.porta__botao:focus-visible {
+    outline: 3px solid rgba(39, 67, 255, .35);
+    outline-offset: 2px;
+}
+
+.porta__nota {
+    margin: 22px 0 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--porta-linha);
+    color: var(--porta-tinta-suave);
+    font-size: .8125rem;
+    line-height: 1.55;
+}
+
+.porta__nota strong {
+    color: var(--porta-tinta);
+    font-weight: 600;
+}
+
+.porta__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin: 10px 0 0;
+    font-size: .75rem;
+}
+
+.porta__legal a {
+    color: var(--porta-tinta-suave);
+    text-decoration: underline;
+    text-decoration-color: var(--porta-linha);
+    text-underline-offset: 3px;
+}
+
+.porta__legal a:hover {
+    color: var(--porta-cobalto);
 }
 
 
 /* =====================================================================
-   03. ECRÃS MAIORES
-   A marca passa a coluna fixa, como a barra lateral do painel.
+   03. ECRÃS
    ===================================================================== */
+@media (max-width: 899px) {
+    /* No telemóvel a marca é uma faixa: palavra, frase, fim. O bilhete e
+       a lista de equipamentos descem para fora — quem veio entrar quer o
+       formulário, não a apresentação. */
+    .porta__facto,
+    .porta__gama,
+    .porta__apoio {
+        display: none;
+    }
+
+    .porta__marca {
+        gap: 16px;
+        padding-bottom: 24px;
+    }
+
+    .porta__titulo {
+        max-width: 22ch;
+        font-size: clamp(1.7rem, 1.2rem + 3.6vw, 2.35rem);
+    }
+
+    .porta__lado {
+        align-content: start;
+        padding-top: 72px;
+    }
+}
+
 @media (min-width: 900px) {
-    .acesso {
-        grid-template-columns: minmax(320px, 38%) 1fr;
+    .porta {
+        grid-template-columns: 1fr 1fr;
     }
 
-    .acesso__apresentacao {
-        gap: 30px;
-        padding: 32px 34px 28px;
-        border-right: 2px solid var(--carimbo);
-        border-bottom: 0;
+    .porta__marca {
+        justify-content: space-between;
+        padding: clamp(30px, 3.2vw, 46px) clamp(28px, 3.4vw, 54px);
     }
 
-    .acesso__frase {
-        font-size: 1.6rem;
+    .porta__titulo {
+        max-width: 14ch;
     }
+}
 
-    .acesso__fluxo {
-        display: block;
-    }
+[data-tema="tinta"] .pagina-entrada {
+    --porta-fundo: #0b1622;
+    --porta-superficie: #12202e;
+    --porta-tinta: #e9eff5;
+    --porta-tinta-suave: #9ab0c3;
+    --porta-linha: #22374a;
+    --porta-erro: #f1a0a0;
+}
 
-    .acesso__zona {
-        padding: 56px 40px;
-    }
+[data-tema="tinta"] .porta__controlo svg {
+    color: #7c90a3;
+}
+
+[data-tema="tinta"] .porta__input::placeholder {
+    color: #6c8095;
 }
