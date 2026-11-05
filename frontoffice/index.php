@@ -135,7 +135,7 @@ pagina_inicio(
         <?php endforeach; ?>
     </ul>
 
-    <p class="bloco__lede" style="margin-top:22px">
+    <p class="bloco__lede bloco__lede--seguido">
         <a class="ligacao-texto" href="servicos.php">Ver o que acontece a cada tipo de equipamento</a>
     </p>
 </section>
@@ -146,7 +146,7 @@ pagina_inicio(
         Cada equipamento tem o seu pedido e o seu PIN, mesmo quando entram
         vários ao mesmo tempo. A fatura sai com o pedido.
     </p>
-    <p class="bloco__lede" style="margin-top:14px">
+    <p class="bloco__lede">
         <a class="ligacao-texto" href="orcamento.php">Pedir orçamento para a empresa</a>
     </p>
 </section>
@@ -157,7 +157,7 @@ pagina_inicio(
     </h2>
 
     <?php if ($temContactos): ?>
-        <address class="prosa" style="font-style:normal">
+        <address class="prosa endereco">
             <?php if (oficina('morada') !== null): ?>
                 <p><?= h(oficina('morada')) ?></p>
             <?php endif; ?>
@@ -177,7 +177,7 @@ pagina_inicio(
             <?= h((string) $oficina['entrega']) ?> Descreve a avaria no pedido de
             orçamento e a oficina responde pelo contacto que deixares.
         </p>
-        <p class="bloco__lede" style="margin-top:14px">
+        <p class="bloco__lede">
             <a class="ligacao-texto" href="contacto.php">Como falar com a oficina</a>
         </p>
     <?php endif; ?>

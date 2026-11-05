@@ -240,7 +240,7 @@ pagina_inicio(
 );
 ?>
 
-<section class="bloco" style="margin-top:34px" aria-labelledby="titulo-orcamento">
+<section class="bloco bloco--primeiro" aria-labelledby="titulo-orcamento">
     <h1 class="bloco__titulo" id="titulo-orcamento">Pedir orçamento</h1>
     <p class="bloco__lede">
         Diz-nos o que está avariado e como te contactamos. O orçamento é
@@ -255,27 +255,27 @@ pagina_inicio(
         <p class="site-sucesso__titulo">Pedido enviado.</p>
 
         <?php if (!empty($_SESSION['orcamento_referencia'])): ?>
-            <p style="margin-top:6px">
+            <p class="bloco__texto--junto">
                 Referência
-                <strong style="font-family:var(--b-fonte-mono);letter-spacing:.06em"><?= h((string) $_SESSION['orcamento_referencia']) ?></strong>
+                <strong class="referencia"><?= h((string) $_SESSION['orcamento_referencia']) ?></strong>
                 — guarda-a ou dizê-la ao telefone para encontrarem o pedido.
             </p>
         <?php endif; ?>
 
-        <p style="margin-top:6px">
+        <p class="bloco__texto--junto">
             Ficou registado com o contacto que deixaste. A oficina fala contigo
             por aí para perceber o que se passa com o equipamento.
         </p>
-        <p style="margin-top:6px">
+        <p class="bloco__texto--junto">
             Se preferires tratar disto hoje, traz o equipamento ao balcão: a
             receção é feita contigo e recebes o talão com o PIN.
         </p>
-        <p style="margin-top:10px">
+        <p class="bloco__texto--seguido">
             <a class="ligacao-texto" href="como-funciona.php">Ver o percurso do equipamento</a>
         </p>
     </div>
 
-    <p class="bloco__lede" style="margin-top:22px">
+    <p class="bloco__lede bloco__lede--seguido">
         <a class="ligacao-texto" href="index.php">Voltar à entrada do site</a>
     </p>
 
@@ -353,7 +353,7 @@ pagina_inicio(
             </div>
 
             <div class="campo<?= isset($erros['marca_modelo']) ? ' campo--invalido' : '' ?>">
-                <label class="campo__rotulo" for="marca_modelo">Marca e modelo <span style="font-weight:400">(opcional)</span></label>
+                <label class="campo__rotulo" for="marca_modelo">Marca e modelo <span class="campo__opcional">(opcional)</span></label>
                 <input class="entrada" type="text" id="marca_modelo" name="marca_modelo"
                        value="<?= h($valores['marca_modelo']) ?>"
                        maxlength="<?= MAX_MODELO ?>"

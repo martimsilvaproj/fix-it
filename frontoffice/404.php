@@ -19,7 +19,7 @@ pagina_inicio(
 );
 ?>
 
-<section class="bloco" style="margin-top:34px" aria-labelledby="titulo-404">
+<section class="bloco bloco--primeiro" aria-labelledby="titulo-404">
     <h1 class="bloco__titulo" id="titulo-404">Esta página não existe</h1>
     <p class="bloco__lede">
         O endereço pode ter mudado ou estar mal escrito. Nada se perdeu: os

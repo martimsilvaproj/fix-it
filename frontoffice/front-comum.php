@@ -167,6 +167,10 @@ function pagina_inicio(string $titulo, string $descricao, string $chave = '', ar
     <meta property="og:locale" content="pt_PT">
     <meta property="og:title" content="<?= h($titulo) ?> — <?= h($nome) ?>">
     <meta property="og:description" content="<?= h($descricao) ?>">
+    <meta property="og:site_name" content="<?= h($nome) ?>">
+    <?php if ($canon !== ''): ?>
+    <meta property="og:url" content="<?= h($canon) ?>">
+    <?php endif; ?>
 
     <link rel="stylesheet" href="../assets/css/painel.css">
     <link rel="stylesheet" href="../assets/css/front.css">
@@ -178,7 +182,7 @@ function pagina_inicio(string $titulo, string $descricao, string $chave = '', ar
 
 <a class="saltar-conteudo" href="#conteudo">Saltar para o conteúdo</a>
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false">
     <defs>
         <g id="icone-seta" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4.5 12h14M13 6.5l5.5 5.5L13 17.5"/>

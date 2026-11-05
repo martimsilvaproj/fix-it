@@ -18,7 +18,7 @@ pagina_inicio(
 );
 ?>
 
-<section class="bloco" style="margin-top:34px" aria-labelledby="titulo-percurso">
+<section class="bloco bloco--primeiro" aria-labelledby="titulo-percurso">
     <h1 class="bloco__titulo" id="titulo-percurso">Do talão à entrega</h1>
     <p class="bloco__lede">
         Cinco fases, sempre pela mesma ordem. Podes acompanhar cada mudança

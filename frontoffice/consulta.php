@@ -628,7 +628,7 @@ if ($pedido !== null && $decisao !== null && $decisao['decisao'] === 'recusado')
 
 <a class="saltar-conteudo" href="#conteudo">Saltar para o conteúdo</a>
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false">
     <defs>
         <g id="icone-visto" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
             <path d="m5 12.5 4.5 4.5L19 7"/>

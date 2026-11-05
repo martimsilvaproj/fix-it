@@ -115,15 +115,30 @@ clientes nem o trabalho dos outros.
 
 ### Entrar
 
-1. Abre `/backoffice/login.php`.
-2. Escreve o **email** e a **palavra-passe**.
-3. Carrega em **ENTRAR**.
+1. Abre `/backoffice/login.php`. A página tem duas metades: à esquerda a marca
+   e o percurso de uma reparação, à direita o formulário.
+2. Escreve o **email** e a **palavra-passe**. No ecrã do balcão o cursor já
+   está no email; no telemóvel não, para o teclado não tapar a página.
+3. Para veres o que escreveste, carrega em **Mostrar**, ao lado do campo: a
+   palavra-passe aparece e o botão passa a **Ocultar**.
+4. Carrega em **Entrar**.
 
 Se os dados estiverem errados, a página diz «Email ou palavra-passe
 incorretos» — a mesma frase para os dois casos, de propósito, para não dizer a
 quem tenta adivinhar se o email existe.
 
-![Ecrã de entrada na oficina](screenshots/manual-conta.png)
+Três ajudas que a página dá sem ser preciso perguntar:
+
+- **Caps Lock.** Se a tecla estiver ligada com o campo da palavra-passe em foco,
+  aparece «A tecla Caps Lock está ligada.» por baixo do campo. É a causa mais
+  comum de uma palavra-passe certa ser recusada.
+- **Saltar para o formulário.** A primeira paragem do Tab não é a marca: é uma
+  ligação que salta a apresentação toda. Só se vê quando tem foco.
+- **Tema.** O sol no canto troca entre papel e tinta. A escolha fica neste
+  browser, não na conta — quem partilha o computador da receção não muda o ecrã
+  do colega.
+
+![A entrada da oficina, a 390 px](screenshots/entrada-390.png)
 
 ### A sessão dura 8 horas
 

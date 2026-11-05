@@ -115,7 +115,7 @@ backoffice/   11 páginas da área da oficina
 frontoffice/  12 ficheiros do site público
 assets/css/   quatro folhas de estilo
 sql/          esquema, migrações e dados
-testes/       31 verificações automáticas
+testes/       50 verificações automáticas
 ```
 
 As páginas do back office não repetem a moldura: `nucleo/layout-painel.php`
@@ -195,6 +195,29 @@ Decisões que resultaram de testes:
 
 ![Lista em ecrã estreito](screenshots/lista-360-cartoes.png)
 
+### A porta da oficina
+
+A entrada não veste o talão, e é a única página do projecto onde isso acontece
+por decisão: duas metades iguais, cobalto sólido à esquerda com a marca e a
+frase, papel branco à direita com o formulário. A frase é a tese do produto —
+«Cada reparação, do balcão à entrega» — e o lugar do depoimento é ocupado por
+um facto do balcão, não por uma citação que ninguém disse. As duas famílias
+(Bricolage Grotesque e Inter) são servidas de `assets/fonts/`: a entrada
+continua sem um único pedido a terceiros.
+
+A revisão de acessibilidade desta página encontrou o que os testes automáticos
+não vêem. Os rótulos de 10 px sobre o cobalto estavam entre **2,6:1** e
+**4,4:1** e passaram a branco a 90%; o limite dos campos era uma linha de
+**1,2:1** sobre o branco, abaixo dos 3:1 que a WCAG pede para identificar um
+controlo, e ganhou um token próprio (`--porta-linha-campo`). Medido no browser
+sobre a página composta: 17 elementos de texto, nenhum abaixo do mínimo, pior
+caso 5,38:1.
+
+O percurso de teclado também mudou: a primeira paragem do Tab passou a ser
+«Saltar para o formulário», que só aparece com foco, e cada controlo tem anel
+próprio em `:focus` — não em `:focus-visible`, que decide sozinho quando acende
+e deixou o foco visível sem anel durante os testes.
+
 ### Melhorias feitas depois de testar
 
 - Um técnico conseguia ver o item «Utilizadores» no menu (a página já o
@@ -218,7 +241,7 @@ Decisões que resultaram de testes:
 php testes/correr.php
 ```
 
-**31 verificações**, todas a passar, com e sem a extensão `mbstring`:
+**50 verificações**, todas a passar, com e sem a extensão `mbstring`:
 
 - cortes de texto em bytes (para os limites da base) e em caracteres (para a
   apresentação);
@@ -319,7 +342,7 @@ Registo e acompanhamento de pedidos com histórico completo; orçamentos com
 histórico de valores e decisão do cliente; consulta pública por PIN; caixa de
 entrada com conversão transaccional; lista com pesquisa, filtros e ordenações;
 fichas de cliente e equipamento; gestão de contas com dois perfis; painel com
-indicadores e gráfico; validação de formulários com mensagens por campo; 31
+indicadores e gráfico; validação de formulários com mensagens por campo; 50
 testes automáticos; documentação (`README`, manual, este relatório, sistema
 visual e diário técnico).
 

@@ -128,13 +128,14 @@ com `password_verify()`. Antes de usar a sério, mudá-las em **Conta**.
 ```
 index.php              redirecciona para o site público
 robots.txt
-assets/css/            painel.css, front.css, formulario.css, login.css
+assets/css/            painel.css, front.css, formulario.css, login.css (e as
+                       duas fontes da entrada em assets/fonts/)
 backoffice/            área reservada (11 páginas)
 frontoffice/           site público (12 ficheiros, incluindo front-comum.php)
 nucleo/                código partilhado: conexão, sessão, texto, estados, solicitações
 sql/                   esquema, migrações e contas iniciais
-testes/correr.php      31 verificações automáticas
-screenshots/           36 capturas de ecrã
+testes/correr.php      50 verificações automáticas
+screenshots/           43 capturas de ecrã
 uploads/               fotografias dos equipamentos (fora do repositório)
 DESIGN.md              sistema visual: cor, tipografia, espaço, componentes
 PRODUCT.md             produto, utilizadores, princípios
@@ -187,7 +188,7 @@ Verificações puras (sem base de dados nem servidor):
 php testes/correr.php
 ```
 
-31 verificações: cortes de texto em bytes e em caracteres, formatação de
+50 verificações: cortes de texto em bytes e em caracteres, formatação de
 estados, normalização de contactos, validação de NIF e de PIN, cálculo de
 percentagens e de escalões de entrega, e a lista de estados que podem ser
 escolhidos à mão (que exclui «Convertida», porque esse só a conversão o atribui).

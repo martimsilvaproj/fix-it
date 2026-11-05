@@ -114,9 +114,9 @@ fazer.
 
 ## Diapositivo 10 — Testes (1,5 min)
 
-**Mostrar:** a saída de `php testes/correr.php` («Tudo certo: 31 verificações»).
+**Mostrar:** a saída de `php testes/correr.php` («Tudo certo: 50 verificações»).
 
-**Dizer:** «31 verificações automáticas, mais uma bateria HTTP contra o servidor
+**Dizer:** «50 verificações automáticas, mais uma bateria HTTP contra o servidor
 a correr: dez páginas a 200 sem avisos, técnico bloqueado em Utilizadores,
 cabeçalhos de segurança em todas as páginas, conversão duplicada recusada.
 

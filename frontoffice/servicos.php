@@ -17,7 +17,7 @@ pagina_inicio(
 );
 ?>
 
-<section class="bloco" style="margin-top:34px" aria-labelledby="titulo-servicos">
+<section class="bloco bloco--primeiro" aria-labelledby="titulo-servicos">
     <h1 class="bloco__titulo" id="titulo-servicos">O que reparamos</h1>
     <p class="bloco__lede">
         Informática e telemóveis. Não trabalhamos com outros equipamentos —
@@ -78,7 +78,7 @@ pagina_inicio(
         </p>
     </div>
 
-    <p class="bloco__lede" style="margin-top:20px">
+    <p class="bloco__lede bloco__lede--meio">
         <a class="ligacao-texto" href="como-funciona.php">Ver o percurso fase a fase</a>
     </p>
 </section>

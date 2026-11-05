@@ -18,7 +18,7 @@ pagina_inicio(
 );
 ?>
 
-<section class="bloco" style="margin-top:34px" aria-labelledby="titulo-privacidade">
+<section class="bloco bloco--primeiro" aria-labelledby="titulo-privacidade">
     <h1 class="bloco__titulo" id="titulo-privacidade">Privacidade</h1>
     <p class="bloco__lede">
         Esta página descreve o que este site faz com os dados de quem o usa.

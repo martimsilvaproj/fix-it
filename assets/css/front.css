@@ -844,6 +844,54 @@
     line-height: 1.6;
 }
 
+/* --- Ritmo declarado, não escrito à mão ------------------------------
+   Estas quatro classes substituíram `style="margin-top:…"` espalhados
+   por sete páginas. O valor é o mesmo de antes; a diferença é que agora
+   se muda num sítio e todas as páginas acompanham.
+   ------------------------------------------------------------------- */
+.bloco--primeiro {
+    margin-top: 34px;
+}
+
+.bloco__lede--seguido {
+    margin-top: 22px;
+}
+
+.bloco__lede--meio {
+    margin-top: 20px;
+}
+
+.bloco__texto--junto {
+    margin-top: 6px;
+}
+
+.bloco__texto--seguido {
+    margin-top: 10px;
+}
+
+/* Uma referência que se lê ao telefone: monoespaçada, para os dígitos
+   não se baralharem com o texto à volta. */
+.referencia {
+    font-family: var(--b-fonte-mono);
+    font-weight: 600;
+    letter-spacing: .06em;
+}
+
+/* Um <address> que não é uma morada (é o bloco de contactos de uma
+   secção) não deve ir buscar o itálico do browser. */
+.endereco {
+    font-style: normal;
+}
+
+.campo__opcional {
+    font-weight: 400;
+}
+
+/* O sprite de ícones é um <svg> de 0×0: não pode ocupar espaço no fluxo. */
+.sprite {
+    position: absolute;
+}
+
 /* A oferta é uma tabela sem preços: regra grossa em cima, linhas
    finas em baixo, tipo à esquerda e nota à direita. */
 .oferta {

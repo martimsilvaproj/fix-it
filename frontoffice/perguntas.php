@@ -87,7 +87,7 @@ pagina_inicio(
 );
 ?>
 
-<section class="bloco" style="margin-top:34px" aria-labelledby="titulo-perguntas">
+<section class="bloco bloco--primeiro" aria-labelledby="titulo-perguntas">
     <h1 class="bloco__titulo" id="titulo-perguntas">Perguntas</h1>
     <p class="bloco__lede">
         O que perguntam antes de trazer o equipamento. Se faltar alguma,

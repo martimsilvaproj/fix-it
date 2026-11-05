@@ -24,7 +24,7 @@ pagina_inicio(
 );
 ?>
 
-<section class="bloco" style="margin-top:34px" aria-labelledby="titulo-contacto">
+<section class="bloco bloco--primeiro" aria-labelledby="titulo-contacto">
     <h1 class="bloco__titulo" id="titulo-contacto">Falar com a oficina</h1>
     <p class="bloco__lede">
         A reparação começa sempre no balcão, com o equipamento à frente. Para
