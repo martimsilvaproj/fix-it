@@ -4655,3 +4655,13 @@ a.estado {
 [data-tema="tinta"] .botao--primario:active {
     box-shadow: 2px 2px 0 var(--carimbo);
 }
+
+/* --- A entrada no tema escuro ----------------------------------------
+   No papel claro a porta é tinta e a folha é clara: vê-se onde uma acaba.
+   À noite as duas ficam escuras e o corte desaparece. A coluna desce um
+   degrau e ganha o mesmo traço das réguas, para a entrada continuar a ler-
+   se como duas metades. */
+[data-tema="tinta"] .acesso__apresentacao {
+    border-color: var(--traco);
+    background-color: #0A1420;
+}
