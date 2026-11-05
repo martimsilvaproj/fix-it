@@ -1,0 +1,835 @@
+/* =====================================================================
+   FixIt — Formulários da área administrativa
+   Depende de painel.css (tokens, botões, marca, migalhas, foco).
+   Mobile-first.
+
+   Índice
+     01. Barra superior e página
+     02. Alertas
+     03. Folha e secções do formulário
+     04. Campos, entradas e erros
+     05. Seletor segmentado
+     06. Envio de fotografias
+     07. Ações do formulário
+     08. Ecrã de sucesso (PIN)
+     09. Responsividade
+   ===================================================================== */
+
+
+/* =====================================================================
+   01. BARRA SUPERIOR E PÁGINA
+   ===================================================================== */
+.pagina-formulario {
+    background: var(--fundo);
+}
+
+/* Garante que o atributo hidden vence qualquer display definido abaixo. */
+[hidden] {
+    display: none !important;
+}
+
+.topo-formulario {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: var(--branco);
+    border-bottom: 1px solid var(--linha);
+}
+
+.topo-formulario__interior {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    max-width: 920px;
+    min-height: var(--topbar-altura);
+    margin-inline: auto;
+    padding: 8px 16px;
+}
+
+.migalhas--sempre {
+    display: none;
+}
+
+.topo-formulario .botao {
+    margin-left: auto;
+}
+
+.formulario-principal {
+    width: 100%;
+    max-width: 920px;
+    margin-inline: auto;
+    padding: 22px 16px 56px;
+}
+
+.cabecalho-pagina {
+    margin-bottom: 18px;
+}
+
+.cabecalho-pagina h1 {
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 1.75rem);
+    font-weight: 650;
+    line-height: 1.2;
+    letter-spacing: -.022em;
+    color: var(--tinta-900);
+}
+
+.cabecalho-pagina p {
+    max-width: 62ch;
+    margin-top: 6px;
+    color: var(--tinta-500);
+    font-size: var(--texto-md);
+}
+
+
+/* =====================================================================
+   02. ALERTAS
+   ===================================================================== */
+.alerta {
+    display: flex;
+    gap: 11px;
+    padding: 13px 15px;
+    margin-bottom: 16px;
+    border-radius: var(--raio-lg);
+    background: var(--vermelho-bg);
+    color: #8F2525;
+}
+
+.alerta svg {
+    flex: none;
+    width: 19px;
+    height: 19px;
+    margin-top: 1px;
+    stroke-width: 1.75;
+}
+
+.alerta__titulo {
+    font-size: var(--texto-base);
+    font-weight: 650;
+    color: #7C1D1D;
+}
+
+.alerta__texto {
+    margin-top: 2px;
+    font-size: var(--texto-sm);
+    color: #8F2525;
+}
+
+/* Variante de confirmação: mesma estrutura, cor de sucesso. */
+.alerta--sucesso {
+    background: var(--verde-bg);
+    color: var(--verde-fg);
+}
+
+.alerta--sucesso .alerta__titulo,
+.alerta--sucesso .alerta__texto {
+    color: var(--verde-fg);
+}
+
+
+/* =====================================================================
+   03. FOLHA E SECÇÕES
+   ===================================================================== */
+.folha {
+    background: var(--branco);
+    border-radius: var(--raio-xl);
+    box-shadow: var(--sombra-1);
+    overflow: hidden;
+}
+
+.seccao {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px 16px;
+    border-bottom: 1px solid var(--linha);
+}
+
+.seccao__topo h2 {
+    font-size: var(--texto-lg);
+    font-weight: 650;
+    letter-spacing: -.01em;
+    color: var(--tinta-900);
+}
+
+.seccao__ajuda {
+    margin-top: 2px;
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+.grelha {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px 16px;
+}
+
+
+/* =====================================================================
+   04. CAMPOS E ENTRADAS
+   ===================================================================== */
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.campo__rotulo {
+    padding: 0;
+    border: 0;
+    font-size: var(--texto-base);
+    font-weight: 600;
+    color: var(--tinta-700);
+}
+
+.campo__opcional {
+    margin-left: 2px;
+    font-size: var(--texto-xs);
+    font-weight: 500;
+    color: var(--tinta-500);
+}
+
+.obrigatorio {
+    color: #B4443C;
+}
+
+.entrada {
+    width: 100%;
+    min-height: 46px;
+    padding: 11px 12px;
+    border: 1px solid #D3DCE6;
+    border-radius: var(--raio-md);
+    background: var(--branco);
+    color: var(--tinta-900);
+    font-family: inherit;
+    font-size: 1rem;      /* 16px evita o zoom automático no iOS */
+    line-height: 1.45;
+    transition: border-color .16s ease, background-color .16s ease;
+}
+
+.entrada::placeholder {
+    color: #66788C;
+    opacity: 1;
+}
+
+.entrada:hover {
+    border-color: #BCC9D8;
+}
+
+/* Anel de foco igual ao do resto do sistema (outline, não halo). */
+.entrada:focus {
+    border-color: var(--azul-600);
+    outline: 2px solid var(--azul-500);
+    outline-offset: 0;
+}
+
+.entrada:disabled {
+    background-color: #F5F7FA;
+    color: var(--tinta-500);
+    cursor: not-allowed;
+}
+
+.entrada--area {
+    min-height: 132px;
+    padding: 12px;
+    line-height: 1.6;
+    resize: vertical;
+}
+
+/* Select com seta desenhada, coerente com os ícones do sistema. */
+select.entrada {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 0 40px 0 12px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235A6C80' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 13px center;
+    background-size: 16px;
+    cursor: pointer;
+}
+
+.entrada-euros {
+    position: relative;
+}
+
+.entrada-euros .entrada {
+    padding-right: 34px;
+    font-variant-numeric: tabular-nums;
+}
+
+.entrada-euros__simbolo {
+    position: absolute;
+    top: 50%;
+    right: 13px;
+    transform: translateY(-50%);
+    color: var(--tinta-500);
+    font-size: var(--texto-base);
+    pointer-events: none;
+}
+
+.campo__ajuda {
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+    line-height: 1.45;
+}
+
+.campo__erro {
+    color: #9B2C2C;
+    font-size: var(--texto-sm);
+    font-weight: 550;
+    line-height: 1.45;
+}
+
+/* --- Estado inválido --- */
+/* background-color (e não background) para não apagar a seta do select. */
+.campo--invalido .entrada {
+    border-color: #C0392B;
+    background-color: #FFFCFC;
+}
+
+.campo--invalido .entrada:focus {
+    border-color: #C0392B;
+    outline-color: #C0392B;
+}
+
+.campo--invalido .campo__rotulo {
+    color: #8F2525;
+}
+
+
+/* =====================================================================
+   05. SELETOR SEGMENTADO (cliente existente / novo)
+   ===================================================================== */
+.seletor {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.seletor legend {
+    margin-bottom: 7px;
+}
+
+.segmento {
+    display: flex;
+    gap: 3px;
+    width: 100%;
+    max-width: 430px;
+    padding: 3px;
+    border-radius: 11px;
+    background: #EFF3F8;
+}
+
+.segmento__opcao {
+    position: relative;
+    flex: 1 1 50%;
+}
+
+.segmento__opcao input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.segmento__opcao span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+    font-weight: 550;
+    text-align: center;
+    transition: background-color .16s ease, color .16s ease, box-shadow .16s ease;
+}
+
+.segmento__opcao input:checked + span {
+    background: var(--branco);
+    color: var(--tinta-900);
+    font-weight: 600;
+    box-shadow: 0 1px 2px rgba(16, 28, 40, .12);
+}
+
+.segmento__opcao input:focus-visible + span {
+    outline: 2px solid var(--azul-500);
+    outline-offset: 1px;
+}
+
+.segmento__opcao input:disabled + span {
+    color: var(--tinta-400);
+    cursor: not-allowed;
+}
+
+
+/* =====================================================================
+   06. ENVIO DE FOTOGRAFIAS
+   ===================================================================== */
+.envio {
+    position: relative;
+    border: 1.5px dashed #C6D3E1;
+    border-radius: var(--raio-lg);
+    background: #FBFCFE;
+    transition: border-color .16s ease, background-color .16s ease;
+}
+
+.envio:hover,
+.envio--ativo {
+    border-color: var(--azul-500);
+    background: var(--azul-50);
+}
+
+.envio__alvo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 22px 16px;
+    border-radius: inherit;
+    text-align: center;
+    cursor: pointer;
+}
+
+.envio__icone {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    margin-bottom: 5px;
+    border-radius: 50%;
+    background: var(--azul-100);
+    color: var(--azul-600);
+}
+
+.envio__icone svg {
+    width: 19px;
+    height: 19px;
+    stroke-width: 1.7;
+}
+
+.envio__titulo {
+    color: var(--tinta-900);
+    font-size: var(--texto-base);
+    font-weight: 600;
+}
+
+.envio__texto {
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+.envio__limites {
+    margin-top: 4px;
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+}
+
+/* O input está visualmente oculto, mas continua a receber foco por teclado. */
+.envio input:focus-visible + .envio__alvo {
+    outline: 2px solid var(--azul-500);
+    outline-offset: 2px;
+}
+
+/* --- Miniaturas --- */
+.miniaturas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.miniaturas:empty {
+    display: none;
+}
+
+.miniatura {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--linha);
+    border-radius: 10px;
+    background: #EFF3F8;
+}
+
+.miniatura img {
+    display: block;
+    width: 100%;
+    height: 76px;
+    object-fit: cover;
+}
+
+.miniatura__remover {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(12, 32, 56, .74);
+    color: #fff;
+    cursor: pointer;
+}
+
+.miniatura__remover:hover {
+    background: rgba(12, 32, 56, .9);
+}
+
+.miniatura__remover svg {
+    width: 12px;
+    height: 12px;
+    stroke-width: 2.4;
+}
+
+.miniatura__dados {
+    display: block;
+    padding: 5px 7px;
+    background: var(--branco);
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* =====================================================================
+   07. AÇÕES DO FORMULÁRIO
+   ===================================================================== */
+.acoes {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    padding: 17px 16px;
+    background: #FBFCFD;
+}
+
+.acoes__nota {
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+.acoes__botoes {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.acoes__botoes .botao {
+    width: 100%;
+    height: 44px;
+}
+
+
+/* =====================================================================
+   08. ECRÃ DE SUCESSO
+   ===================================================================== */
+.sucesso {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    max-width: 560px;
+    margin: 8px auto 0;
+    padding: 28px 20px;
+    border-radius: var(--raio-xl);
+    background: var(--branco);
+    box-shadow: var(--sombra-1);
+    text-align: center;
+}
+
+.sucesso__marca {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--verde-bg);
+    color: var(--verde-fg);
+}
+
+.sucesso__marca svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 1.8;
+}
+
+.sucesso h1 {
+    font-size: clamp(1.375rem, 1.1rem + 1vw, 1.625rem);
+    font-weight: 650;
+    line-height: 1.2;
+    letter-spacing: -.02em;
+}
+
+.sucesso__texto {
+    max-width: 46ch;
+    color: var(--tinta-500);
+    font-size: var(--texto-base);
+}
+
+/* --- PIN --- */
+.pin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    padding: 16px 0 14px;
+    border-top: 1px solid var(--linha);
+    border-bottom: 1px solid var(--linha);
+}
+
+.pin__rotulo {
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.pin__valor {
+    padding-left: .22em;   /* compensa o espaço final do letter-spacing */
+    color: var(--tinta-900);
+    font-size: clamp(2.125rem, 1.7rem + 2vw, 2.625rem);
+    font-weight: 650;
+    line-height: 1.15;
+    letter-spacing: .22em;
+    font-variant-numeric: tabular-nums;
+}
+
+.pin__copiar {
+    min-width: 132px;
+    height: 36px;
+    margin-top: 4px;
+    font-size: var(--texto-sm);
+}
+
+.pin__nota {
+    max-width: 48ch;
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+/* --- Resumo do pedido --- */
+.resumo {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+    text-align: left;
+}
+
+.resumo > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--linha);
+}
+
+.resumo > div:last-child {
+    border-bottom: 0;
+}
+
+.resumo dt {
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+.resumo dd {
+    margin: 0;
+    color: var(--tinta-900);
+    font-size: var(--texto-sm);
+    font-weight: 550;
+    text-align: right;
+}
+
+.sucesso .acoes__botoes {
+    width: 100%;
+    margin-top: 4px;
+}
+
+
+/* =====================================================================
+   09. RESPONSIVIDADE
+   ===================================================================== */
+@media (min-width: 560px) {
+    .migalhas--sempre {
+        display: flex;
+    }
+
+    .acoes {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .acoes__botoes {
+        flex-direction: row;
+    }
+
+    .acoes__botoes .botao {
+        width: auto;
+        height: 42px;
+    }
+
+    .sucesso .acoes__botoes {
+        flex-direction: row;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 640px) {
+    .grelha {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .campo--largo {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (min-width: 720px) {
+    .topo-formulario__interior {
+        padding-inline: 28px;
+    }
+
+    .formulario-principal {
+        padding: 30px 28px 64px;
+    }
+
+    .seccao {
+        gap: 18px;
+        padding: 26px 28px;
+    }
+
+    .acoes {
+        padding: 18px 28px;
+    }
+
+    .sucesso {
+        padding: 36px 32px;
+    }
+}
+
+/* Campos que não devem esticar numa grelha larga. */
+.campo--curto {
+    max-width: 240px;
+}
+/* =====================================================================
+   Campos com a moldura do talão
+   Esta folha carrega depois de painel.css, por isso é aqui que a borda
+   de 2px vence a de 1px que o painel define. O site e a consulta
+   pública voltam a sobrepor-se com .site-body e .pagina-publica.
+   ===================================================================== */
+.entrada {
+    border: 2px solid var(--tinta-900);
+    border-radius: 0;
+    background-color: #FFFFFF;
+}
+
+.entrada:hover {
+    border-color: var(--tinta-900);
+}
+
+.entrada:focus {
+    border-color: var(--tinta-900);
+    outline: 2px solid var(--azul-500);
+    outline-offset: 1px;
+}
+/* =====================================================================
+   INTERIOR — formulários como folhas de serviço
+   Fecha a cascata depois de painel.css: a folha de os campos, as secções
+   e o seletor segmentado passam a ter a moldura do talão.
+   ===================================================================== */
+
+.folha {
+    border: 2px solid var(--tinta-900);
+    border-radius: 0;
+    background: #FFFFFF;
+    box-shadow: none;
+}
+
+.seccao {
+    border-bottom: 1px solid var(--linha);
+}
+
+.seccao__topo h2 {
+    font-weight: 800;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+}
+
+.seccao__ajuda {
+    color: var(--tinta-700);
+}
+
+.topo-formulario {
+    border-bottom: 2px solid var(--tinta-900);
+}
+
+/* Rótulo de campo: mono, 12px e maiúsculas. O painel já o pede, mas esta
+   folha carrega depois — é aqui que o tamanho e o peso fecham. */
+.campo__rotulo {
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+/* Seletor segmentado: caixa fechada, opções sem cantos. */
+.segmento {
+    border-radius: 0;
+    background: #EFF3F8;
+}
+
+/* Caixa de escolha e rádio alinhados com a tinta do resto. */
+.campo input[type="checkbox"],
+.campo input[type="radio"] {
+    accent-color: var(--azul-600);
+}
+/* =====================================================================
+   INTERIOR — cabeçalho do formulário de novo pedido
+   A folha de entrada de equipamento abre com a mesma marca de impressão
+   do resto do painel e fecha com o mesmo traço de 2px.
+   ===================================================================== */
+
+.cabecalho-pagina {
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--tinta-900);
+}
+
+.cabecalho-pagina h1::before {
+    content: "";
+    display: block;
+    width: 34px;
+    height: 4px;
+    margin-bottom: 12px;
+    background: var(--azul-600);
+}
+
+.cabecalho-pagina h1 {
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -.035em;
+    text-transform: uppercase;
+}
+
+.cabecalho-pagina p {
+    color: var(--tinta-700);
+}

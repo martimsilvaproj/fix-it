@@ -1,0 +1,4622 @@
+/* =====================================================================
+   FixIt — Área administrativa
+   Folha de estilos única do painel (mobile-first).
+
+   Índice
+     01. Tokens (cor, tipografia, espaçamento, elevação)
+     02. Reset e base
+     03. Utilitários
+     04. Botões, ligações e ícones
+     05. Barra lateral (sidebar)
+     06. Cabeçalho superior (topbar)
+     07. Área de conteúdo e cabeçalho de página
+     08. Cartões de métricas
+     09. Painel e tabela de pedidos
+     10. Gráfico de pedidos por estado
+     11. Estados (vazio, carregamento, erro)
+     12. Responsividade
+     13. Transições entre páginas
+     14. Movimento reduzido
+     15. Revestimento — a estética do talão (fim do ficheiro)
+
+   O bloco 15 é o único que muda a identidade: reescreve os tokens e veste
+   os componentes que já existem. O resto do ficheiro é geometria e
+   comportamento e não deve ser tocado por causa de cor ou de forma.
+   ===================================================================== */
+
+
+/* =====================================================================
+   01. TOKENS
+   Toda a cor nasce aqui: se precisares de mudar a identidade, mexes
+   neste bloco e o resto do painel acompanha.
+   ===================================================================== */
+:root {
+    /* --- Azul institucional (confiança, técnico, sóbrio) --- */
+    --azul-900: #0C2038;   /* fundo da sidebar */
+    --azul-800: #123A5F;
+    --azul-700: #17497A;
+    --azul-600: #1A5FA0;   /* ação primária */
+    --azul-500: #2472BC;   /* foco e realce */
+    --azul-100: #E7EFF8;
+    --azul-50:  #F2F7FC;
+
+    /* --- Cinzas neutros, ligeiramente azulados --- */
+    --tinta-900: #101C28;  /* texto principal */
+    --tinta-700: #37475A;  /* texto secundário forte */
+    --tinta-500: #5A6C80;  /* texto de apoio — 5.4:1 sobre branco */
+    --tinta-400: #7A8B9D;  /* apenas elementos não textuais */
+    --linha:      #E4E9F0;
+    --fundo:      #F3F6F9;
+    --branco:     #FFFFFF;
+
+    /* --- Tons semânticos para os estados do pedido --- */
+    --verde-bg:   #E8F6EE;  --verde-fg:   #14603D;
+    --ambar-bg:   #FCF3E2;  --ambar-fg:   #8A5A0F;
+    --vermelho-bg:#FCEBEB;  --vermelho-fg:#9B2C2C;
+    --cinza-bg:   #EFF1F4;  --cinza-fg:   #4A5766;
+
+    /* --- Elevação: um único sistema de sombra --- */
+    --sombra-1: 0 1px 2px rgba(16, 28, 40, .05),
+                0 4px 12px -6px rgba(16, 28, 40, .10);
+    --sombra-2: 0 1px 2px rgba(16, 28, 40, .05),
+                0 18px 40px -22px rgba(16, 28, 40, .32);
+
+    /* --- Formas --- */
+    --raio-sm: 8px;
+    --raio-md: 10px;
+    --raio-lg: 12px;
+    --raio-xl: 16px;
+
+    /* --- Layout --- */
+    --sidebar-largura: 268px;
+    --topbar-altura: 64px;
+
+    /* --- Tipografia --- */
+    /* System UI: no Windows resolve para Segoe UI Variable, no macOS
+       para SF Pro, no Android para Roboto. Sem pedidos de rede e com
+       as métricas nativas de cada sistema. */
+    --fonte: ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+             Roboto, "Helvetica Neue", Arial, sans-serif;
+
+    --texto-xs: .75rem;    /* 12px  — cabeçalhos de tabela, etiquetas */
+    --texto-sm: .8125rem;  /* 13px  — notas, apoio */
+    --texto-base: .875rem; /* 14px  — corpo de UI e tabelas */
+    --texto-md: .9375rem;  /* 15px  — texto corrido */
+    --texto-lg: 1rem;      /* 16px  — títulos de painel */
+}
+
+
+/* =====================================================================
+   02. RESET E BASE
+   ===================================================================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--fundo);
+    color: var(--tinta-900);
+    font-family: var(--fonte);
+    font-size: var(--texto-md);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body.nav-aberto {
+    overflow: hidden;
+}
+
+h1, h2, h3, p {
+    margin: 0;
+}
+
+a {
+    color: inherit;
+}
+
+button {
+    font: inherit;
+    color: inherit;
+}
+
+/* Seleção de texto e cursor também fazem parte do sistema. */
+::selection {
+    background: #CFE0F5;
+    color: var(--azul-900);
+}
+
+/* Foco visível e consistente para navegação por teclado. */
+:where(a, button, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--azul-500);
+    outline-offset: 2px;
+    border-radius: var(--raio-sm);
+}
+
+
+/* =====================================================================
+   03. UTILITÁRIOS
+   ===================================================================== */
+.visualmente-oculto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Atalho de teclado: só aparece quando recebe foco. */
+.saltar-conteudo {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 100;
+    padding: 10px 16px;
+    border-radius: var(--raio-md);
+    background: var(--azul-600);
+    color: #fff;
+    font-size: var(--texto-base);
+    font-weight: 600;
+    text-decoration: none;
+    transform: translateY(-160%);
+    transition: transform .2s ease;
+}
+
+.saltar-conteudo:focus-visible {
+    transform: translateY(0);
+}
+
+
+/* =====================================================================
+   04. BOTÕES, LIGAÇÕES E ÍCONES
+   ===================================================================== */
+.botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    /* Altura mínima, não altura fixa: com o texto ampliado a 200% a linha
+       do rótulo fica mais alta do que a caixa e o texto era cortado por
+       cima e por baixo. No tamanho normal a caixa continua nos 40 px. */
+    min-height: 40px;
+    padding: 4px 14px;
+    border: 1px solid transparent;
+    border-radius: var(--raio-md);
+    font-size: var(--texto-base);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color .18s ease,
+                color .18s ease,
+                box-shadow .18s ease,
+                transform .12s ease;
+}
+
+.botao svg {
+    width: 17px;
+    height: 17px;
+    stroke-width: 1.8;
+}
+
+.botao--primario {
+    background: var(--azul-600);
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(16, 40, 70, .22);
+}
+
+.botao--primario:hover {
+    background: var(--azul-700);
+}
+
+.botao--primario:active {
+    transform: translateY(1px);
+    box-shadow: none;
+}
+
+.botao--fantasma {
+    background: transparent;
+    color: var(--tinta-700);
+}
+
+.botao--fantasma:hover {
+    background: #F1F4F8;
+    color: var(--tinta-900);
+}
+
+/* Ação que apaga dados: sólida na confirmação, fantasma no primeiro passo. */
+.botao--perigo {
+    background: var(--vermelho-fg);
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(16, 28, 40, .18);
+}
+
+.botao--perigo:hover {
+    background: #7C1D1D;
+}
+
+.botao--perigo:active {
+    transform: translateY(1px);
+    box-shadow: none;
+}
+
+.botao--perigo-fantasma {
+    background: transparent;
+    color: var(--vermelho-fg);
+}
+
+.botao--perigo-fantasma:hover {
+    background: var(--vermelho-bg);
+    color: var(--vermelho-fg);
+}
+
+/* Botão quadrado só com ícone (menu, fechar). */
+.botao-icone {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--raio-md);
+    background: transparent;
+    color: var(--tinta-700);
+    cursor: pointer;
+    transition: background-color .18s ease, color .18s ease;
+}
+
+.botao-icone:hover {
+    background: #F1F4F8;
+    color: var(--tinta-900);
+}
+
+.botao-icone svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 1.7;
+}
+
+/* Ligação com seta, usada nos cabeçalhos de painel. */
+.ligacao-seta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 2px;
+    border-radius: 6px;
+    color: var(--azul-600);
+    font-size: var(--texto-sm);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.ligacao-seta:hover {
+    color: var(--azul-700);
+}
+
+.ligacao-seta svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 2;
+    transition: transform .18s ease;
+}
+
+.ligacao-seta:hover svg {
+    transform: translateX(2px);
+}
+
+
+/* =====================================================================
+   05. BARRA LATERAL
+   Mobile: gaveta fora do ecrã, aberta por cima do conteúdo.
+   Desktop (>=1024px): coluna fixa.
+   ===================================================================== */
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    width: min(84vw, 288px);
+    background: var(--azul-900);
+    color: #C6D5E4;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    transform: translateX(-100%);
+    transition: transform .32s cubic-bezier(.22, .61, .36, 1);
+}
+
+body.nav-aberto .sidebar {
+    transform: translateX(0);
+    box-shadow: 0 24px 60px -20px rgba(5, 14, 24, .55);
+}
+
+.sidebar__topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 18px 16px 14px;
+}
+
+/* --- Marca --- */
+.marca {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    text-decoration: none;
+    color: #fff;
+}
+
+.marca__simbolo {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    background: var(--azul-600);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .16);
+}
+
+.marca__simbolo svg {
+    width: 20px;
+    height: 20px;
+    stroke: #fff;
+    stroke-width: 1.8;
+}
+
+.marca__texto {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.marca__nome {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: -.015em;
+}
+
+.marca__descricao {
+    font-size: var(--texto-xs);
+    font-weight: 500;
+    color: #8FA5BC;
+    letter-spacing: .02em;
+}
+
+/* Variante da marca para cabeçalhos claros. */
+.marca--clara .marca__nome {
+    color: var(--tinta-900);
+}
+
+.marca--clara .marca__descricao {
+    color: var(--tinta-500);
+}
+
+.sidebar__fechar {
+    color: #A9BCCE;
+}
+
+.sidebar__fechar:hover {
+    background: rgba(255, 255, 255, .08);
+    color: #fff;
+}
+
+/* --- Navegação --- */
+.navegacao {
+    padding: 6px 12px 16px;
+}
+
+.navegacao__titulo {
+    margin: 14px 10px 6px;
+    font-size: var(--texto-xs);
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #7497B8;
+}
+
+.navegacao__lista {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.navegacao__ligacao {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 9px 10px;
+    border-radius: 9px;
+    color: #BCCDDD;
+    font-size: var(--texto-base);
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color .16s ease, color .16s ease;
+}
+
+.navegacao__ligacao svg {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    stroke-width: 1.65;
+    opacity: .85;
+}
+
+.navegacao__ligacao:hover {
+    background: rgba(255, 255, 255, .06);
+    color: #fff;
+}
+
+.navegacao__ligacao[aria-current="page"] {
+    background: #1A4C7D;
+    color: #fff;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07);
+}
+
+.navegacao__ligacao[aria-current="page"] svg {
+    opacity: 1;
+}
+
+/* Contador de pedidos em curso. */
+.navegacao__contagem {
+    margin-left: auto;
+    padding: 1px 6px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, .1);
+    color: #DCE7F1;
+    font-size: var(--texto-xs);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.navegacao__ligacao[aria-current="page"] .navegacao__contagem {
+    background: rgba(255, 255, 255, .16);
+}
+
+/* --- Rodapé da sidebar --- */
+.sidebar__rodape {
+    margin-top: auto;
+    padding: 16px;
+    border-top: 1px solid rgba(255, 255, 255, .07);
+}
+
+.estado-sistema {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--texto-xs);
+    color: #9DB1C6;
+}
+
+.estado-sistema::before {
+    content: "";
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #3FBF87;
+}
+
+.estado-sistema--erro::before {
+    background: #E06A5E;
+}
+
+/* --- Cortina escura por trás da gaveta --- */
+.cortina {
+    position: fixed;
+    inset: 0;
+    z-index: 45;
+    background: rgba(8, 20, 33, .52);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .28s ease;
+}
+
+body.nav-aberto .cortina {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* A saída que leva a outra página: o toque já escolheu o destino, por isso a
+   gaveta não precisa de percorrer a travessia inteira antes de o documento
+   trocar — esses 320 ms eram tempo parado com o menu ainda a andar, e faziam
+   a navegação parecer lenta. A classe veste-se só no caminho da navegação
+   (`navegarDepoisDeFechar`); abrir e fechar a gaveta no mesmo sítio fica com
+   a animação de sempre. Com movimento reduzido a transição continua a ser
+   quase nula: aquela regra traz `!important`. */
+body.nav-a-navegar .sidebar {
+    transition-duration: .18s;
+}
+
+body.nav-a-navegar .cortina {
+    transition-duration: .16s;
+}
+
+
+/* =====================================================================
+   06. CABEÇALHO SUPERIOR
+   ===================================================================== */
+.conteudo {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: var(--branco);
+    border-bottom: 1px solid var(--linha);
+}
+
+/* O interior acompanha a largura máxima do conteúdo, para que as
+   migalhas fiquem alinhadas com o título em ecrãs muito largos. */
+.topbar__interior {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;   /* uma barra só: nada desce para uma segunda linha */
+    gap: 12px;
+    width: 100%;
+    max-width: 1360px;
+    min-height: var(--topbar-altura);
+    margin-inline: auto;
+    padding: 8px 16px;
+}
+
+.topbar__esquerda {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+}
+
+/* `min-width: 0`: a conta e a saída podem encolher até à largura da barra
+   em vez de a empurrarem para fora. */
+.topbar__direita {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    gap: 6px;
+}
+
+/* --- Migalhas --- */
+.migalhas {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--texto-sm);
+    color: var(--tinta-500);
+}
+
+.migalhas li + li::before {
+    content: "/";
+    margin-right: 8px;
+    color: var(--tinta-400);
+}
+
+.migalhas a {
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.migalhas a:hover {
+    color: var(--tinta-900);
+}
+
+.migalhas [aria-current="page"] {
+    color: var(--tinta-900);
+    font-weight: 550;
+}
+
+/* --- Perfil --- */
+/* O perfil é a entrada para a conta de quem está dentro. */
+.perfil {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 44px;   /* alvo de toque confortável, mesmo só com avatar */
+    padding: 4px 6px;
+    border-radius: 10px;
+    color: inherit;
+    text-decoration: none;
+    transition: background-color .16s ease;
+}
+
+.perfil:hover {
+    background: #F1F4F8;
+}
+
+.perfil:focus-visible {
+    outline: 2px solid var(--azul-500);
+    outline-offset: 2px;
+}
+
+/* Na própria página da conta, o perfil fica assinalado. */
+.perfil[aria-current="page"] {
+    background: var(--azul-50);
+}
+
+.perfil__avatar {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--azul-100);
+    color: var(--azul-700);
+    font-size: var(--texto-sm);
+    font-weight: 650;
+    letter-spacing: .01em;
+}
+
+.perfil__texto {
+    display: none;
+    flex-direction: column;
+    line-height: 1.25;
+}
+
+.perfil__nome {
+    font-size: var(--texto-sm);
+    font-weight: 600;
+    color: var(--tinta-900);
+}
+
+.perfil__cargo {
+    font-size: var(--texto-xs);
+    color: var(--tinta-500);
+}
+
+/* Separador entre o perfil e a saída. */
+.botao-sair {
+    margin-left: 4px;
+    padding-left: 12px;
+    border-left: 1px solid var(--linha);
+    border-radius: 0 var(--raio-md) var(--raio-md) 0;
+    font-family: inherit;
+    white-space: nowrap;   /* "Sair" numa linha só, mesmo sem espaço */
+}
+
+/* O "Sair" é um botão dentro de um formulário POST (com token CSRF).
+   O formulário sai do layout para o botão ficar no mesmo sítio da
+   ligação que existia antes. */
+.formulario-sair {
+    display: contents;
+}
+
+
+/* =====================================================================
+   07. ÁREA DE CONTEÚDO
+   ===================================================================== */
+.principal {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 22px 16px 44px;
+}
+
+.cabecalho {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 2px;
+}
+
+.cabecalho__texto {
+    min-width: 0;
+}
+
+.cabecalho h1 {
+    font-size: clamp(1.5rem, 1.2rem + 1.1vw, 1.875rem);
+    font-weight: 650;
+    line-height: 1.2;
+    letter-spacing: -.022em;
+    color: var(--tinta-900);
+    /* Com o texto ampliado a 200%, «Equipamentos» é uma palavra só que não
+       cabe nos 320 px: sem isto o título saía do cabeçalho e a página ganhava
+       uma barra de deslocamento horizontal. */
+    overflow-wrap: anywhere;
+}
+
+/* O título da ficha leva o número e o estado na mesma linha: a pílula é a
+   do histórico e da lista, e a cor diz o mesmo que ela diz na lista. Só a
+   ficha precisa disto — nas outras páginas o título é uma frase só.
+
+   Número e pílula cabem lado a lado com folga a partir dos 360 px. A 320
+   já não: «Em reparação» deixava 8 px até à margem — a pílula parecia
+   encostada à direita —, e um estado mais longo descia sozinho para a
+   linha de baixo, ou seja, o título mudava de forma conforme o estado.
+   Abaixo dos 360 px a pílula desce sempre para a sua linha, alinhada à
+   esquerda com o número: a mesma forma para todos os estados, com respiro
+   à direita. O respiro entre as duas linhas é o mesmo que a marca da
+   espera longa usa para se separar do número (8px). */
+.cabecalho__titulo-ficha {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+}
+
+@media (max-width: 359px) {
+    .cabecalho__titulo-ficha {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* A marca da espera longa no cabeçalho da ficha: a mesma pílula âmbar da
+   lista, numa linha própria por baixo do número, para o estado se ver antes
+   de se chegar ao painel da consulta. O afastamento é o mesmo que separa o
+   número da descrição. */
+.cabecalho__marca {
+    margin-top: 8px;
+}
+
+.cabecalho__descricao {
+    max-width: 62ch;
+    margin-top: 6px;
+    color: var(--tinta-500);
+    font-size: var(--texto-md);
+    /* A frase nomeia a pesquisa entre «»: uma pesquisa sem espaços é uma
+       palavra só, e sem isto saía do cabeçalho em vez de quebrar. */
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 520px) {
+    .cabecalho .botao {
+        width: 100%;
+    }
+}
+
+
+/* =====================================================================
+   08. CARTÕES DE MÉTRICAS
+   ===================================================================== */
+.metricas {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+}
+
+.metrica {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px;
+    border-radius: var(--raio-xl);
+    background: var(--branco);
+    box-shadow: var(--sombra-1);
+}
+
+/* Os cartões de pedidos são atalhos para a lista já filtrada. */
+a.metrica {
+    position: relative;
+    color: inherit;
+    text-decoration: none;
+    transition: box-shadow .18s ease, transform .12s ease;
+}
+
+a.metrica:hover {
+    box-shadow: var(--sombra-2);
+    transform: translateY(-1px);
+}
+
+a.metrica:active {
+    transform: translateY(0);
+}
+
+a.metrica:hover .metrica__rotulo {
+    color: var(--azul-700);
+}
+
+/* Seta discreta: só os cartões que levam a algum lado a têm. */
+.metrica__seta {
+    position: absolute;
+    right: 18px;
+    bottom: 20px;
+    width: 15px;
+    height: 15px;
+    stroke-width: 2.4;   /* compensa o viewBox 24 → 15px */
+    color: var(--tinta-400);
+    transition: color .18s ease, transform .18s ease;
+}
+
+a.metrica:hover .metrica__seta,
+a.metrica:focus-visible .metrica__seta {
+    color: var(--azul-600);
+    transform: translateX(2px);
+}
+
+.metrica__topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.metrica__rotulo {
+    color: var(--tinta-500);
+    font-size: var(--texto-base);
+    font-weight: 550;
+}
+
+.metrica__icone {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border-radius: var(--raio-md);
+    background: var(--azul-50);
+    color: var(--azul-600);
+}
+
+.metrica__icone--ambar {
+    background: #FDF5E7;
+    color: #9A6712;
+}
+
+.metrica__icone--verde {
+    background: #EAF6EF;
+    color: #15704A;
+}
+
+.metrica__icone svg {
+    width: 19px;
+    height: 19px;
+    stroke-width: 1.75;
+}
+
+.metrica__valor {
+    font-size: 2.125rem;
+    font-weight: 650;
+    line-height: 1;
+    letter-spacing: -.03em;
+    font-variant-numeric: tabular-nums;
+    color: var(--tinta-900);
+}
+
+.metrica__nota {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding-right: 22px;   /* espaço para a seta dos cartões-ligação */
+    font-size: var(--texto-sm);
+    color: var(--tinta-500);
+}
+
+/* Variação: pequena etiqueta, não um gráfico. */
+.tendencia {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 7px 3px 5px;
+    border-radius: 6px;
+    background: var(--verde-bg);
+    color: var(--verde-fg);
+    font-size: var(--texto-xs);
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+}
+
+.tendencia--atencao {
+    background: var(--ambar-bg);
+    color: var(--ambar-fg);
+}
+
+.tendencia svg {
+    width: 13px;
+    height: 13px;
+    stroke-width: 2.1;
+}
+
+
+/* =====================================================================
+   09. PAINEL E TABELA DE PEDIDOS
+   ===================================================================== */
+.painel {
+    border-radius: var(--raio-xl);
+    background: var(--branco);
+    box-shadow: var(--sombra-1);
+    overflow: hidden;
+}
+
+.painel__cabecalho {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 16px;
+    padding: 16px;
+    border-bottom: 1px solid var(--linha);
+}
+
+/* O bloco do título encolhe até à largura do painel: a linha mais longa
+   do texto não pode definir a largura mínima, senão o cabeçalho empurra o
+   painel para fora em vez de quebrar. */
+.painel__cabecalho > div {
+    min-width: 0;
+}
+
+.painel__cabecalho h2 {
+    font-size: var(--texto-lg);
+    font-weight: 600;
+    letter-spacing: -.01em;
+    /* O título da lista nomeia o recorte, e a pesquisa entra lá dentro:
+       uma pesquisa sem espaços quebra dentro do cabeçalho. */
+    overflow-wrap: anywhere;
+}
+
+.painel__descricao {
+    margin-top: 2px;
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+    /* O cabeçalho do «Mudar o estado» nomeia o cliente e o equipamento, e
+       um nome sem espaços é uma palavra só: sem isto atravessava o cartão
+       e era cortado pelo `overflow: hidden` do painel. As palavras com
+       espaços quebram como sempre, nos mesmos sítios. */
+    overflow-wrap: anywhere;
+}
+
+/* Nota do cabeçalho da lista: explica por que a ordem pedida no endereço
+   não foi a que a página seguiu. Discreta de propósito — o controlo ao lado
+   já mostra a ordem em vigor e esta linha só evita que a ligação pareça
+   ter falhado. O ícone alinha com a primeira linha do texto. */
+.nota-ordem {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    max-width: 58ch;
+    margin-top: 6px;
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+    line-height: 1.45;
+}
+
+.nota-ordem svg {
+    flex: none;
+    width: 15px;
+    height: 15px;
+    margin-top: 2px;
+    color: var(--tinta-400);
+}
+
+/* O fecho da nota é texto sublinhado, não um botão com moldura: um controlo
+   com borda pesava mais do que a frase que explica, e a nota é o que menos
+   deve puxar o olho no cabeçalho. O espaço à esquerda separa-o da última
+   palavra, para não colar ao ponto final. */
+.nota-ordem__dispensar {
+    margin-left: 4px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--tinta-500);
+    font: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+}
+
+.nota-ordem__dispensar:hover {
+    color: var(--tinta-900);
+}
+
+/* Atalhos do cabeçalho de "Pedidos abertos": uma pílula por recorte da
+   fila, com o número a seguir ao rótulo. A cor diz o que cada uma é, para
+   não haver cinco avisos iguais: âmbar só no que passou um prazo — a
+   espera na oficina e o PIN que o cliente não abre —, azul no que o
+   cliente já consultou, cinza nas duas que são só trabalho por fazer. O
+   número é o que informa; o link é o que o torna utilizável. */
+.atalhos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.atalho {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px 3px 8px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: var(--texto-sm);
+    text-decoration: none;
+    /* Num ecrã estreito a pílula quebra entre as suas partes — o rótulo de
+       um lado, o valor do outro —, em vez de partir uma frase a meio. */
+    flex-wrap: wrap;
+    transition: border-color .16s ease, background-color .16s ease;
+}
+
+.atalho svg {
+    flex: none;
+    width: 14px;
+    height: 14px;
+    stroke-width: 2;
+}
+
+.atalho strong {
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Número e contexto são um só valor: quebram juntos, para o ponto médio
+   não ficar pendurado no fim de uma linha nem abrir a seguinte. */
+.atalho__valores {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Contexto depois do número — a idade que cada lado da consulta mostra: a
+   da consulta mais antiga dos consultados, ou há quanto tempo espera o por
+   consultar mais antigo. Sem peso e atrás de um ponto médio: o número
+   continua a ser o que salta à vista; a nota existe para ele não sugerir
+   que está tudo fresco. */
+.atalho__nota::before {
+    content: '·';
+    margin-right: 6px;
+    opacity: .5;
+}
+
+/* Cinza: o que já não pede trabalho — a fila por atribuir, quem não viu o
+   pedido e os entregues que o cliente nunca acompanhou. O âmbar fica para
+   as esperas que ainda correm. */
+.atalho--atribuir,
+.atalho--consultar,
+.atalho--entregue {
+    background: var(--cinza-bg);
+    color: var(--cinza-fg);
+}
+
+.atalho--espera,
+.atalho--pin {
+    background: var(--ambar-bg);
+    color: var(--ambar-fg);
+}
+
+.atalho--consultados {
+    background: var(--azul-100);
+    color: var(--azul-700);
+}
+
+/* O sublinhado aparece ao passar o rato ou com o teclado: em repouso a
+   pílula já se lê como resumo, e não como mais um botão do cabeçalho. */
+.atalho:hover,
+.atalho:focus-visible {
+    border-color: currentColor;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* Num ecrã estreito as pílulas com nota não cabem numa linha e quebram em
+   duas: com o raio de 999px o texto da segunda cairia sobre a curva, por
+   isso aí a pílula passa a cartão pequeno. */
+@media (max-width: 520px) {
+    .atalho {
+        padding: 6px 10px;
+        border-radius: var(--raio-sm);
+    }
+}
+
+/* Ordenação da lista, à direita do cabeçalho do painel: dois botões
+   pequenos, o da ordem ativa preenchido. */
+.ordenacao {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+}
+
+/* Cada lado do controlo é um grupo fechado: o rótulo viaja com as suas
+   opções, e é o grupo que quebra — nunca o rótulo de um lado com as opções
+   do outro. Dentro do grupo, as opções quebram como sempre. */
+.ordenacao__grupo {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    min-width: 0;
+    gap: 8px;
+}
+
+.ordenacao__rotulo {
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+    white-space: nowrap;
+}
+
+/* Sem filete entre a ordenação e o sentido: quando os dois grupos não
+   cabem na mesma linha, o segundo desce e um filete à esquerda ficava a
+   marcar uma separação que na vertical não existe. O vão de 16 px entre
+   os grupos chega para os distinguir. */
+
+/* A opção já escolhida é texto, não botão: só o que leva a algum lado tem
+   forma de botão, e a ligação para a própria página desaparece. O recuo
+   faz o papel do que o botão dava, para o grupo não ficar apertado. */
+.ordenacao__atual {
+    padding: 0 10px;
+    color: var(--tinta-900);
+    font-size: var(--texto-sm);
+    font-weight: 600;
+}
+
+/* Filtros da lista: pesquisa por cliente/NIF, estado e técnico.
+   Faixa com fundo próprio, encostada ao cabeçalho do painel. */
+.filtros {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: end;
+    gap: 12px 14px;
+    padding: 14px 16px 16px;
+    border-bottom: 1px solid var(--linha);
+    background: #FAFBFD;
+}
+
+.filtros__campo {
+    gap: 5px;
+}
+
+.filtros__acoes {
+    display: flex;
+    gap: 8px;
+}
+
+/* Os botões acompanham a altura das entradas, para a linha ficar alinhada.
+   Mínimo, para o rótulo ampliado não ficar cortado. */
+.filtros__acoes .botao {
+    min-height: 46px;
+}
+
+/* Em ecrã estreito o botão principal ocupa a largura disponível. */
+.filtros__acoes .botao--primario {
+    flex: 1;
+}
+
+/* Resumo dos dois lados do filtro de consultas, por baixo dos controlos:
+   números com o mesmo peso do resto da lista, rótulo discreto. */
+.filtros__resumo {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 8px;
+    margin: -2px 0 0;
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+}
+
+.filtros__resumo strong {
+    color: var(--tinta-900);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Cada número é um atalho para o lado que conta: sublinhado discreto, que
+   fica nítido ao passar o rato. O lado já filtrado perde o atalho. */
+.filtros__resumo a {
+    color: var(--tinta-500);
+    text-decoration: none;
+    border-bottom: 1px solid var(--linha);
+    padding-bottom: 1px;
+    transition: color .16s ease, border-color .16s ease;
+}
+
+.filtros__resumo a:hover,
+.filtros__resumo a:focus-visible {
+    color: var(--azul-700);
+    border-bottom-color: currentColor;
+}
+
+.filtros__resumo-atual {
+    color: var(--tinta-900);
+}
+
+/* Oficina vazia: em vez dos números por estado, uma frase que diz porque
+   não há resumo nenhum. Sem caixa de flexão, para o texto correr como prosa;
+   mais escura que o resumo, porque é um aviso e não uma contagem. */
+.filtros__resumo--vazio {
+    display: block;
+    color: var(--tinta-700);
+}
+
+/* O atalho dentro desta frase é a única coisa que se pode fazer na barra
+   enquanto a oficina está vazia: fica no tom do texto, e não no cinza mais
+   claro dos números do resumo, que o deixaria mais apagado do que a frase
+   que o apresenta. Continua uma ligação sublinhada — um botão aqui fazia
+   companhia ao do cartão vazio, e dois no mesmo ecrã pesam. */
+.filtros__resumo--vazio a {
+    color: var(--tinta-900);
+    font-weight: 600;
+    border-bottom-color: currentColor;
+}
+
+/* Rótulo do resumo por estado: diz de que dimensão são os números. */
+.filtros__resumo-rotulo {
+    color: var(--tinta-700);
+    font-weight: 500;
+}
+
+/* Os dois lados do resumo por estado viajam num bloco só. No ecrã largo o
+   bloco não existe para o layout: cada lado continua a ser um item da
+   barra, com a sua linha. */
+.filtros__resumo-estado {
+    display: contents;
+}
+
+/* O mesmo para o resumo por técnico: um bloco que só ganha corpo no
+   telemóvel, onde a linha passa a texto corrido (ver a regra dos 520 px). */
+.filtros__resumo-tecnico {
+    display: contents;
+}
+
+/* Num telemóvel a barra é a primeira coisa a passar: quatro campos
+   empilhados, cada um com o rótulo em cima e um controlo de 46 px, davam
+   meio ecrã antes de a lista começar. Os controlos baixam para 40 px, o
+   respiro entre linhas aperta e a barra perde cerca de 80 px de altura —
+   sem esconder nenhum campo. Os campos continuam numa coluna: em meia
+   largura, as opções dos selects ("Todos os estados", "Há mais de uma
+   semana") ficavam cortadas, e a letra não pode encolher sem o iOS
+   ampliar a página ao tocar no campo. */
+@media (max-width: 520px) {
+    .filtros {
+        gap: 6px;
+        padding: 10px 12px 12px;
+    }
+
+    .filtros__campo {
+        gap: 3px;
+    }
+
+    .filtros .entrada {
+        min-height: 40px;
+        padding-block: 6px;
+    }
+
+    .filtros__acoes {
+        gap: 6px;
+    }
+
+    .filtros__acoes .botao {
+        min-height: 40px;
+    }
+}
+
+/* Num telemóvel o resumo pesa: quatro ou cinco linhas, cada uma com o
+   respiro de um ecrã largo, ocupavam metade da barra. Aqui o espaço entre
+   as linhas e entre os números é o mesmo (6px), para a lista ficar com um
+   ritmo só — a letra não muda, para o resumo continuar legível. */
+@media (max-width: 520px) {
+    .filtros__resumo {
+        gap: 1px 6px;
+        margin-top: -6px;
+    }
+
+    /* O resumo por estado junta os dois lados num texto corrido. Em duas
+       linhas, o "na oficina" sozinho ficava com o resto do primeiro lado e
+       os números caíam num segundo piso: num texto só, cada número aproveita
+       a largura que o anterior deixou. O segundo lado entra depois de um
+       "·", e repete a dimensão ("Estado: ") só a primeira vez: num texto só,
+       "Estado:" duas vezes em duas linhas seguidas é ruído. */
+    .filtros__resumo-estado {
+        display: block;
+        grid-column: 1 / -1;
+        margin-top: -2px;
+    }
+
+    .filtros__resumo-estado .filtros__resumo {
+        display: inline;
+        margin-top: 0;
+    }
+
+    /* A frase da oficina vazia não é um número do texto corrido: fica com
+       uma linha só para ela, na barra e na mesma posição do resumo que
+       substitui — no telemóvel também a barra avisa. */
+    .filtros__resumo-estado .filtros__resumo--vazio {
+        display: block;
+        margin-top: 2px;
+    }
+
+    .filtros__resumo-estado .filtros__resumo + .filtros__resumo::before {
+        content: "· ";
+    }
+
+    .filtros__resumo-estado .filtros__resumo + .filtros__resumo .filtros__resumo-dimensao {
+        display: none;
+    }
+
+    /* O resumo por técnico é o mais alto dos três. Em caixas de flexão, o
+       nome comprido que não cabe no fim de uma linha abre outra com o resto
+       da anterior vazio, e cada linha cresce para a altura da caixa (com o
+       filete do atalho). Em texto corrido, cada nome aproveita o que o
+       anterior deixou livre, os separadores custam só um «·» com os seus
+       espaços e a linha mede a letra. Cada nome fica inteiro (`nowrap`),
+       para a linha não partir um «Marta Nogueira» a meio. O conteúdo não
+       muda: os mesmos nomes, os mesmos números. */
+    .filtros__resumo-tecnico {
+        display: block;
+        grid-column: 1 / -1;
+        margin-top: -2px;
+    }
+
+    .filtros__resumo-tecnico .filtros__resumo {
+        display: block;
+        margin-top: 0;
+    }
+
+    .filtros__resumo-tecnico a,
+    .filtros__resumo-tecnico .filtros__resumo-atual {
+        white-space: nowrap;
+    }
+}
+
+/* Chip do filtro por equipamento: identifica a máquina e permite
+   removê-la sem perder os restantes filtros. */
+.filtros__ativos {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filtro {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    max-width: 100%;
+    padding: 7px 8px 7px 11px;
+    border: 1px solid #D8E1EA;
+    border-radius: 999px;
+    background: var(--branco);
+    box-shadow: 0 1px 2px rgba(16, 28, 40, .04);
+}
+
+.filtro__icone {
+    flex: none;
+    width: 17px;
+    height: 17px;
+    color: var(--tinta-500);
+    stroke-width: 1.9;
+}
+
+.filtro__texto {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.25;
+}
+
+.filtro__valor {
+    color: var(--tinta-900);
+    font-size: var(--texto-sm);
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.filtro__contexto {
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.filtro__remover {
+    flex: none;
+    padding: 3px 6px;
+    border-radius: var(--raio-sm);
+    color: var(--azul-600);
+    font-size: var(--texto-sm);
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.filtro__remover:hover {
+    background: var(--azul-50);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+@media (min-width: 560px) {
+    .filtros {
+        /* Três colunas: os três selects (estado, técnico, consultas)
+           cabem numa linha, com a pesquisa e os botões por cima e baixo. */
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        padding-inline: 20px;
+    }
+
+    .filtros__campo--pesquisa {
+        grid-column: 1 / -1;
+    }
+
+    /* Com espaço a mais, os botões ficam à direita, com largura natural. */
+    .filtros__acoes {
+        grid-column: 1 / -1;
+        justify-content: flex-end;
+    }
+
+    .filtros__acoes .botao--primario {
+        flex: 0 0 auto;
+    }
+}
+
+/* A partir daqui os controlos ficam numa só linha. */
+@media (min-width: 900px) {
+    .filtros {
+        grid-template-columns: minmax(180px, 1.5fr) repeat(3, minmax(110px, 1fr)) auto;
+        padding: 16px 20px;
+    }
+
+    .filtros__campo--pesquisa,
+    .filtros__acoes {
+        grid-column: auto;
+    }
+
+    .filtros__acoes .botao--primario {
+        flex: 0 0 auto;
+    }
+}
+
+/* Barra só com pesquisa (clientes e equipamentos): sem os selects da lista
+   de pedidos, o molde de cinco colunas deixava três pistas vazias e a
+   pesquisa encolhia a um terço da barra. Fica uma coluna enquanto os botões
+   não cabem ao lado, e duas quando cabem. */
+.filtros--pesquisa {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 900px) {
+    .filtros--pesquisa {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+}
+
+.tabela__contentor {
+    position: relative;   /* contém os textos .visualmente-ocultos da tabela */
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+.tabela {
+    width: 100%;
+    min-width: 880px;
+    border-collapse: collapse;
+    font-size: var(--texto-base);
+}
+
+.tabela th {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--linha);
+    background: #FAFBFD;
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+    font-weight: 600;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.tabela td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--linha);
+    color: var(--tinta-700);
+    vertical-align: middle;
+}
+
+.tabela tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.tabela tbody tr {
+    transition: background-color .14s ease;
+}
+
+.tabela tbody tr:hover {
+    background: #FAFBFD;
+}
+
+.tabela__id {
+    color: var(--tinta-900);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* O número do pedido abre a página de detalhe. */
+.tabela__ligacao {
+    color: inherit;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.tabela__ligacao:hover {
+    color: var(--azul-700);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.tabela__cliente {
+    color: var(--tinta-900);
+    font-weight: 550;
+}
+
+.tabela__data {
+    color: var(--tinta-500);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* O ponto que separa a data da idade, e a idade em si: o tempo na oficina
+   ao lado da data de entrada, na lista — a mesma idade que o painel escreve
+   na coluna «Na oficina» ("hoje", "12 dias", "3 meses"), num degrau abaixo
+   da data. */
+.tabela__data-separador,
+.tabela__data-idade {
+    color: var(--tinta-400);
+    font-size: var(--texto-xs);
+    font-variant-numeric: tabular-nums;
+}
+
+/* A partir de uma semana a idade veste a pílula âmbar da coluna «Na
+   oficina» do painel — a mesma marca e a mesma régua estrita (sete dias
+   certos ainda são texto), para a espera longa se ver também na lista. Na
+   mesma linha o âmbar da espera do PIN fica na coluna das consultas: aqui
+   o que se marca é o tempo desde a entrada, ao lado da data de onde conta,
+   e as duas marcas dizem coisas diferentes apesar da cor. */
+.tabela__data-idade--longa {
+    display: inline-flex;
+    align-items: center;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--ambar-bg);
+    color: var(--ambar-fg);
+    font-weight: 650;
+    /* A pílula não traz o ponto da idade em texto: sozinha, ela já se
+       separa da data, e com o ponto à frente o cartão estreito deixava-o
+       pendurado no fim da linha quando a pílula descia. O afastamento fica
+       aqui, para o caso de partilharem a linha. */
+    margin-left: 4px;
+}
+
+/* Há quanto tempo o pedido está na oficina: "Hoje", "1 dia", "12 dias",
+   "3 meses" — a mesma régua da lista e da ficha. */
+.tabela__espera {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* Mais de uma semana na oficina: a pílula âmbar puxa o olho na fila, mas
+   o número continua a ser o que informa — a cor só o sublinha. */
+.tabela__espera--longa {
+    display: inline-flex;
+    align-items: center;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--ambar-bg);
+    color: var(--ambar-fg);
+    font-weight: 650;
+}
+
+/* Segunda linha da célula do técnico, só nos pedidos por atribuir. O
+   espaço que a separa do formulário vive aqui: assim uma linha já
+   atribuída — que só tem o select — não ganha um vão morto em cima. */
+.tabela__sem-tecnico {
+    display: block;
+    margin: 2px 0 6px;
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* Consultas públicas com o PIN atual, na lista de pedidos. O seletor
+   leva a célula à frente para vencer a cor de .tabela td. */
+.tabela td.tabela__consultas {
+    color: var(--tinta-900);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.tabela td.tabela__consultas--vazia {
+    color: var(--tinta-400);
+    font-weight: 500;
+}
+
+/* Data da última consulta, ao lado do número: menor e mais discreta. */
+.tabela__consultas-data {
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Mais de uma semana sem o cliente abrir o PIN: a idade veste a mesma
+   pílula âmbar com que o painel marca a espera longa, para os dois "há
+   mais de uma semana" da oficina se lerem como o mesmo aviso. A data ao
+   lado fica discreta: a cor sublinha a idade, não a substitui.
+
+   A pílula serve os dois lados da consulta: o âmbar para as esperas que
+   ainda correm e o cinza para o pedido entregue que o cliente nunca
+   abriu — o trabalho acabou, mas o caso não deixa de ser o mesmo.
+
+   A ficha do pedido veste a mesma pílula na espera do PIN, com o mesmo
+   âmbar e o mesmo limite de uma semana: o "há mais de uma semana" é o
+   mesmo aviso, e não pode ter dois desenhos. Só o âmbar — a ficha fala de
+   um pedido, e o lado cinzento é o dos entregues na lista. */
+.tabela__consultas-idade--longa,
+.tabela__consultas-idade--entregue,
+/* O tamanho do recorte dentro da pílula do cabeçalho da ficha: os dias vão a
+   negrito — são eles que chamam — e a contagem fica mais leve, para o número
+   não competir com a idade que está a marcar o pedido. */
+.consulta__idade-contagem {
+    font-weight: 500;
+}
+
+.consulta__idade--longa {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-weight: 650;
+    /* A pílula traz o seu próprio corpo e os algarismos tabulares: quando
+       é ligação sai do `.tabela__consultas-data`, de quem os herdava, e
+       sem isto ficaria maior do que a mesma pílula em texto — o tamanho
+       da idade não pode depender de ser clicável. */
+    font-size: var(--texto-xs);
+    font-variant-numeric: tabular-nums;
+}
+
+.tabela__consultas-idade--longa,
+.consulta__idade--longa {
+    background: var(--ambar-bg);
+    color: var(--ambar-fg);
+}
+
+/* Mesma pílula, outro peso: o pedido já saiu da oficina, por isso a cor é a
+   do atalho do painel que conta estes entregues, e não o âmbar que pede
+   atenção a quem ainda tem o trabalho em mãos. */
+.tabela__consultas-idade--entregue {
+    background: var(--cinza-bg);
+    color: var(--cinza-fg);
+}
+
+/* A idade marcada na coluna das consultas veste a pílula inteira — o mesmo
+   corpo, o mesmo recorte e o mesmo peso da idade da entrada e da espera na
+   ficha —, quer seja ligação, quer seja texto com o filtro já aplicado.
+   Sem isto, a versão ligação saía do `.tabela__consultas-data`, de quem
+   herdava o corpo, e aparecia maior (14 px em vez de 12) e com cantos
+   direitos ao lado da pílula redonda da entrada, com a mesma cor e o mesmo
+   número dentro. */
+.tabela__consultas-idade--longa,
+.tabela__consultas-idade--entregue {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-size: var(--texto-xs);
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+}
+
+/* A idade de mais de uma semana é também o atalho para ver só estes
+   pedidos: na coluna da lista, no aviso do cabeçalho da ficha e na espera
+   do painel da consulta, os três ao mesmo recorte. A pílula cinzenta do
+   entregue segue a mesma regra: o painel conta esse conjunto e a barra de
+   filtros leva lá, por isso a idade também abre a lista desses pedidos. A
+   pílula continua a ler-se como resumo — sem sublinhado, que numa
+   pastilha pequena só a sujaria —, e o rato mostra que é clicável com um
+   anel da sua própria tinta, o mesmo sinal que os atalhos do painel dão a
+   mudar a cor da borda. Ao teclado, o foco fica com o contorno de
+   sempre. */
+a.tabela__consultas-idade--longa,
+a.tabela__consultas-idade--entregue,
+a.consulta__idade--longa {
+    text-decoration: none;
+    transition: box-shadow .16s ease;
+}
+
+a.tabela__consultas-idade--longa:hover,
+a.tabela__consultas-idade--longa:focus-visible,
+a.tabela__consultas-idade--entregue:hover,
+a.tabela__consultas-idade--entregue:focus-visible,
+a.consulta__idade--longa:hover,
+a.consulta__idade--longa:focus-visible {
+    box-shadow: inset 0 0 0 1px currentColor;
+}
+
+/* A pílula da idade mede 21 px de altura — cabe no olho, não no dedo. O
+   alvo cresce por baixo, num pseudo-elemento que não pinta nada: a
+   pastilha fica exactamente do mesmo tamanho, e em volta dela o âmbar e a
+   data continuam texto, como antes.
+
+   O alvo é centrado na pílula e mede sempre 44 px de lado, o mínimo
+   confortável para o dedo: quando a pastilha é mais pequena o
+   pseudo-elemento estica-se à volta dela («há 9 dias» tem 21 px de altura),
+   e quando o texto é ampliado acompanha-a, em vez de encolher por dentro
+   dela. O mesmo tratamento na lista — nas duas pílulas que levam à lista
+   dos esquecidos — e na ficha. */
+a.tabela__consultas-idade--longa,
+a.tabela__consultas-idade--entregue,
+a.consulta__idade--longa {
+    position: relative;
+}
+
+a.tabela__consultas-idade--longa::after,
+a.tabela__consultas-idade--entregue::after,
+a.consulta__idade--longa::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+}
+
+/* Num ecrã de toque não há hover: a idade marcada — a âmbar da lista, a
+   cinzenta do entregue, e as duas da ficha — nunca chegaria a mostrar o
+   anel, e leria como texto ao lado do resto da frase. A partir dos 520 px
+   e abaixo o anel fica desenhado de origem, com o mesmo traço e a mesma
+   tinta do :hover, para o dedo encontrar o que o rato encontra. Todas as
+   pílulas que levam a algum lado levam o mesmo sinal; a da lista não fica
+   de fora só por estar numa tabela. O foco de teclado continua a somar o
+   contorno de sempre. */
+@media (max-width: 520px) {
+    a.tabela__consultas-idade--longa,
+    a.tabela__consultas-idade--entregue,
+    a.consulta__idade--longa {
+        box-shadow: inset 0 0 0 1px currentColor;
+    }
+}
+
+.tabela__por-atribuir {
+    color: var(--tinta-500);
+    font-style: italic;
+}
+
+/* Atribuir o técnico sem sair da lista: select compacto e botão ao lado,
+   na célula do técnico. O select mantém a seta do sistema (o padding
+   direito alarga-se para a seta caber). */
+.tabela__tecnico {
+    white-space: nowrap;
+}
+
+.tabela td.tabela__tecnico {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.atribuir {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* O botão perde o padding largo dos botões de formulário: aqui é uma
+   ação secundária, encostada ao select. */
+.atribuir .botao {
+    padding: 0 10px;
+}
+
+.atribuir .entrada--tabela {
+    width: auto;
+    max-width: 150px;
+    min-height: 34px;
+    padding: 0 28px 0 8px;
+    font-size: var(--texto-sm);
+    background-position: right 7px center;
+    background-size: 14px;
+}
+
+/* No painel o formulário fica por baixo do "Por atribuir", na mesma
+   célula, e existe em todas as linhas: atribuir quem não tem, trocar
+   quem tem, ou devolver a "por atribuir". O select e o botão ficam um
+   sobre o outro para a coluna do técnico não alargar a tabela — lado a
+   lado, a tabela passava o contentor a 1280 px; o texto deixa de herdar
+   o nowrap da coluna. */
+.atribuir--painel {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    white-space: normal;
+}
+
+/* O afastamento do rótulo pertence ao rótulo: numa linha já atribuída,
+   que só tem o select, não há vão morto em cima. */
+.tabela__por-atribuir + .atribuir--painel {
+    margin-top: 6px;
+}
+
+.atribuir--painel .entrada--tabela {
+    max-width: 132px;
+}
+
+/* Na lista, a idade do «por atribuir» fica por baixo do select, e não por
+   cima como no painel: aqui é o proprio select que escreve «Por atribuir»,
+   por isso a idade é a segunda linha, a seguir ao estado. O vão é o mesmo
+   que separa as duas linhas no painel. */
+#lista .tabela td.tabela__tecnico .tabela__sem-tecnico {
+    margin: 6px 0 0;
+}
+
+/* --- Lista de clientes --- */
+.tabela__nif {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.tabela__numero {
+    color: var(--tinta-900);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Telefone e email empilhados na mesma célula. */
+.contacto {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    line-height: 1.35;
+}
+
+.contacto__email {
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+    overflow-wrap: anywhere;   /* emails longos não esticam a tabela */
+}
+
+.tabela__sem-acoes {
+    color: var(--tinta-400);
+    font-size: var(--texto-sm);
+}
+
+/* --- Lista de equipamentos --- */
+.equipamento {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    line-height: 1.35;
+}
+
+.equipamento__modelo {
+    color: var(--tinta-900);
+    font-weight: 550;
+}
+
+.equipamento__tipo {
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+.tabela__serie {
+    color: var(--tinta-500);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* --- Etiquetas de estado (uma por valor do ENUM) --- */
+.estado {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px 3px 8px;
+    border-radius: 999px;
+    font-size: var(--texto-xs);
+    font-weight: 600;
+    letter-spacing: .005em;
+    white-space: nowrap;
+}
+
+.estado::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: .8;
+}
+
+/* No título da ficha a pílula é um atalho para o painel que muda o estado,
+   e não um rótulo: continua a pílula em repouso — o sublinhado só aparece ao
+   passar o rato ou por teclado —, porque sublinhada de origem parecia outra
+   coisa ao lado do número. */
+a.estado {
+    text-decoration: none;
+}
+
+a.estado:hover,
+a.estado:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.estado--recebido {
+    background: #EEF2F8;
+    color: #3B5372;
+}
+
+.estado--diagnostico {
+    background: var(--ambar-bg);
+    color: var(--ambar-fg);
+}
+
+.estado--reparacao {
+    background: var(--azul-100);
+    color: #1B4C8C;
+}
+
+.estado--pronto {
+    background: var(--verde-bg);
+    color: var(--verde-fg);
+}
+
+.estado--entregue {
+    background: var(--cinza-bg);
+    color: var(--cinza-fg);
+}
+
+/* --- Cargo das contas (lista de utilizadores) --- */
+.cargo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: var(--cinza-bg);
+    color: var(--cinza-fg);
+    font-size: var(--texto-xs);
+    font-weight: 600;
+}
+
+.cargo--administrador {
+    background: var(--azul-100);
+    color: #1B4C8C;
+}
+
+/* Assinala a própria conta na lista, sem competir com o nome.
+   tinta-700 e não tinta-500: a 12 px o marcador precisa de 4,5:1. */
+.conta-atual {
+    margin-left: 6px;
+    color: var(--tinta-700);
+    font-size: var(--texto-xs);
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.painel__rodape {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 12px;
+    padding: 11px 16px;
+    border-top: 1px solid var(--linha);
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+/* --- Ação: mudar estado --- */
+/* Alertas dentro de um cartão respeitam o padding do cartão. */
+.painel > .alerta {
+    margin: 14px 16px;
+}
+
+/* Ligações dentro de um alerta (ex.: abrir a consulta pública). */
+.alerta__ligacao {
+    color: inherit;
+    font-weight: 650;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.tabela__acao,
+.tabela th.tabela__acao {
+    text-align: right;
+}
+
+.ligacao-acao {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 2px;
+    border-radius: 5px;
+    color: var(--azul-600);
+    font-size: var(--texto-sm);
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.ligacao-acao svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 1.9;
+}
+
+.ligacao-acao:hover {
+    color: var(--azul-700);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* Duas ações na mesma linha da tabela (editar, repor palavra-passe). */
+.tabela__acoes {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+}
+
+/* --- Telemóvel: cada pedido em aberto é um cartão ---
+   A tabela dos abertos tem oito colunas e 880 px de largura mínima: num
+   telemóvel só se via o pedido e o cliente, e o técnico — a única coisa
+   que aqui se muda — ficava para lá do canto, a pedir que se arrastasse a
+   tabela para o lado. Abaixo de 560 px as linhas passam a cartões: o
+   rótulo de cada coluna vem de `data-rotulo` e põe-se à frente do valor,
+   numa coluna estreita, para nada transbordar — a 360 px a secção tem
+   279 px úteis e é por aí que o cartão se mede. Os quatro campos curtos
+   andam aos pares, dois por linha: sozinhos, eram quatro linhas de oito
+   caracteres cada. O `thead` fica na página para quem lê com leitor de
+   ecrã, escondido à vista como o texto que só se ouve. Só a tabela do
+   painel: a lista de pedidos continua a rolar dentro do seu contentor,
+   com as colunas todas. */
+@media (max-width: 560px) {
+    #abertos .tabela__contentor {
+        overflow-x: visible;
+    }
+
+    #abertos .tabela {
+        min-width: 0;
+    }
+
+    /* O cabeçalho da tabela sai da página: cada célula leva o nome da
+       coluna à frente do valor, e as oito colunas de 880 px que ele
+       media deixariam o cartão a transbordar. */
+    #abertos .tabela thead {
+        display: none;
+    }
+
+    #abertos .tabela,
+    #abertos .tabela tbody {
+        display: block;
+    }
+
+    /* O cartão é uma coluna de linhas que podem partilhar a linha: cada
+       célula ocupa a largura toda enquanto não for dos campos curtos, e
+       esses andam aos pares. O `gap` substitui o que antes era o
+       espaçamento vertical de cada célula. */
+    #abertos .tabela tr {
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        gap: 4px 10px;
+        padding: 10px 16px 12px;
+        border-bottom: 1px solid var(--linha);
+    }
+
+    #abertos .tabela td {
+        flex: 1 0 100%;
+        display: grid;
+        grid-template-columns: 84px minmax(0, 1fr);
+        align-items: baseline;
+        gap: 2px 10px;
+        padding: 0;
+        border: 0;
+        white-space: normal;
+        /* O nome do cliente e o equipamento podem não ter espaços (um NIF,
+           uma referência): quebram dentro da coluna do valor em vez de
+           saírem do cartão. */
+        overflow-wrap: anywhere;
+    }
+
+    #abertos .tabela td::before {
+        content: attr(data-rotulo);
+        color: var(--tinta-500);
+        font-size: var(--texto-xs);
+        font-weight: 600;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+    }
+
+    /* A ordem do cartão agrupa o que se lê junto: a identificação, o
+       estado com o tempo na oficina, o técnico — o que aqui se muda — e,
+       no fim, a entrada com a ação. O DOM guarda a ordem da tabela, para a
+       lista continuar a ser uma tabela; é a disposição dos cartões que
+       muda, e só abaixo de 560 px. Nada aqui é focável além da ação, por
+       isso a ordem visual não baralha a navegação por teclado. */
+    /* O número do pedido é o título do cartão: fica sozinho na primeira
+       linha, sem rótulo e um degrau acima do resto. */
+    #abertos .tabela td.tabela__id {
+        order: 1;
+        padding-bottom: 2px;
+        font-size: var(--texto-md);
+    }
+
+    #abertos .tabela td.tabela__cliente {
+        order: 2;
+    }
+
+    #abertos .tabela td[data-rotulo="Equipamento"] {
+        order: 3;
+    }
+
+    #abertos .tabela td[data-rotulo="Estado"] {
+        order: 4;
+    }
+
+    #abertos .tabela td.tabela__espera {
+        order: 5;
+    }
+
+    #abertos .tabela td.tabela__tecnico {
+        order: 6;
+    }
+
+    #abertos .tabela td.tabela__data {
+        order: 7;
+    }
+
+    #abertos .tabela td.tabela__acao {
+        order: 8;
+    }
+
+    /* Par curto: rótulo à frente do valor, cada um com a largura do seu
+       texto. Feito com a coluna de 84 px do resto, dois campos nunca
+       cabiam juntos. `flex: 0 0 auto` porque encolher só aqui partia o
+       rótulo a meio; se o par não couber, a segunda metade desce inteira
+       para a linha seguinte, e o `flex-wrap` dentro da célula cobre o
+       caso de um valor comprido demais para a largura do cartão. */
+    #abertos .tabela td[data-rotulo="Estado"],
+    #abertos .tabela td.tabela__espera,
+    #abertos .tabela td.tabela__data,
+    #abertos .tabela td.tabela__acao {
+        flex: 0 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0 8px;
+        padding: 0;
+        max-width: 100%;
+    }
+
+    #abertos .tabela td.tabela__id::before {
+        content: none;
+    }
+
+    /* O técnico traz um select e um botão, e na coluna do valor não cabem
+       os dois a 360 px: os 185 px do valor dão 109 ao select depois de
+       pagar o botão e o vão, e um nome comprido fica cortado. Em vez de
+       apertar o texto, o formulário passa a ocupar as duas colunas e a
+       linha própria por baixo do rótulo — o "Técnico" e o "Por atribuir"
+       ficam onde estavam, e o botão encosta à direita do select. */
+    #abertos .tabela td.tabela__tecnico .atribuir--painel {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* O botão não estica nem encolhe: a largura dele é a da palavra, e o
+       select fica com o resto da linha. */
+    #abertos .tabela td.tabela__tecnico .atribuir--painel .botao {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+
+    /* `min-width: 0` porque um select não encolhe abaixo da opção mais
+       longa: sem isto, um nome comprido empurrava o cartão para fora. */
+    #abertos .tabela td.tabela__tecnico .atribuir--painel .entrada--tabela {
+        flex: 1 1 90px;
+        min-width: 0;
+        max-width: none;
+    }
+
+    /* A idade do PIN por abrir pertence ao valor, não ao rótulo: vai para a
+       coluna do "Por atribuir", uma linha abaixo dele. Encostada à
+       esquerda, lia-se como um segundo rótulo do campo. */
+    #abertos .tabela .tabela__sem-tecnico {
+        grid-column: 2;
+        margin-top: 0;
+    }
+
+    #abertos .tabela .tabela__por-atribuir + .atribuir--painel {
+        margin-top: 4px;
+    }
+
+    #abertos .tabela td.tabela__acao {
+        text-align: left;
+    }
+}
+
+/* --- Telemóvel: cada pedido da lista também é um cartão ---
+   A lista tem as mesmas oito colunas e os mesmos 880 px de largura mínima:
+   a 360 px só se viam duas colunas e o resto pedia que se arrastasse a
+   tabela para o lado, com a barra de deslocamento por cima do rodapé. Em
+   vez disso as linhas passam a cartões abaixo de 560 px, com o rótulo da
+   coluna em `data-rotulo` à frente do valor — o mesmo padrão dos pedidos em
+   aberto do painel, para a lista e o painel se lerem da mesma maneira. O
+   `thead` fica na página para quem lê com leitor de ecrã. */
+@media (max-width: 560px) {
+    #lista .tabela__contentor {
+        overflow-x: visible;
+    }
+
+    #lista .tabela {
+        min-width: 0;
+    }
+
+    #lista .tabela thead {
+        display: none;
+    }
+
+    #lista .tabela,
+    #lista .tabela tbody,
+    #lista .tabela tr,
+    #lista .tabela td {
+        display: block;
+    }
+
+    #lista .tabela tr {
+        padding: 10px 0 12px;
+        border-bottom: 1px solid var(--linha);
+    }
+
+    /* O rótulo é uma etiqueta em linha com 92 px — a largura de
+       "EQUIPAMENTO", o mais comprido dos oito — e o valor começa depois
+       dela, na primeira linha e nas seguintes: o `text-indent` negativo
+       puxa só a primeira linha para a margem, e as outras ficam no recuo.
+       Um rótulo em coluna de grelha não servia: nas células com mais de um
+       elemento (as consultas, o técnico) cada elemento ia para uma coluna
+       diferente e o cartão desmanchava-se. */
+    #lista .tabela td {
+        display: block;
+        padding: 3px 16px 3px 116px;
+        border: 0;
+        white-space: normal;
+        text-indent: -100px;
+        /* Como no painel: um nome ou uma referência sem espaços quebra
+           dentro do cartão, no recuo do valor. */
+        overflow-wrap: anywhere;
+    }
+
+    #lista .tabela td::before {
+        content: attr(data-rotulo);
+        display: inline-block;
+        width: 92px;
+        margin-right: 8px;
+        color: var(--tinta-500);
+        font-size: var(--texto-xs);
+        font-weight: 600;
+        letter-spacing: .06em;
+        text-indent: 0;
+        text-transform: uppercase;
+    }
+
+    /* O recuo é do rótulo; o que está dentro da célula escreve-se normal. */
+    #lista .tabela td > * {
+        text-indent: 0;
+    }
+
+    /* O número do pedido é o título do cartão: sozinho, sem rótulo, sem
+       recuo e um degrau acima do resto. */
+    #lista .tabela td.tabela__id {
+        padding: 0 16px 6px;
+        font-size: var(--texto-md);
+        text-indent: 0;
+    }
+
+    #lista .tabela td.tabela__id::before {
+        content: none;
+    }
+
+    /* A célula das consultas é a mais densa — número, idade e data — e na
+       tabela não quebrava. No cartão quebra, para não sair da coluna do
+       valor. */
+    #lista .tabela td.tabela__consultas {
+        white-space: normal;
+    }
+
+    /* O técnico traz um select e um botão. Na coluna do valor — o recuo de
+       116 px que o rótulo paga — sobram 228 px a 360 px, e o select ficava
+       com o nome cortado. Em vez de apertar o texto, o formulário passa a
+       ocupar a largura toda do cartão, na linha própria por baixo do
+       rótulo: o "Técnico" fica onde estava, e as margens negativas anulam
+       o que a célula paga dos dois lados — 116 px à esquerda, para o
+       select começar na margem do cartão, e 16 px à direita, para o
+       Guardar acabar nela. É o mesmo arranjo do painel, com o botão a
+       encostar à direita do select. */
+    #lista .tabela .atribuir {
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 6px;
+        margin: 4px -16px 0 -116px;
+    }
+
+    /* O botão não estica nem encolhe: a largura dele é a da palavra, e o
+       select fica com o resto da linha. */
+    #lista .tabela .atribuir .botao {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+
+    /* `min-width: 0` porque um select não encolhe abaixo da opção mais
+       longa: sem isto, um nome comprido empurrava o cartão para fora. */
+    #lista .tabela .atribuir .entrada--tabela {
+        flex: 1 1 90px;
+        min-width: 0;
+        max-width: none;
+    }
+
+    /* A idade do pedido por atribuir começa onde o select começa: o recuo da
+       célula é anulado dos dois lados, como no formulário acima. */
+    #lista .tabela td.tabela__tecnico .tabela__sem-tecnico {
+        margin: 6px -16px 0 -116px;
+    }
+
+    #lista .tabela td.tabela__acao {
+        text-align: left;
+    }
+
+}
+
+/* A 320 px sobram 155 px para o valor — o rótulo leva 100 de recuo — e a
+   pílula da idade partia-se ao meio: «há 8» numa linha, «dias» na outra. É
+   o mesmo aperto que a ficha teve a 320 px, e leva a mesma folga: nas linhas
+   que trazem pílula, o rótulo fica na sua linha e o valor passa a usar a
+   largura toda, na margem do cartão, alinhado com o número que abre o
+   cartão. As linhas de texto ficam com o rótulo em linha: cabem no recuo e o
+   cartão não cresce por causa delas. */
+@media (max-width: 359px) {
+    #lista .tabela td[data-rotulo="Estado"],
+    #lista .tabela td.tabela__consultas {
+        padding-left: 16px;
+        text-indent: 0;
+    }
+
+    #lista .tabela td[data-rotulo="Estado"]::before,
+    #lista .tabela td.tabela__consultas::before {
+        display: block;
+        width: auto;
+        margin: 0 0 2px;
+    }
+
+    /* A pílula da idade é uma unidade: se não couber na linha, desce inteira
+       em vez de partir o texto ao meio. A do estado já o era. */
+    #lista .tabela .tabela__consultas-idade {
+        white-space: nowrap;
+    }
+}
+
+.acao-estado {
+    padding: 16px;
+}
+
+.acao-estado__atual {
+    display: flex;
+    align-items: center;
+}
+
+/* Os dois selects não precisam de ocupar o cartão inteiro. */
+.acao-estado__campos {
+    max-width: 700px;
+}
+
+.acao-estado__vazio {
+    max-width: 60ch;
+    margin-top: 12px;
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+.acao-estado__rodape {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--linha);
+}
+
+.acao-estado__nota {
+    max-width: 46ch;
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+.acao-estado__botoes {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+}
+
+/* Cartão em que o rodapé é o único conteúdo do formulário (sessões). */
+.acao-estado--simples .acao-estado__rodape {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+}
+
+/* Contagem de sessões abertas, acima do botão que as fecha. */
+.sessoes__contagem {
+    margin-bottom: 12px;
+    color: var(--tinta-700);
+    font-size: var(--texto-base);
+    line-height: 1.5;
+}
+
+.sessoes__contagem strong {
+    font-weight: 650;
+    color: var(--tinta-900);
+    font-variant-numeric: tabular-nums;
+}
+
+.botao:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+}
+
+/* Paginação da lista completa de pedidos. */
+.paginacao__botoes {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+}
+
+/* O mesmo vale para os botões pequenos (ordenação e paginação): o rótulo
+   cresce com o texto e a caixa acompanha. */
+.botao--pequeno {
+    min-height: 34px;
+    padding: 3px 12px;
+    font-size: var(--texto-sm);
+}
+
+.paginacao__botoes .botao[aria-disabled="true"] {
+    opacity: .5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+@media (min-width: 560px) {
+    .acao-estado {
+        padding: 20px;
+    }
+}
+
+
+/* =====================================================================
+   09b. DETALHE DO PEDIDO
+   Duas colunas em ecrãs largos: a ação e o histórico à esquerda, os
+   dados do cliente e da máquina à direita. Em ecrã estreito empilham
+   por ordem de leitura (o que se faz, o que se sabe, quem é).
+   ===================================================================== */
+.detalhe-pedido {
+    display: grid;
+    gap: 20px;
+    align-items: start;
+}
+
+.detalhe-pedido__coluna {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+}
+
+/* O espaço entre cartões já vem do .principal; o alerta não soma margem. */
+.principal > .alerta {
+    margin-bottom: 0;
+}
+
+/* Conteúdo de um painel que não é tabela nem formulário. */
+.painel__corpo {
+    padding: 16px;
+}
+
+.avaria {
+    max-width: 80ch;
+    color: var(--tinta-700);
+    font-size: var(--texto-base);
+    line-height: 1.65;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+}
+
+.avaria--vazia {
+    color: var(--tinta-500);
+    font-style: italic;
+}
+
+/* --- Ficha de dados (cliente, equipamento, datas) --- */
+.ficha-pedido {
+    display: grid;
+    gap: 14px;
+    margin: 0;
+    padding: 16px;
+}
+
+.ficha-pedido__item {
+    min-width: 0;
+}
+
+.ficha-pedido dt {
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.ficha-pedido dd {
+    margin: 2px 0 0;
+    color: var(--tinta-900);
+    font-size: var(--texto-base);
+    font-weight: 550;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.ficha-pedido dd.ficha-pedido__vazio {
+    color: var(--tinta-500);
+    font-weight: 450;
+    font-style: italic;
+}
+
+.ficha-pedido__numero {
+    font-variant-numeric: tabular-nums;
+}
+
+/* --- Consulta pública: PIN e o que o cliente vê --- */
+.consulta {
+    display: grid;
+    justify-items: start;
+    gap: 6px;
+    padding: 16px;
+}
+
+.consulta__rotulo {
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.consulta__pin {
+    padding-left: .18em;
+    color: var(--tinta-900);
+    font-size: 1.625rem;
+    font-weight: 650;
+    line-height: 1.2;
+    letter-spacing: .18em;
+    font-variant-numeric: tabular-nums;
+}
+
+.consulta__nota {
+    max-width: 42ch;
+    margin-top: 2px;
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+    line-height: 1.55;
+}
+
+.consulta__nota strong {
+    color: var(--tinta-700);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Há quanto tempo o PIN espera e desde quando, logo por baixo do número:
+   mais presente que a nota (é um facto sobre este talão), mas sem competir
+   com o PIN. Números tabulares para a data não dançar ao mudar de minuto. */
+.consulta__estado {
+    max-width: 42ch;
+    margin-top: 2px;
+    color: var(--tinta-700);
+    font-size: var(--texto-sm);
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+}
+
+.consulta__estado time {
+    white-space: nowrap;
+}
+
+.consulta > .botao {
+    margin-top: 8px;
+}
+
+/* --- Orçamento: valor atual no cabeçalho, edição no corpo --- */
+.orcamento__atual {
+    color: var(--tinta-900);
+    font-size: 1.125rem;
+    font-weight: 650;
+    letter-spacing: -.01em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.orcamento__atual--vazio {
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+    font-weight: 450;
+    font-style: italic;
+}
+
+.orcamento {
+    padding: 16px;
+}
+
+.orcamento__linha {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 10px 12px;
+    max-width: 640px;
+}
+
+.orcamento__linha .campo {
+    flex: 1 1 200px;
+}
+
+/* O botão acompanha a altura da entrada, como nos filtros da lista. */
+.orcamento__linha .botao {
+    height: 46px;
+}
+
+.orcamento__nota {
+    max-width: 52ch;
+    margin-top: 10px;
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+.orcamento__vazio {
+    max-width: 52ch;
+    margin-top: 12px;
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+/* Remover o orçamento e gerar um PIN novo: separados do resto por uma
+   linha e confirmados antes de gravar. */
+.orcamento__remover,
+.consulta__gerar {
+    width: 100%;
+    max-width: 640px;
+    margin-top: 16px;
+    padding-top: 10px;
+    border-top: 1px solid var(--linha);
+}
+
+.orcamento__remover details,
+.consulta__gerar details {
+    width: 100%;
+}
+
+.orcamento__remover-botao,
+.consulta__gerar-botao {
+    display: flex;
+    width: fit-content;
+    list-style: none;
+    cursor: pointer;
+}
+
+.orcamento__remover-botao::-webkit-details-marker,
+.consulta__gerar-botao::-webkit-details-marker {
+    display: none;
+}
+
+/* A seta acompanha a abertura da confirmação. */
+.orcamento__remover-botao svg,
+.consulta__gerar-botao svg {
+    transition: transform .18s ease;
+}
+
+details[open] > .orcamento__remover-botao svg,
+details[open] > .consulta__gerar-botao svg {
+    transform: rotate(180deg);
+}
+
+.orcamento__confirmacao,
+.consulta__confirmacao {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px 14px;
+    border-radius: var(--raio-lg);
+    background: var(--vermelho-bg);
+}
+
+.orcamento__confirmacao-titulo,
+.consulta__confirmacao-titulo {
+    color: #7C1D1D;
+    font-size: var(--texto-base);
+    font-weight: 650;
+    line-height: 1.4;
+}
+
+.orcamento__confirmacao-titulo strong,
+.consulta__confirmacao-titulo strong {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.orcamento__confirmacao-texto,
+.consulta__confirmacao-texto {
+    max-width: 54ch;
+    margin-top: 3px;
+    color: #8F2525;
+    font-size: var(--texto-sm);
+    line-height: 1.55;
+}
+
+.orcamento__confirmacao-acoes,
+.consulta__confirmacao-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+@media (min-width: 560px) {
+    .orcamento__remover-botao {
+        margin-left: auto;
+    }
+}
+
+/* --- Histórico: uma entrada por passagem de estado --- */
+.historico {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 16px;
+    list-style: none;
+}
+
+.historico__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 14px minmax(0, 1fr);
+    gap: 12px;
+    padding-bottom: 18px;
+}
+
+.historico__item:last-child {
+    padding-bottom: 0;
+}
+
+/* Linha que liga as marcas, exceto na última entrada. */
+.historico__item:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 18px;
+    bottom: 2px;
+    left: 6px;
+    width: 2px;
+    background: var(--linha);
+}
+
+.historico__marca {
+    width: 14px;
+    height: 14px;
+    margin-top: 4px;
+    border: 2px solid #CBD6E3;
+    border-radius: 50%;
+    background: var(--branco);
+}
+
+.historico__item--atual .historico__marca {
+    border-color: var(--azul-600);
+    background: var(--azul-600);
+}
+
+.historico__corpo {
+    min-width: 0;
+}
+
+.historico__topo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+}
+
+.historico__atual {
+    color: var(--azul-700);
+    font-size: var(--texto-xs);
+    font-weight: 650;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+}
+
+/* Alteração ao orçamento: etiqueta própria e valor anterior → novo. */
+.historico__etiqueta {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border: 1px solid #D8E1EA;
+    border-radius: 999px;
+    background: var(--branco);
+    color: var(--tinta-700);
+    font-size: var(--texto-xs);
+    font-weight: 600;
+    letter-spacing: .01em;
+}
+
+/* No painel, a etiqueta é o número do pedido e abre a ficha. */
+.historico__etiqueta--ligacao {
+    border-color: #C9D8E7;
+    color: var(--azul-700);
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+}
+
+.historico__etiqueta--ligacao:hover {
+    border-color: var(--azul-600);
+    background: var(--azul-50);
+}
+
+.historico__mudanca {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 5px;
+    margin-top: 4px;
+    color: var(--tinta-900);
+    font-size: var(--texto-base);
+    font-variant-numeric: tabular-nums;
+}
+
+.historico__de {
+    color: var(--tinta-500);
+}
+
+.historico__mudanca strong {
+    font-weight: 650;
+}
+
+/* As marcas de uma troca de técnico, de uma alteração ao orçamento ou de
+   um PIN emitido são vazadas: o preenchimento continua a significar
+   "estado atual". */
+.historico__item--tecnico .historico__marca,
+.historico__item--orcamento .historico__marca,
+.historico__item--pin .historico__marca {
+    border-color: #B9C6D4;
+    background: var(--branco);
+}
+
+/* A marca do aviso é a única cheia: um aviso pede uma ação a quem o
+   recebe, ao contrário de um registo do que já aconteceu. Leva o âmbar
+   com que a lista assinala estas esperas, para ser lida como o mesmo
+   assunto nos dois sítios. */
+.historico__item--aviso .historico__marca {
+    border-color: var(--ambar-fg);
+    background: var(--ambar-bg);
+}
+
+.historico__meta {
+    margin-top: 3px;
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+/* Uso de um talão dentro da entrada de PIN: quantas consultas recebeu e
+   quando foi a última — no talão em uso, a última antes da entrega. */
+.historico__pin-uso {
+    margin-top: 4px;
+    color: var(--tinta-700);
+    font-size: var(--texto-sm);
+}
+
+.historico__pin-uso strong {
+    color: var(--tinta-900);
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+}
+
+.historico__meta time {
+    font-variant-numeric: tabular-nums;
+}
+
+/* Contagem de consultas ao PIN atual: rodapé do histórico. */
+.historico__consultas p {
+    max-width: 80ch;
+    margin: 0;
+}
+
+.historico__consultas strong {
+    color: var(--tinta-700);
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+}
+
+.historico__consultas time {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* Consultas feitas depois de a máquina sair: nota à parte da contagem que
+   fecha na entrega. O rodapé é uma fila que parte ao meio por si — "2
+   consultas …" ao lado de "Mais 2 consultas …" lê-se como duas contas da
+   mesma coisa, por isso a nota toma a linha toda. */
+.historico__consultas .historico__consultas-depois {
+    flex-basis: 100%;
+}
+
+@media (min-width: 560px) {
+    .painel__corpo,
+    .ficha-pedido,
+    .consulta,
+    .orcamento,
+    .historico {
+        padding: 18px 20px;
+    }
+}
+
+/* Duas colunas só quando o conteúdo do painel tem largura real. */
+@media (min-width: 1200px) {
+    .detalhe-pedido {
+        grid-template-columns: minmax(0, 1.65fr) minmax(300px, 1fr);
+    }
+}
+
+
+/* =====================================================================
+   10. GRÁFICO DE PEDIDOS POR ESTADO
+   O canvas é quadrado e acompanha a coluna; a legenda repete os
+   valores em texto, para quem não vê o gráfico.
+   ===================================================================== */
+.grafico {
+    display: grid;
+    gap: 18px;
+    padding: 18px 16px 22px;
+}
+
+.grafico__tela {
+    position: relative;
+    width: 100%;
+    max-width: 236px;
+    margin-inline: auto;
+    aspect-ratio: 1 / 1;
+}
+
+.grafico__tela canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    cursor: default;   /* a mão só nas fatias com destino (ver o onHover) */
+}
+
+.grafico__centro {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.grafico__total {
+    color: var(--tinta-900);
+    font-size: 1.75rem;
+    font-weight: 650;
+    line-height: 1;
+    letter-spacing: -.03em;
+    font-variant-numeric: tabular-nums;
+}
+
+.grafico__unidade {
+    margin-top: 3px;
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+}
+
+/* A divisão entre os dois lados, escrita no meio do anel. Fica em texto
+   pequeno e sem negrito: o número grande é o total, e este é o contexto
+   que diz de que lado ele é feito. */
+.grafico__divisao {
+    margin-top: 5px;
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+    line-height: 1.35;
+    text-align: center;
+}
+
+/* Mensagem quando a biblioteca do CDN não carrega. */
+.grafico__falha {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    padding: 20px;
+    border: 1px dashed var(--linha);
+    border-radius: var(--raio-xl);
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+    text-align: center;
+}
+
+.grafico__falha[hidden] {
+    display: none;
+}
+
+.grafico__legenda {
+    display: grid;
+    align-content: center;
+    gap: 12px;
+}
+
+/* Os dois lados da oficina: o que está em trabalho e o que já saiu. Cada
+   um com o seu total, e os estados por baixo — assim um entregue não se
+   lê na mesma lista dos que estão em trabalho. */
+.grafico__grupo {
+    min-width: 0;
+}
+
+/* Em ecrãs estreitos os grupos empilham e o filete separa o segundo; em
+   ecrãs largos ficam lado a lado (ver a regra dos 1060 px), e aí o filete
+   não fazia sentido. */
+.grafico__grupo + .grafico__grupo {
+    padding-top: 10px;
+    border-top: 1px solid var(--linha);
+}
+
+.grafico__grupo-titulo {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0;
+    padding: 0 8px;
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+    font-weight: 600;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+}
+
+.grafico__grupo-total {
+    color: var(--tinta-900);
+    font-variant-numeric: tabular-nums;
+}
+
+.grafico__lista {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.grafico__item {
+    margin: 0;
+}
+
+/* A linha inteira da legenda é a ligação para a lista filtrada. */
+.grafico__ligacao {
+    display: grid;
+    grid-template-columns: 9px minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 10px;
+    margin-inline: -8px;
+    padding: 9px 8px;
+    border-radius: var(--raio-sm);
+    color: inherit;
+    text-decoration: none;
+    transition: background-color .16s ease;
+}
+
+.grafico__ligacao:hover {
+    background: #F4F7FA;
+}
+
+.grafico__ligacao:hover .grafico__nome {
+    color: var(--azul-700);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* Linha de legenda que só decodifica o anel: mostra a fatia e o número, mas
+   não abre nada — a lista sabe filtrar por estado, não pela idade da
+   entrega. Sem o fundo e o sublinhado do hover, não promete um clique. */
+.grafico__ligacao--parada,
+.grafico__ligacao--parada:hover {
+    background: none;
+    cursor: default;
+}
+
+.grafico__ligacao--parada:hover .grafico__nome {
+    color: var(--tinta-700);
+    text-decoration: none;
+}
+
+/* O caminho para a lista dos entregues, depois das linhas que decodificam
+   o anel: é a única do grupo que leva a algum lado. */
+.grafico__ver {
+    display: inline-block;
+    /* O mesmo ritmo vertical das linhas de cima, para o alvo do toque não
+       ficar num fio de texto. */
+    margin: 0 8px;
+    padding: 9px 0;
+    color: var(--azul-700);
+    font-size: var(--texto-sm);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.grafico__ver:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.grafico__ponto {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+
+.grafico__nome {
+    min-width: 0;
+    color: var(--tinta-700);
+    font-size: var(--texto-base);
+}
+
+.grafico__quantidade {
+    color: var(--tinta-900);
+    font-size: var(--texto-base);
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+}
+
+.grafico__percentagem {
+    min-width: 34px;
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+@media (min-width: 560px) {
+    .grafico {
+        padding: 20px 20px 24px;
+    }
+}
+
+/* Ao lado do gráfico; antes disso fica por baixo, centrado. */
+@media (min-width: 720px) {
+    .grafico {
+        grid-template-columns: 236px minmax(0, 1fr);
+        align-items: center;
+        gap: 36px;
+        padding: 22px 20px 24px;
+    }
+
+    .grafico__tela {
+        margin-inline: 0;
+    }
+}
+
+/* Em ecrãs largos a legenda ganha duas colunas — uma por lado da oficina,
+   em vez de uma lista alta ao lado de um círculo pequeno. Como os grupos
+   passam a estar lado a lado, o filete que os separava em altura sai. */
+@media (min-width: 1060px) {
+    .grafico__legenda {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 40px;
+    }
+
+    .grafico__grupo + .grafico__grupo {
+        padding-top: 0;
+        border-top: 0;
+    }
+}
+
+
+/* =====================================================================
+   11. ESTADOS: sem registos, a carregar, erro
+   Aplicam-se ao interior do painel. A classe é posta no HTML/PHP.
+   ===================================================================== */
+.aviso {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 44px 24px;
+    text-align: center;
+}
+
+.aviso__icone {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 2px;
+    border-radius: 50%;
+    background: var(--azul-50);
+    color: var(--azul-600);
+}
+
+.aviso__icone svg {
+    width: 19px;
+    height: 19px;
+    stroke-width: 1.7;
+}
+
+.aviso__titulo {
+    font-size: var(--texto-base);
+    font-weight: 600;
+    color: var(--tinta-900);
+    /* O título das listas sem resultados nomeia a pesquisa entre «»: sem isto,
+       uma pesquisa sem espaços saía do cartão em vez de quebrar. */
+    overflow-wrap: anywhere;
+}
+
+.aviso__texto {
+    max-width: 46ch;
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+.aviso--erro .aviso__icone {
+    background: var(--vermelho-bg);
+    color: var(--vermelho-fg);
+}
+
+/* Esqueleto de carregamento (sem animação se o utilizador a reduzir). */
+.esqueleto {
+    height: 14px;
+    border-radius: 5px;
+    background: linear-gradient(90deg, #EDF1F6 25%, #F6F8FB 50%, #EDF1F6 75%);
+    background-size: 200% 100%;
+    animation: esqueleto-deslizar 1.4s ease-in-out infinite;
+}
+
+@keyframes esqueleto-deslizar {
+    from { background-position: 150% 0; }
+    to   { background-position: -50% 0; }
+}
+
+
+/* =====================================================================
+   12. RESPONSIVIDADE (mobile-first: só alarga a partir daqui)
+   ===================================================================== */
+
+/* Barra de deslocamento da tabela coerente com o sistema. */
+@supports (scrollbar-width: thin) {
+    .tabela__contentor {
+        scrollbar-width: thin;
+        scrollbar-color: #CBD6E3 transparent;
+    }
+}
+
+.tabela__contentor::-webkit-scrollbar {
+    height: 10px;
+}
+
+.tabela__contentor::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.tabela__contentor::-webkit-scrollbar-thumb {
+    border: 3px solid var(--branco);
+    border-radius: 999px;
+    background: #CBD6E3;
+}
+
+/* --- Telemóvel largo --- */
+@media (min-width: 560px) {
+    .perfil__texto {
+        display: flex;
+    }
+
+    .principal {
+        padding: 24px 20px 48px;
+    }
+
+    .metricas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .painel__cabecalho,
+    .painel__rodape,
+    .topbar__interior {
+        padding-inline: 20px;
+    }
+}
+
+/* --- Tablet --- */
+@media (min-width: 720px) {
+    .topbar__interior {
+        padding-inline: 28px;
+    }
+
+    .principal {
+        gap: 24px;
+        padding: 28px 28px 52px;
+    }
+
+    .migalhas {
+        display: flex;
+    }
+
+    .metricas {
+        gap: 16px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .metrica {
+        padding: 20px;
+    }
+
+    .painel__cabecalho {
+        padding: 18px 20px;
+    }
+
+    .painel__rodape {
+        padding: 12px 20px;
+    }
+}
+
+/* --- Desktop: a sidebar deixa de ser gaveta --- */
+@media (min-width: 1024px) {
+    .sidebar {
+        width: var(--sidebar-largura);
+        transform: none;
+    }
+
+    .sidebar__fechar,
+    .botao-menu,
+    .cortina {
+        display: none;
+    }
+
+    .conteudo {
+        margin-left: var(--sidebar-largura);
+    }
+
+    .principal {
+        padding: 32px 36px 56px;
+    }
+
+    .topbar__interior {
+        padding-inline: 36px;
+    }
+}
+
+@media (min-width: 1320px) {
+    .principal {
+        padding: 36px 44px 64px;
+    }
+
+    .topbar__interior {
+        padding-inline: 44px;
+    }
+}
+
+
+/* =====================================================================
+   13. TRANSIÇÕES ENTRE PÁGINAS
+
+   Cada mudança de página é um documento novo, mas o back office lê-se
+   como uma só aplicação: a moldura fica onde está e só o conteúdo troca.
+   `@view-transition` faz isso sem JavaScript e sem mexer no HTML; onde o
+   browser não a conhece, a navegação continua exatamente como era.
+   ===================================================================== */
+@view-transition {
+    navigation: auto;
+}
+
+/* A moldura leva o mesmo nome nos dois documentos, por isso o browser
+   pousa a barra que já lá estava em vez de a dissolver. A barra lateral
+   também, em todas as larguras: no telemóvel é uma gaveta, mas continua a
+   ser moldura — e, sem nome, entrava no retrato da raiz e ficava pendurada
+   sobre a página que chegava quando se tocava numa ligação com o menu
+   aberto. */
+.topbar {
+    view-transition-name: barra-superior;
+}
+
+.sidebar {
+    view-transition-name: barra-lateral;
+}
+
+/* A cortina escura da gaveta segue a mesma regra: é parte do menu, não do
+   conteúdo que muda de página. */
+.cortina {
+    view-transition-name: cortina;
+}
+
+/* A moldura é igual nos dois lados: não há nada para animar. */
+::view-transition-group(barra-superior),
+::view-transition-old(barra-superior),
+::view-transition-new(barra-superior),
+::view-transition-group(barra-lateral),
+::view-transition-old(barra-lateral),
+::view-transition-new(barra-lateral),
+::view-transition-group(cortina),
+::view-transition-old(cortina),
+::view-transition-new(cortina) {
+    animation: none;
+}
+
+/* No telemóvel a gaveta não é pintada na travessia. Quando o toque é numa
+   ligação da gaveta, o script do menu fecha-a primeiro e só depois navega,
+   por isso ela chega aqui já fora do ecrã; mas há caminhos que não passam
+   pelo script — um envio de formulário, o histórico do browser —, e aí o
+   antigo retrato da gaveta aberta e a cortina escura ficariam por cima da
+   página nova até a transição acabar. Sem pintura nos dois lados, não sobra
+   vestígio a atravessar o ecrã e a página nova entra por baixo. */
+@media (max-width: 1023px) {
+    ::view-transition-old(barra-lateral),
+    ::view-transition-new(barra-lateral),
+    ::view-transition-old(cortina),
+    ::view-transition-new(cortina) {
+        opacity: 0;
+    }
+}
+
+/* As migalhas mudam de página para página ("Pedidos" → "Pedido #1041"),
+   mas a barra que as segura não pode estremecer. Com nome próprio, a linha
+   é fotografada à parte da moldura congelada e atravessa-se por si: o
+   browser leva o grupo de uma largura para a outra, e o texto antigo e o
+   novo cruzam-se dentro dele. Sem isto, a barra ficava parada mas as
+   migalhas trocavam de um fotograma para o outro, a saltar. */
+.migalhas {
+    view-transition-name: migalhas;
+}
+
+::view-transition-group(migalhas) {
+    animation-duration: 240ms;
+    animation-timing-function: cubic-bezier(.16, 1, .3, 1);
+}
+
+::view-transition-old(migalhas) {
+    animation: migalhas-sai 120ms cubic-bezier(.4, 0, 1, 1) both;
+}
+
+::view-transition-new(migalhas) {
+    animation: migalhas-entra 240ms cubic-bezier(.16, 1, .3, 1) both;
+}
+
+/* Sai depressa e sem deslocação; a nova entra a subir 4 px, menos do que os
+   6 px do conteúdo — a linha é pequena, e o mesmo movimento nela parece
+   maior. */
+@keyframes migalhas-sai {
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes migalhas-entra {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+}
+
+/* Os resultados da lista levam nome próprio pelo mesmo motivo que as
+   migalhas: aplicar um filtro ou mudar de página é a mesma página com
+   outro recorte, e a tabela é a única coisa que muda. As três listas que
+   se recortam — pedidos, clientes e equipamentos — dão este id ao
+   contentor da tabela. Com nome, ela atravessa-se sozinha e o resto da
+   página pode ficar parado — sem isto, cada filtro ou página atravessava a
+   página inteira e o ecrã piscava todo para trocar uma dúzia de linhas. */
+#resultados {
+    view-transition-name: resultados;
+}
+
+::view-transition-group(resultados) {
+    animation-duration: 220ms;
+    animation-timing-function: cubic-bezier(.16, 1, .3, 1);
+}
+
+::view-transition-old(resultados) {
+    animation: resultados-sai 120ms cubic-bezier(.4, 0, 1, 1) both;
+}
+
+::view-transition-new(resultados) {
+    animation: resultados-entra 220ms cubic-bezier(.16, 1, .3, 1) both;
+}
+
+@keyframes resultados-sai {
+    to {
+        opacity: 0;
+    }
+}
+
+/* A mesma subida de 6 px do conteúdo: o recorte entra como o resto entra. */
+@keyframes resultados-entra {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+}
+
+/* O conteúdo é o que muda: sai depressa, entra a subir 6 px, para a troca
+   se ler como a peça nova a ocupar o lugar da anterior. */
+.principal {
+    view-transition-name: conteudo;
+}
+
+::view-transition-old(conteudo) {
+    animation: pagina-sai 120ms cubic-bezier(.4, 0, 1, 1) both;
+}
+
+::view-transition-new(conteudo) {
+    animation: pagina-entra 220ms cubic-bezier(.16, 1, .3, 1) both;
+}
+
+@keyframes pagina-sai {
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes pagina-entra {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+}
+
+/* Numa troca de recorte a página não viaja: o conteúdo novo entra no lugar
+   do antigo no mesmo fotograma (o antigo esconde-se logo, o novo aparece
+   já no sítio) e só os resultados se atravessam. A marca `recorte` é posta
+   pelo script de cada lista quando o destino é esta mesma página com
+   outros parâmetros — um filtro, outra página, outra ordem. Sem a marca, a
+   transição é a de sempre: a página inteira a mudar de sítio. A regra só existe em
+   navegadores que conhecem os tipos de transição; nos outros fica a página
+   inteira a viajar, como até aqui. */
+:root:active-view-transition-type(recorte)::view-transition-group(conteudo),
+:root:active-view-transition-type(recorte)::view-transition-old(conteudo),
+:root:active-view-transition-type(recorte)::view-transition-new(conteudo) {
+    animation: none;
+}
+
+:root:active-view-transition-type(recorte)::view-transition-old(conteudo) {
+    opacity: 0;
+}
+
+
+/* =====================================================================
+   14. MOVIMENTO REDUZIDO
+   ===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+
+    /* A troca de página passa a ser um corte seco: sem subida, sem
+       desvanecimento, mas o conteúdo novo aparece na mesma. As migalhas
+       seguem a mesma regra — aqui a linha nova aparece no lugar da antiga,
+       sem a atravessar. */
+    ::view-transition-old(conteudo),
+    ::view-transition-new(conteudo),
+    ::view-transition-old(migalhas),
+    ::view-transition-new(migalhas),
+    ::view-transition-group(migalhas),
+    ::view-transition-old(resultados),
+    ::view-transition-new(resultados),
+    ::view-transition-group(resultados) {
+        animation: none;
+    }
+}
+
+
+/* =====================================================================
+   15. REVESTIMENTO — a estética do talão
+   O painel passa a ser desenhado como o site: papel, tinta, regras de
+   2px, cantos vivos e etiquetas monoespaçadas. Nada aqui inventa
+   componentes — só veste os que existem, para quem trabalha no back
+   office e quem consulta no front office reconhecerem a mesma casa.
+
+   A paleta não muda: já era esta. O que muda é a forma.
+   ===================================================================== */
+
+:root {
+    --fonte-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo,
+                  Consolas, "Liberation Mono", monospace;
+
+    /* Formas: zero raios, em todo o lado. */
+    --raio-sm: 0;
+    --raio-md: 0;
+    --raio-lg: 0;
+    --raio-xl: 0;
+
+    /* Elevação: sombra de carimbo, nunca desfoque. */
+    --sombra-1: none;
+    --sombra-2: 6px 6px 0 var(--tinta-900);
+
+    /* A barra lateral deixa de ser azul-marinho e passa a tinta. */
+    --azul-900: #101C28;
+}
+
+::selection {
+    background: var(--tinta-900);
+    color: #FFFFFF;
+}
+
+:where(a, button, summary, [tabindex]):focus-visible {
+    border-radius: 0;
+}
+
+/* --- Botões --------------------------------------------------------- */
+.botao {
+    border: 2px solid var(--tinta-900);
+    border-radius: 0;
+    background: transparent;
+    color: var(--tinta-900);
+    font-family: var(--fonte-mono);
+    font-size: var(--texto-xs);
+    font-weight: 700;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+}
+
+.botao--primario {
+    border-color: var(--azul-600);
+    background: var(--azul-600);
+    color: #FFFFFF;
+    box-shadow: 6px 6px 0 var(--tinta-900);
+}
+
+.botao--primario:hover {
+    border-color: var(--azul-700);
+    background: var(--azul-700);
+}
+
+.botao--primario:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--tinta-900);
+}
+
+.botao--fantasma {
+    border-color: var(--tinta-900);
+    background: transparent;
+    color: var(--tinta-900);
+}
+
+.botao--fantasma:hover {
+    background: var(--tinta-900);
+    color: #FFFFFF;
+}
+
+.botao--perigo {
+    border-color: var(--vermelho-fg);
+    background: var(--vermelho-fg);
+    color: #FFFFFF;
+    box-shadow: 6px 6px 0 var(--tinta-900);
+}
+
+.botao--perigo:hover {
+    border-color: #7C1D1D;
+    background: #7C1D1D;
+}
+
+.botao--perigo:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--tinta-900);
+}
+
+.botao--perigo-fantasma {
+    border-color: var(--vermelho-fg);
+    background: transparent;
+    color: var(--vermelho-fg);
+}
+
+.botao--perigo-fantasma:hover {
+    background: var(--vermelho-fg);
+    color: #FFFFFF;
+}
+
+.botao-icone {
+    border-radius: 0;
+}
+
+.botao-icone:hover {
+    background: var(--tinta-900);
+    color: #FFFFFF;
+}
+
+.saltar-conteudo {
+    border: 2px solid var(--tinta-900);
+    border-radius: 0;
+}
+
+/* --- Barra lateral -------------------------------------------------- */
+.sidebar {
+    border-right: 2px solid #000000;
+    background: var(--tinta-900);
+    color: #C9D6E3;
+}
+
+.marca__simbolo {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.marca__nome {
+    font-weight: 800;
+    letter-spacing: -.035em;
+    text-transform: uppercase;
+}
+
+.marca__descricao {
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+}
+
+.navegacao__titulo {
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    letter-spacing: .18em;
+}
+
+.navegacao__ligacao {
+    border-left: 2px solid transparent;
+    border-radius: 0;
+}
+
+.navegacao__ligacao[aria-current="page"] {
+    border-left-color: #FFFFFF;
+    box-shadow: none;
+}
+
+.navegacao__contagem {
+    border-radius: 0;
+    font-family: var(--fonte-mono);
+}
+
+.sidebar__rodape {
+    border-top: 1px solid rgba(255, 255, 255, .16);
+}
+
+.estado-sistema {
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.estado-sistema::before {
+    border-radius: 0;
+}
+
+/* --- Cabeçalho superior --------------------------------------------- */
+.topbar {
+    border-bottom: 2px solid var(--tinta-900);
+}
+
+.migalhas {
+    font-family: var(--fonte-mono);
+    font-size: .6875rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.perfil {
+    border-radius: 0;
+}
+
+.perfil__avatar {
+    border: 2px solid var(--tinta-900);
+    border-radius: 0;
+    background: #FFFFFF;
+    color: var(--tinta-900);
+    font-family: var(--fonte-mono);
+    font-weight: 700;
+}
+
+.perfil[aria-current="page"] {
+    background: var(--azul-50);
+}
+
+.botao-sair {
+    border-radius: 0;
+}
+
+/* --- Conteúdo ------------------------------------------------------- */
+.cabecalho h1 {
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -.035em;
+    text-transform: uppercase;
+}
+
+.cabecalho__descricao {
+    color: var(--tinta-700);
+}
+
+/* --- Cartões de métricas -------------------------------------------- */
+.metrica {
+    border: 2px solid var(--tinta-900);
+    border-radius: 0;
+    background: #FFFFFF;
+    box-shadow: none;
+}
+
+a.metrica:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--tinta-900);
+}
+
+a.metrica:active {
+    transform: translate(0, 0);
+    box-shadow: 2px 2px 0 var(--tinta-900);
+}
+
+.metrica__rotulo {
+    font-family: var(--fonte-mono);
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--tinta-700);
+}
+
+.metrica__icone {
+    border: 2px solid currentColor;
+    border-radius: 0;
+    background: transparent;
+}
+
+.metrica__valor {
+    font-family: var(--fonte-mono);
+    font-weight: 700;
+}
+
+.tendencia {
+    border-radius: 0;
+    font-family: var(--fonte-mono);
+    letter-spacing: .04em;
+}
+
+/* --- Painel, lista e tabela ----------------------------------------- */
+.painel {
+    border: 2px solid var(--tinta-900);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.painel__cabecalho {
+    border-bottom: 2px solid var(--tinta-900);
+}
+
+.painel__cabecalho h2 {
+    font-weight: 800;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+}
+
+.painel__rodape {
+    border-top: 2px solid var(--tinta-900);
+    font-family: var(--fonte-mono);
+    font-size: .6875rem;
+    letter-spacing: .04em;
+}
+
+.atalho {
+    border: 2px solid currentColor;
+    border-radius: 0;
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.ordenacao__rotulo,
+.ordenacao__atual {
+    font-family: var(--fonte-mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.ordenacao__atual {
+    font-size: var(--texto-xs);
+    font-weight: 700;
+}
+
+.filtros {
+    border-bottom: 2px solid var(--tinta-900);
+    background: var(--fundo);
+}
+
+.filtro {
+    border: 2px solid var(--tinta-900);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.filtro__remover {
+    border-radius: 0;
+    font-family: var(--fonte-mono);
+}
+
+.tabela th {
+    border-bottom: 2px solid var(--tinta-900);
+    background: transparent;
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    letter-spacing: .12em;
+}
+
+.tabela tbody tr:hover {
+    background: #F7FAFD;
+}
+
+.tabela__id,
+.tabela__numero,
+.tabela__data,
+.tabela__nif,
+.tabela__serie {
+    font-family: var(--fonte-mono);
+}
+
+/* As pílulas de estado passam a etiquetas de talão: caixa fechada na
+   própria cor, maiúsculas mono e um quadrado em vez de um ponto. */
+.estado {
+    padding: 2px 8px;
+    border: 2px solid currentColor;
+    border-radius: 0;
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.estado::before {
+    width: 5px;
+    height: 5px;
+    border-radius: 0;
+}
+
+.cargo {
+    border-radius: 0;
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.tabela__espera--longa,
+.tabela__data-idade--longa,
+.tabela__consultas-idade--longa,
+.tabela__consultas-idade--entregue,
+.consulta__idade--longa {
+    border-radius: 0;
+    font-family: var(--fonte-mono);
+}
+
+/* --- Formulários --------------------------------------------
+
+/* =====================================================================
+   15. REVESTIMENTO — a estética do talão
+   O painel passa a ser desenhado como o site: papel, tinta, regras de
+   2px, cantos vivos e etiquetas monoespaçadas. Nada aqui inventa
+   componentes — só veste os que existem, para quem trabalha no back
+   office e quem consulta no front office reconhecerem a mesma casa.
+
+   A paleta não muda: já era esta. O que muda é a forma.
+   ===================================================================== */
+
+:root {
+    --fonte-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo,
+                  Consolas, "Liberation Mono", monospace;
+
+    /* Formas: zero raios, em todo o lado. */
+    --raio-sm: 0;
+    --raio-md: 0;
+    --raio-lg: 0;
+    --raio-xl: 0;
+
+    /* Elevação: sombra de carimbo, nunca desfoque. */
+    --sombra-1: none;
+    --sombra-2: 6px 6px 0 var(--tinta-900);
+
+    /* A barra lateral deixa de ser azul-marinho e passa a tinta. */
+    --azul-900: #101C28;
+}
+
+::selection {
+    background: var(--tinta-900);
+    color: #FFFFFF;
+}
+
+:where(a, button, summary, [tabindex]):focus-visible {
+    border-radius: 0;
+}
+
+/* --- Botões --------------------------------------------------------- */
+.botao {
+    border: 2px solid var(--tinta-900);
+    border-radius: 0;
+    background: transparent;
+    color: var(--tinta-900);
+    font-family: var(--fonte-mono);
+    font-size: var(--texto-xs);
+    font-weight: 700;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+}
+
+.botao--primario {
+    border-color: var(--azul-600);
+    background: var(--azul-600);
+    color: #FFFFFF;
+    box-shadow: 6px 6px 0 var(--tinta-900);
+}
+
+.botao--primario:hover {
+    border-color: var(--azul-700);
+    background: var(--azul-700);
+}
+
+.botao--primario:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--tinta-900);
+}
+
+.botao--fantasma {
+    border-color: var(--tinta-900);
+    background: transparent;
+    color: var(--tinta-900);
+}
+
+.botao--fantasma:hover {
+    background: var(--tinta-900);
+    color: #FFFFFF;
+}
+
+.botao--perigo {
+    border-color: var(--vermelho-fg);
+    background: var(--vermelho-fg);
+    color: #FFFFFF;
+    box-shadow: 6px 6px 0 var(--tinta-900);
+}
+
+.botao--perigo:hover {
+    border-color: #7C1D1D;
+    background: #7C1D1D;
+}
+
+.botao--perigo:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--tinta-900);
+}
+
+.botao--perigo-fantasma {
+    border-color: var(--vermelho-fg);
+    background: transparent;
+    color: var(--vermelho-fg);
+}
+
+.botao--perigo-fantasma:hover {
+    background: var(--vermelho-fg);
+    color: #FFFFFF;
+}
+
+.botao-icone {
+    border-radius: 0;
+}
+
+.botao-icone:hover {
+    background: var(--tinta-900);
+    color: #FFFFFF;
+}
+
+.saltar-conteudo {
+    border: 2px solid var(--tinta-900);
+    border-radius: 0;
+}
+
+/* --- Barra lateral -------------------------------------------------- */
+.sidebar {
+    border-right: 2px solid #000000;
+    background: var(--tinta-900);
+    color: #C9D6E3;
+}
+
+.marca__simbolo {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.marca__nome {
+    font-weight: 800;
+    letter-spacing: -.035em;
+    text-transform: uppercase;
+}
+
+.marca__descricao {
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+}
+
+.navegacao__titulo {
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    letter-spacing: .18em;
+}
+
+.navegacao__ligacao {
+    border-left: 2px solid transparent;
+    border-radius: 0;
+}
+
+.navegacao__ligacao[aria-current="page"] {
+    border-left-color: #FFFFFF;
+    box-shadow: none;
+}
+
+.navegacao__contagem {
+    border-radius: 0;
+    font-family: var(--fonte-mono);
+}
+
+.sidebar__rodape {
+    border-top: 1px solid rgba(255, 255, 255, .16);
+}
+
+.estado-sistema {
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.estado-sistema::before {
+    border-radius: 0;
+}
+
+/* --- Cabeçalho superior --------------------------------------------- */
+.topbar {
+    border-bottom: 2px solid var(--tinta-900);
+}
+
+.migalhas {
+    font-family: var(--fonte-mono);
+    font-size: .6875rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.perfil {
+    border-radius: 0;
+}
+
+.perfil__avatar {
+    border: 2px solid var(--tinta-900);
+    border-radius: 0;
+    background: #FFFFFF;
+    color: var(--tinta-900);
+    font-family: var(--fonte-mono);
+    font-weight: 700;
+}
+
+.perfil[aria-current="page"] {
+    background: var(--azul-50);
+}
+
+.botao-sair {
+    border-radius: 0;
+}
+
+/* --- Conteúdo ------------------------------------------------------- */
+.cabecalho h1 {
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -.035em;
+    text-transform: uppercase;
+}
+
+.cabecalho__descricao {
+    color: var(--tinta-700);
+}
+
+/* --- Cartões de métricas -------------------------------------------- */
+.metrica {
+    border: 2px solid var(--tinta-900);
+    border-radius: 0;
+    background: #FFFFFF;
+    box-shadow: none;
+}
+
+a.metrica:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--tinta-900);
+}
+
+a.metrica:active {
+    transform: translate(0, 0);
+    box-shadow: 2px 2px 0 var(--tinta-900);
+}
+
+.metrica__rotulo {
+    font-family: var(--fonte-mono);
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--tinta-700);
+}
+
+.metrica__icone {
+    border: 2px solid currentColor;
+    border-radius: 0;
+    background: transparent;
+}
+
+.metrica__valor {
+    font-family: var(--fonte-mono);
+    font-weight: 700;
+}
+
+.tendencia {
+    border-radius: 0;
+    font-family: var(--fonte-mono);
+    letter-spacing: .04em;
+}
+
+/* --- Painel, lista e tabela ----------------------------------------- */
+.painel {
+    border: 2px solid var(--tinta-900);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.painel__cabecalho {
+    border-bottom: 2px solid var(--tinta-900);
+}
+
+.painel__cabecalho h2 {
+    font-weight: 800;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+}
+
+.painel__rodape {
+    border-top: 2px solid var(--tinta-900);
+    font-family: var(--fonte-mono);
+    font-size: .6875rem;
+    letter-spacing: .04em;
+}
+
+.atalho {
+    border: 2px solid currentColor;
+    border-radius: 0;
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.ordenacao__rotulo,
+.ordenacao__atual {
+    font-family: var(--fonte-mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.ordenacao__atual {
+    font-size: var(--texto-xs);
+    font-weight: 700;
+}
+
+.filtros {
+    border-bottom: 2px solid var(--tinta-900);
+    background: var(--fundo);
+}
+
+.filtro {
+    border: 2px solid var(--tinta-900);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.filtro__remover {
+    border-radius: 0;
+    font-family: var(--fonte-mono);
+}
+
+.tabela th {
+    border-bottom: 2px solid var(--tinta-900);
+    background: transparent;
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    letter-spacing: .12em;
+}
+
+.tabela tbody tr:hover {
+    background: #F7FAFD;
+}
+
+.tabela__id,
+.tabela__numero,
+.tabela__data,
+.tabela__nif,
+.tabela__serie {
+    font-family: var(--fonte-mono);
+}
+
+/* As pílulas de estado passam a etiquetas de talão: caixa fechada na
+   própria cor, maiúsculas mono e um quadrado em vez de um ponto. */
+.estado {
+    padding: 2px 8px;
+    border: 2px solid currentColor;
+    border-radius: 0;
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.estado::before {
+    width: 5px;
+    height: 5px;
+    border-radius: 0;
+}
+
+.cargo {
+    border-radius: 0;
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.tabela__espera--longa,
+.tabela__data-idade--longa,
+.tabela__consultas-idade--longa,
+.tabela__consultas-idade--entregue,
+.consulta__idade--longa {
+    border-radius: 0;
+    font-family: var(--fonte-mono);
+}
+
+/* --- Formulários ---------------------------------------------------- */
+.campo__rotulo {
+    font-family: var(--fonte-mono);
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--tinta-700);
+}
+
+.alerta {
+    border-width: 2px;
+    border-radius: 0;
+}
+
+.folha,
+.seccao {
+    border-radius: 0;
+}
+
+/* --- Entrada (login) ------------------------------------------------ */
+.acesso__caixa {
+    border: 2px solid var(--tinta-900);
+    border-radius: 0;
+    box-shadow: 6px 6px 0 var(--tinta-900);
+}
+
+.acesso__caixa h1 {
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -.035em;
+    text-transform: uppercase;
+}
+
+.acesso__submeter {
+    width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    a.metrica:hover {
+        transform: none;
+        box-shadow: 4px 4px 0 var(--tinta-900);
+    }
+/* =====================================================================
+   16. INTERIOR — a folha de serviço
+   O que fica dentro do painel: cabeçalho de página com marca de
+   impressão, tabelas legíveis de ponta a ponta, números em mono e
+   gráfico com etiquetas do talão. Continua a não haver componente
+   novo — só o desenho dos que existem.
+   ===================================================================== */
+
+.principal {
+    gap: 22px;
+}
+
+/* O cabeçalho de página fecha com a regra de 2px e abre com a marca de
+   impressão do site, para cada ecrã do painel se ler como uma folha. */
+.cabecalho {
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--tinta-900);
+}
+
+.cabecalho h1::before {
+    content: "";
+    display: block;
+    width: 34px;
+    height: 4px;
+    margin-bottom: 12px;
+    background: var(--azul-600);
+}
+
+/* A mesma marca, mais discreta, antes dos títulos de secção. */
+.painel__cabecalho h2::before,
+.seccao__topo h2::before {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    height: 3px;
+    margin-right: 9px;
+    vertical-align: 4px;
+    background: var(--azul-600);
+}
+
+/* --- Tabelas ------------------------------------------------------- */
+/* Linha alternada: numa lista de vinte pedidos, o olho perde a linha a
+   meio. O tom é o do papel, um degrau abaixo do branco do painel. */
+.tabela tbody tr:nth-child(even) {
+    background: #F8FBFE;
+}
+
+.tabela tbody tr:hover {
+    background: #EFF5FB;
+}
+
+.tabela td {
+    padding-block: 13px;
+}
+
+/* Números de série, NIF, datas e IDs alinham-se em coluna: com
+   algarismos tabulares, a mesma posição lê-se de cima a baixo. */
+.tabela__serie,
+.tabela__nif,
+.tabela__data,
+.tabela__id,
+.tabela__numero {
+    font-variant-numeric: tabular-nums;
+}
+
+/* --- Gráfico ------------------------------------------------------- */
+.grafico__total,
+.grafico__unidade,
+.grafico__grupo-titulo,
+.grafico__grupo-total {
+    font-family: var(--fonte-mono);
+    letter-spacing: .02em;
+}
+
+.grafico__grupo-titulo {
+    font-size: .625rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.grafico__tela {
+    border: 2px solid var(--tinta-900);
+    border-radius: 0;
+    background: #FFFFFF;
+}
+
+/* --- Estados vazios ------------------------------------------------ */
+/* Onde não há lista, a caixa continua fechada em vez de um vazio mudo. */
+.painel__rodape {
+    background: var(--fundo);
+}
+/* =====================================================================
+   17. A FICHA COMO TALÃO
+   O ecrã que os técnicos mais abrem. O título da ficha é, por si, uma
+   linha flexível (número + pílula de estado), por isso a marca de
+   impressão deixa de ser um traço por cima e passa a ser a lombada da
+   folha, à esquerda do número.
+   ===================================================================== */
+
+.cabecalho .cabecalho__titulo-ficha::before {
+    flex: 0 0 auto;
+    width: 5px;
+    height: 30px;
+    margin: 0 12px 0 0;
+}
+
+/* «Pedido #12» em mono: um número de boletim lê-se em coluna, não em
+   texto corrido. */
+.cabecalho__titulo-ficha > span:first-child {
+    font-family: var(--fonte-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.01em;
+}
+
+/* --- Ficha: etiquetas e valores ------------------------------------ */
+.ficha-pedido dt {
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--tinta-700);
+}
+
+.ficha-pedido dd {
+    font-variant-numeric: tabular-nums;
+}
+
+.ficha-pedido__numero {
+    font-family: var(--fonte-mono);
+    letter-spacing: .02em;
+}
+
+/* --- O PIN, que se lê em voz alta ao balcão ------------------------- */
+.consulta__rotulo {
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+
+.consulta__pin {
+    font-family: var(--fonte-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: .18em;
+}
+
+.consulta__nota {
+    color: var(--tinta-700);
+}

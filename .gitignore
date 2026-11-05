@@ -1,0 +1,23 @@
+# --- Ambiente de desenvolvimento local -----------------------------------
+# MariaDB portátil, dados da base, php.ini de desenvolvimento e registos.
+# Nada disto faz parte da aplicação: são centenas de MB de binários.
+.localdb/
+
+# --- Ferramentas do editor/agente ---------------------------------------
+.agents/
+.impeccable/
+.cloud-attachments/
+
+# --- Dados carregados pelos utilizadores --------------------------------
+# As fotografias de equipamento são dados de clientes: não vão para o
+# repositório. A pasta fica, vazia, porque a aplicação precisa dela.
+uploads/*
+!uploads/.gitkeep
+
+# --- Lixo de sistema e de editores ---------------------------------------
+*.log
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/

@@ -1,0 +1,1356 @@
+/* =====================================================================
+   FixIt — site público
+   Folha própria do front office. Depende de painel.css para a base
+   tipográfica e para os utilitários, mas NÃO usa os tokens do painel:
+   o site tem paleta própria, com âmbito .site-body, para o back office
+   ficar exactamente como está.
+
+   Direcção: talão de oficina impresso.
+   Papel osso, tinta preta, uma cor de carimbo, regras de 2px, cantos
+   vivos, números monoespaçados. A promessa do produto — um percurso
+   com cinco fases e um PIN — é desenhada como o boletim que o cliente
+   leva do balcão.
+
+   Índice
+     01. Tokens e base
+     02. Cabeçalho, fita e navegação
+     03. Entrada (poster do percurso)
+     04. Secções, oferta e prosa
+     05. Perguntas
+     06. Formulário e avisos
+     07. Rodapé
+     08. Movimento
+   ===================================================================== */
+
+
+/* =====================================================================
+   01. TOKENS E BASE
+   ===================================================================== */
+.site-body {
+    /* Papel e tinta */
+    --b-papel:        #F3F6F9;
+    --b-papel-fundo:  #E7EFF8;
+    --b-papel-campo:  #FFFFFF;
+    --b-tinta:        #101C28;
+    --b-tinta-70:     #37475A;
+    --b-tinta-55:     #5A6C80;
+    --b-regra:        #E4E9F0;
+
+    /* Cor de carimbo — texto pequeno passa 4.5:1 sobre o papel */
+    --b-carimbo:      #1A5FA0;
+    --b-carimbo-vivo: #2472BC;
+
+    --b-fonte-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo,
+                    Consolas, "Liberation Mono", monospace;
+
+    background: var(--b-papel);
+    color: var(--b-tinta);
+    -webkit-font-smoothing: antialiased;
+}
+
+.site-main {
+    display: block;
+    width: 100%;
+    max-width: 1240px;
+    margin-inline: auto;
+    padding: 0 20px;
+}
+
+.site-main:focus {
+    outline: none;
+}
+
+.site-body :focus-visible {
+    outline: 2px solid var(--b-carimbo-vivo);
+    outline-offset: 3px;
+    border-radius: 0;
+}
+
+.site-body ::selection {
+    background: var(--b-tinta);
+    color: var(--b-papel);
+}
+
+.site-body ::placeholder {
+    color: var(--b-tinta-55);
+    opacity: 1;
+}
+
+/* --- Botões: bloco de tinta com sombra de carimbo -------------------- */
+.site-body .botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 13px 22px;
+    border: 2px solid var(--b-tinta);
+    border-radius: 0;
+    background: transparent;
+    color: var(--b-tinta);
+    font-family: var(--b-fonte-mono);
+    font-size: .8125rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.site-body .botao--primario {
+    background: var(--b-carimbo);
+    color: #FFFFFF;
+    box-shadow: 6px 6px 0 var(--b-tinta);
+}
+
+.site-body .botao--primario:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 var(--b-tinta);
+}
+
+.site-body .botao--primario:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--b-tinta);
+}
+
+.site-body .botao--fantasma {
+    background: transparent;
+    color: var(--b-tinta);
+    border-color: var(--b-tinta);
+}
+
+.site-body .botao--fantasma:hover {
+    background: var(--b-tinta);
+    color: var(--b-papel);
+}
+
+.botao--grande {
+    min-height: 56px;
+    padding-inline: 28px;
+    font-size: .875rem;
+}
+
+.ligacao-texto {
+    color: var(--b-tinta);
+    text-decoration: none;
+    border-bottom: 2px solid var(--b-carimbo);
+    padding-bottom: 1px;
+    font-weight: 650;
+}
+
+.ligacao-texto:hover {
+    background: var(--b-carimbo);
+    color: var(--b-papel);
+    border-bottom-color: var(--b-tinta);
+}
+
+
+/* =====================================================================
+   02. CABEÇALHO, FITA E NAVEGAÇÃO
+   ===================================================================== */
+.site-topo {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    background: var(--b-papel);
+    border-bottom: 2px solid var(--b-tinta);
+}
+
+.site-topo__interior {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 20px;
+    width: 100%;
+    max-width: 1240px;
+    margin-inline: auto;
+    padding: 12px 20px;
+}
+
+.site-marca {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.site-marca .marca__simbolo {
+    width: 34px;
+    height: 34px;
+    border-radius: 0;
+    background: var(--b-tinta);
+    box-shadow: none;
+}
+
+.site-marca .marca__nome {
+    color: var(--b-tinta);
+    font-size: 1.375rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -.035em;
+    text-transform: uppercase;
+}
+
+.site-marca .marca__descricao {
+    margin-top: 3px;
+    color: var(--b-tinta-55);
+    font-family: var(--b-fonte-mono);
+    font-size: .625rem;
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+}
+
+.site-menu-botao {
+    min-height: 44px;
+    padding: 0 16px;
+    border: 2px solid var(--b-tinta);
+    border-radius: 0;
+    background: transparent;
+    color: var(--b-tinta);
+    font-family: var(--b-fonte-mono);
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.site-menu-botao:hover {
+    background: var(--b-tinta);
+    color: var(--b-papel);
+}
+
+/* --- A fita: o cabeçalho do boletim -------------------------------- */
+.fita {
+    background: var(--b-tinta);
+    color: var(--b-papel);
+    overflow: hidden;
+}
+
+.fita__texto {
+    max-width: 1240px;
+    margin-inline: auto;
+    padding: 9px 20px;
+    font-family: var(--b-fonte-mono);
+    font-size: .6875rem;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    line-height: 1.6;
+}
+
+/* --- Navegação ------------------------------------------------------ */
+.site-nav {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    padding: 6px 0 2px;
+    border-top: 1px solid var(--b-regra);
+}
+
+.site-nav--aberto {
+    display: flex;
+}
+
+.site-nav__ligacao {
+    display: flex;
+    align-items: center;
+    min-height: 46px;
+    padding: 0 2px;
+    border-bottom: 1px solid var(--b-regra);
+    color: var(--b-tinta);
+    font-family: var(--b-fonte-mono);
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.site-nav__ligacao:hover {
+    color: var(--b-carimbo);
+}
+
+.site-nav__ligacao[aria-current="page"] {
+    color: var(--b-carimbo);
+    font-weight: 700;
+}
+
+.site-nav__ligacao--estado {
+    color: var(--b-carimbo);
+}
+
+/* --- Submenu «O que reparamos» ------------------------------------- */
+/* O botão não é uma ligação: o estilo vem do .site-nav__ligacao, mas o
+   browser traz fundo e borda próprios. */
+.site-nav__botao-menu {
+    gap: 7px;
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid var(--b-regra);
+    background: none;
+    cursor: pointer;
+    text-align: left;
+}
+
+.site-nav__seta {
+    flex: 0 0 auto;
+    transition: transform 120ms ease;
+}
+
+.site-nav__botao-menu[aria-expanded="true"] .site-nav__seta {
+    transform: rotate(180deg);
+}
+
+.site-nav__submenu {
+    margin: 0;
+    padding: 0 0 6px 14px;
+    list-style: none;
+    border-bottom: 1px solid var(--b-regra);
+}
+
+.site-nav__submenu[hidden] {
+    display: none !important;
+}
+
+.site-nav__submenu a {
+    display: flex;
+    align-items: center;
+    min-height: 42px;
+    color: var(--b-tinta-70);
+    font-family: var(--b-fonte-mono);
+    font-size: .75rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.site-nav__submenu a:hover,
+.site-nav__submenu a:focus-visible {
+    color: var(--b-carimbo);
+}
+
+.site-nav__submenu-fim a {
+    color: var(--b-carimbo);
+    border-top: 1px solid var(--b-regra);
+    margin-top: 4px;
+}
+
+.site-nav__acao {
+    margin: 12px 0 4px;
+}
+
+@media (min-width: 980px) {
+    .site-menu-botao {
+        display: none;
+    }
+
+    .site-nav {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 22px;
+        width: auto;
+        padding: 0;
+        border-top: 0;
+    }
+
+    .site-nav__ligacao {
+        min-height: 44px;
+        padding: 0;
+        border-bottom: 0;
+    }
+
+    .site-nav__ligacao[aria-current="page"],
+    .site-nav__ligacao:hover {
+        box-shadow: inset 0 -2px 0 var(--b-carimbo);
+    }
+
+    .site-nav__ligacao--estado {
+        color: var(--b-tinta);
+    }
+
+    .site-nav__acao {
+        margin: 0 0 0 2px;
+    }
+
+    /* Em ecrã largo o submenu flutua debaixo do botão, numa caixa de 2px. */
+    .site-nav__grupo {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .site-nav__botao-menu {
+        width: auto;
+        border-bottom: 0;
+        border: 0;
+        padding: 0;
+    }
+
+    .site-nav__botao-menu[aria-expanded="true"] {
+        box-shadow: inset 0 -2px 0 var(--b-carimbo);
+    }
+
+    .site-nav__submenu {
+        position: absolute;
+        top: calc(100% + 12px);
+        left: -14px;
+        min-width: 232px;
+        padding: 6px 0;
+        border: 2px solid var(--b-tinta);
+        border-bottom: 2px solid var(--b-tinta);
+        background: var(--b-papel);
+        box-shadow: 6px 6px 0 var(--b-tinta);
+    }
+
+    .site-nav__submenu a {
+        padding: 0 16px;
+    }
+
+    .site-nav__submenu a:hover {
+        background: var(--b-tinta);
+        color: var(--b-papel);
+    }
+
+    .site-nav__submenu-fim a {
+        margin-top: 4px;
+        padding-top: 0;
+    }
+}
+
+/* Ecrãs muito estreitos: a assinatura fica só com o nome e o título
+   baixa um degrau, para o cabeçalho não partir em duas linhas. */
+@media (max-width: 380px) {
+    .site-marca .marca__descricao {
+        display: none;
+    }
+
+    .fita__texto {
+        font-size: .625rem;
+        letter-spacing: .1em;
+    }
+
+    .faixa__titulo {
+        font-size: 2rem;
+        letter-spacing: -.045em;
+    }
+}
+
+
+/* =====================================================================
+   03. ENTRADA — o poster do percurso
+   ===================================================================== */
+.faixa {
+    padding: 34px 0 0;
+}
+
+.faixa__sobre {
+    font-family: var(--b-fonte-mono);
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--b-carimbo);
+}
+
+.faixa__titulo {
+    max-width: 22ch;
+    margin-top: 16px;
+    color: var(--b-tinta);
+    font-size: clamp(2.25rem, 1.1rem + 5.6vw, 5rem);
+    font-weight: 800;
+    line-height: .9;
+    letter-spacing: -.055em;
+    text-transform: uppercase;
+    text-wrap: balance;
+}
+
+.faixa__lede {
+    max-width: 46ch;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--b-regra);
+    color: var(--b-tinta-70);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+}
+
+/* --- O percurso ----------------------------------------------------- */
+.percurso {
+    position: relative;
+    margin: 34px 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 2px solid var(--b-tinta);
+}
+
+.percurso__regua {
+    display: none;
+}
+
+.percurso__passo {
+    display: grid;
+    grid-template-columns: 60px minmax(0, 1fr);
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--b-regra);
+}
+
+.percurso__passo::before {
+    display: none;
+}
+
+.percurso__passo:last-child {
+    border-bottom: 0;
+}
+
+.percurso__marca {
+    display: block;
+    width: auto;
+    height: auto;
+    border: 0;
+    background: none;
+    color: var(--b-carimbo);
+    font-family: var(--b-fonte-mono);
+    font-size: 1.625rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -.02em;
+    font-variant-numeric: tabular-nums;
+}
+
+.percurso__texto {
+    min-width: 0;
+}
+
+.percurso__nome {
+    display: block;
+    color: var(--b-tinta);
+    font-size: 1.0625rem;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -.022em;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+}
+
+.percurso__desc {
+    display: block;
+    margin-top: 6px;
+    color: var(--b-tinta-70);
+    font-size: .9375rem;
+    line-height: 1.5;
+}
+
+.percurso__cliente {
+    display: block;
+    margin-top: 8px;
+    color: var(--b-tinta-55);
+    font-family: var(--b-fonte-mono);
+    font-size: .75rem;
+    line-height: 1.45;
+}
+
+.percurso__cliente::before {
+    content: "→ ";
+    color: var(--b-carimbo);
+    font-weight: 700;
+}
+
+.percurso__passo:last-child .percurso__marca {
+    background: none;
+    color: var(--b-carimbo);
+}
+
+@media (min-width: 900px) {
+    .faixa {
+        padding-top: 56px;
+    }
+
+    .faixa__titulo {
+        max-width: 26ch;
+    }
+
+    /* Cinco colunas separadas por regra, com a barra de progresso
+       a correr por cima da regra superior. */
+    .percurso {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        margin-top: 46px;
+    }
+
+    .percurso__regua {
+        display: block;
+        position: absolute;
+        top: -2px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+            to right,
+            var(--b-carimbo-vivo) 0 var(--progresso, 0%),
+            transparent var(--progresso, 0%) 100%
+        );
+    }
+
+    .percurso__passo {
+        display: block;
+        padding: 22px 20px 26px;
+        border-bottom: 0;
+        border-left: 1px solid var(--b-regra);
+    }
+
+    .percurso__passo:first-of-type {
+        padding-left: 0;
+        border-left: 0;
+    }
+
+    .percurso__passo:last-child {
+        padding-right: 0;
+    }
+
+    .percurso__marca {
+        margin-bottom: 14px;
+        font-size: 2.5rem;
+    }
+
+    .percurso__nome {
+        font-size: 1rem;
+    }
+}
+
+/* --- Extremidades: PIN à esquerda, pedido à direita ------------------ */
+.faixa__acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 16px 28px;
+    margin-top: 8px;
+    padding: 22px 0;
+    border-top: 2px solid var(--b-tinta);
+}
+
+/* O acesso ao estado fica colado à promessa: em telemóvel o PIN aparece
+   antes das cinco fases, não depois delas. */
+.faixa__acesso {
+    margin-top: 28px;
+}
+
+/* O PIN é o que o cliente vem buscar: campo a sério na primeira dobra,
+   não uma ligação de rodapé. */
+.faixa__pin {
+    max-width: 330px;
+    margin: 0;
+}
+
+.faixa__pin-rotulo {
+    display: block;
+    color: var(--b-tinta-70);
+    font-family: var(--b-fonte-mono);
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+
+.faixa__pin-linha {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.site-body .faixa__pin-campo {
+    width: 8.9em;
+    min-height: 52px;
+    padding: 0 12px;
+    border: 2px solid var(--b-tinta);
+    border-radius: 0;
+    background: var(--b-papel-campo);
+    color: var(--b-tinta);
+    font-family: var(--b-fonte-mono);
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: .22em;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+}
+
+.site-body .faixa__pin-campo:focus {
+    border-color: var(--b-tinta);
+    outline: 2px solid var(--b-carimbo-vivo);
+    outline-offset: 1px;
+}
+
+.site-body .faixa__pin-campo::placeholder {
+    color: #94A4B5;
+    letter-spacing: .22em;
+}
+
+.site-body .faixa__pin .botao {
+    min-height: 52px;
+}
+
+.faixa__pin-ajuda {
+    margin-top: 8px;
+    color: var(--b-tinta-55);
+    font-size: .75rem;
+    line-height: 1.45;
+}
+
+@media (min-width: 720px) {
+    .faixa__acoes {
+        justify-content: flex-end;
+    }
+}
+
+
+/* =====================================================================
+   03b. ABAS POR TIPO DE EQUIPAMENTO (servicos.php)
+   ===================================================================== */
+.tipos {
+    margin-top: 24px;
+}
+
+.tipos__lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 22px;
+    padding: 0;
+    list-style: none;
+}
+
+.tipos__lista[hidden],
+.tipos__painel[hidden] {
+    display: none !important;
+}
+
+.site-body .tipos__botao {
+    min-height: 46px;
+    padding: 0 15px;
+    border: 2px solid var(--b-tinta);
+    border-radius: 0;
+    background: transparent;
+    color: var(--b-tinta);
+    font-family: var(--b-fonte-mono);
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.site-body .tipos__botao:hover {
+    background: var(--b-papel-fundo);
+}
+
+.site-body .tipos__botao[aria-selected="true"] {
+    background: var(--b-tinta);
+    color: var(--b-papel);
+}
+
+.tipos__painel {
+    display: grid;
+    gap: 20px;
+    padding-top: 24px;
+    border-top: 2px solid var(--b-tinta);
+}
+
+.tipos__arte {
+    display: grid;
+    place-items: center;
+    min-height: 148px;
+    padding: 18px;
+    border: 2px solid var(--b-tinta);
+    background: var(--b-papel-campo);
+    color: var(--b-carimbo);
+}
+
+.tipos__arte svg {
+    width: 112px;
+    height: 112px;
+}
+
+.tipos__nome {
+    color: var(--b-tinta);
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -.03em;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.tipos__nota {
+    max-width: 56ch;
+    margin-top: 10px;
+    color: var(--b-tinta-70);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.tipos__mais {
+    margin-top: 14px;
+}
+
+@media (min-width: 720px) {
+    .tipos__painel {
+        grid-template-columns: 220px minmax(0, 1fr);
+        gap: 32px;
+        align-items: center;
+        padding-top: 28px;
+    }
+}
+
+/* =====================================================================
+   04. SECÇÕES, OFERTA E PROSA
+   ===================================================================== */
+.bloco {
+    margin-top: 0;
+    padding: 46px 0 0;
+    border-top: 1px solid var(--b-regra);
+}
+
+.bloco__titulo {
+    max-width: 24ch;
+    color: var(--b-tinta);
+    font-size: clamp(1.375rem, 1.1rem + 1.2vw, 2.25rem);
+    font-weight: 800;
+    line-height: .96;
+    letter-spacing: -.04em;
+    text-transform: uppercase;
+    text-wrap: balance;
+}
+
+/* Marca de impressão antes do título de secção. */
+.bloco__titulo::before {
+    content: "";
+    display: block;
+    width: 30px;
+    height: 4px;
+    margin-bottom: 16px;
+    background: var(--b-carimbo);
+}
+
+.bloco__lede {
+    max-width: 60ch;
+    margin-top: 14px;
+    color: var(--b-tinta-70);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* A oferta é uma tabela sem preços: regra grossa em cima, linhas
+   finas em baixo, tipo à esquerda e nota à direita. */
+.oferta {
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 2px solid var(--b-tinta);
+}
+
+.oferta__linha {
+    display: grid;
+    gap: 6px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--b-regra);
+}
+
+.oferta__tipo {
+    color: var(--b-tinta);
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -.03em;
+    text-transform: uppercase;
+}
+
+.oferta__nota {
+    max-width: 62ch;
+    color: var(--b-tinta-70);
+    font-size: .9375rem;
+    line-height: 1.55;
+}
+
+@media (min-width: 720px) {
+    .oferta__linha {
+        grid-template-columns: 250px minmax(0, 1fr);
+        gap: 32px;
+        align-items: baseline;
+        padding: 20px 0;
+    }
+}
+
+/* --- Prosa ---------------------------------------------------------- */
+.prosa {
+    max-width: 68ch;
+    margin-top: 22px;
+    color: var(--b-tinta-70);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+}
+
+.prosa > * + * {
+    margin-top: 1em;
+}
+
+/* Subtítulos de prosa: etiqueta monoespaçada, como cabeçalho de
+   formulário impresso. */
+.prosa h2 {
+    margin-top: 2.4em;
+    color: var(--b-carimbo);
+    font-family: var(--b-fonte-mono);
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+}
+
+.prosa h3 {
+    margin-top: 1.9em;
+    color: var(--b-tinta);
+    font-size: 1.125rem;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+}
+
+.prosa ul,
+.prosa ol {
+    padding-left: 1.15em;
+}
+
+.prosa li + li {
+    margin-top: .45em;
+}
+
+.prosa li::marker {
+    color: var(--b-carimbo);
+}
+
+.prosa strong {
+    color: var(--b-tinta);
+    font-weight: 700;
+}
+
+/* --- Fecho ---------------------------------------------------------- */
+.fecho {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px 32px;
+    margin-top: 56px;
+    padding: 30px 0 0;
+    border-top: 2px solid var(--b-tinta);
+}
+
+.fecho__texto {
+    max-width: 44ch;
+    color: var(--b-tinta);
+    font-size: clamp(1.125rem, 1rem + .7vw, 1.5rem);
+    font-weight: 800;
+    letter-spacing: -.035em;
+    line-height: 1.12;
+}
+
+
+/* =====================================================================
+   05. PERGUNTAS (details/summary — sem JavaScript)
+   ===================================================================== */
+/* Nome próprio (site-filtro): `.filtro` já é a barra de filtros do painel,
+   que é flex e espremia a etiqueta e o campo numa linha. */
+.site-filtro {
+    display: block;
+    max-width: 460px;
+    margin-top: 26px;
+}
+
+.site-filtro[hidden] {
+    display: none !important;
+}
+
+.site-filtro__rotulo {
+    display: block;
+    color: var(--b-tinta-70);
+    font-family: var(--b-fonte-mono);
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+
+.site-body .site-filtro__campo {
+    display: block;
+    width: 100%;
+    min-height: 46px;
+    margin-top: 8px;
+    padding: 0 12px;
+    border: 2px solid var(--b-tinta);
+    border-radius: 0;
+    background: var(--b-papel-campo);
+    color: var(--b-tinta);
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.site-body .site-filtro__campo:focus {
+    border-color: var(--b-tinta);
+    outline: 2px solid var(--b-carimbo-vivo);
+    outline-offset: 1px;
+}
+
+.site-filtro__estado {
+    margin-top: 8px;
+    color: var(--b-tinta-55);
+    font-size: .8125rem;
+}
+
+.perguntas {
+    margin: 26px 0 0;
+    border-top: 2px solid var(--b-tinta);
+}
+
+.pergunta {
+    border-bottom: 1px solid var(--b-regra);
+}
+
+.pergunta__titulo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    min-height: 58px;
+    padding: 18px 0;
+    color: var(--b-tinta);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    line-height: 1.35;
+    cursor: pointer;
+    list-style: none;
+}
+
+.pergunta__titulo::-webkit-details-marker {
+    display: none;
+}
+
+.pergunta__titulo::after {
+    content: "+";
+    flex: 0 0 auto;
+    color: var(--b-carimbo);
+    font-family: var(--b-fonte-mono);
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.pergunta[open] .pergunta__titulo::after {
+    content: "−";
+}
+
+.pergunta[open] .pergunta__titulo {
+    color: var(--b-carimbo);
+}
+
+.pergunta__resposta {
+    max-width: 66ch;
+    padding: 0 0 22px;
+    color: var(--b-tinta-70);
+    font-size: 1rem;
+    line-height: 1.65;
+}
+
+
+/* =====================================================================
+   06. FORMULÁRIO E AVISOS
+   O formulario.css do painel carrega depois desta folha: os overrides
+   levam .site-body à frente para ganharem por especificidade.
+   ===================================================================== */
+.form-site {
+    margin-top: 26px;
+    max-width: 680px;
+}
+
+.form-site__grelha {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+@media (min-width: 620px) {
+    .form-site__grelha {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .form-site__campo--largo {
+        grid-column: 1 / -1;
+    }
+}
+
+.form-site__rodape {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 22px;
+    margin-top: 26px;
+}
+
+.form-site__nota {
+    max-width: 44ch;
+    color: var(--b-tinta-55);
+    font-size: .8125rem;
+    line-height: 1.5;
+}
+
+/* Armadilha para robôs: fora do ecrã, mas presente no HTML. */
+.form-site__isca {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.site-body .campo__rotulo {
+    color: var(--b-tinta-70);
+    font-family: var(--b-fonte-mono);
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+
+.site-body .campo__rotulo span {
+    font-family: var(--b-fonte-mono);
+    font-size: .6875rem;
+    letter-spacing: .06em;
+    text-transform: none;
+    font-weight: 400;
+}
+
+.site-body .entrada {
+    border: 1.5px solid var(--b-tinta);
+    border-radius: 0;
+    background-color: var(--b-papel-campo);
+    color: var(--b-tinta);
+}
+
+.site-body .entrada:hover {
+    border-color: var(--b-tinta);
+    background-color: #FFFFFF;
+}
+
+.site-body .entrada:focus {
+    border-color: var(--b-tinta);
+    outline: 2px solid var(--b-carimbo-vivo);
+    outline-offset: 1px;
+}
+
+.site-body .campo__ajuda {
+    color: var(--b-tinta-55);
+}
+
+.site-body .campo__erro {
+    color: #9B2C2C;
+}
+
+.site-body .campo--invalido .entrada {
+    border-color: #9B2C2C;
+    background-color: #FCEBEB;
+}
+
+.site-body .campo--invalido .campo__rotulo {
+    color: #9B2C2C;
+}
+
+.site-aviso {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding: 16px 18px;
+    border: 2px solid #9B2C2C;
+    border-radius: 0;
+    background: #FCEBEB;
+    color: #8F2525;
+}
+
+.site-aviso svg {
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    stroke-width: 1.8;
+}
+
+.site-aviso__titulo {
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: -.01em;
+    text-transform: uppercase;
+}
+
+.site-aviso__texto {
+    margin-top: 4px;
+    font-size: .9375rem;
+    line-height: 1.5;
+}
+
+.site-aviso__lista {
+    margin: .5em 0 0;
+    padding-left: 1.1em;
+    font-size: .9375rem;
+    line-height: 1.5;
+}
+
+.site-sucesso {
+    margin-top: 26px;
+    padding: 22px 20px;
+    border: 2px solid #14603D;
+    border-radius: 0;
+    background: #E8F6EE;
+    color: #14603D;
+}
+
+.site-sucesso__titulo {
+    font-family: var(--b-fonte-mono);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+
+/* =====================================================================
+   07. RODAPÉ — o verso do boletim
+   ===================================================================== */
+.site-rodape {
+    margin-top: 56px;
+    padding: 38px 0 0;
+    border-top: 0;
+    background: var(--b-tinta);
+    color: var(--b-papel);
+}
+
+.site-rodape__interior {
+    display: grid;
+    gap: 28px;
+    width: 100%;
+    max-width: 1240px;
+    margin-inline: auto;
+    padding: 0 20px;
+}
+
+.site-rodape .site-marca .marca__simbolo {
+    background: var(--b-papel);
+}
+
+.site-rodape .site-marca .marca__simbolo svg {
+    stroke: var(--b-tinta);
+}
+
+.site-rodape .site-marca .marca__nome {
+    color: var(--b-papel);
+}
+
+.site-rodape .site-marca .marca__descricao {
+    color: #8FA5BC;
+}
+
+.site-rodape__nota {
+    max-width: 34ch;
+    margin-top: 12px;
+    color: #A9BCCE;
+    font-size: .8125rem;
+    line-height: 1.5;
+}
+
+.site-rodape__coluna {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-style: normal;
+}
+
+.site-rodape__coluna a,
+.site-rodape__contactos span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    color: var(--b-papel);
+    font-family: var(--b-fonte-mono);
+    font-size: .75rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.site-rodape__coluna a:hover {
+    color: var(--b-carimbo-vivo);
+    box-shadow: inset 0 -1px 0 var(--b-carimbo-vivo);
+}
+
+.site-rodape__base {
+    width: 100%;
+    max-width: 1240px;
+    margin: 30px auto 0;
+    padding: 18px 20px 22px;
+    border-top: 1px solid #37475A;
+    color: #8FA5BC;
+    font-family: var(--b-fonte-mono);
+    font-size: .6875rem;
+    letter-spacing: .08em;
+}
+
+@media (min-width: 720px) {
+    .site-rodape__interior {
+        grid-template-columns: 1.4fr 1fr 1fr;
+        gap: 34px;
+    }
+
+    .site-rodape__contactos {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 4px 22px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .site-rodape__interior {
+        grid-template-columns: 1.6fr 1fr 1fr 1fr;
+    }
+
+    .site-rodape__contactos {
+        grid-column: auto;
+        flex-direction: column;
+    }
+}
+
+
+/* =====================================================================
+   08. MOVIMENTO
+   ===================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+    .site-body .botao {
+        transition: transform 120ms ease, box-shadow 120ms ease,
+                    background-color 120ms ease, color 120ms ease;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .percurso__regua {
+        background: var(--b-tinta);
+    }
+
+    .site-body .botao--primario {
+        box-shadow: 4px 4px 0 var(--b-tinta);
+    }
+
+    .site-body * {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

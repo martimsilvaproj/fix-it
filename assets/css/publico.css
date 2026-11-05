@@ -1,0 +1,840 @@
+/* =====================================================================
+   FixIt — Consulta pública do estado da reparação
+   Depende de painel.css (tokens, botões, marca) e formulario.css
+   (campos, entradas, erros e alertas). Mobile-first.
+
+   Índice
+     01. Página e cabeçalho
+     02. Hero e cartão de consulta
+     03. Resultado
+     04. Stepper
+     05. Detalhes
+     06. Movimento
+   ===================================================================== */
+
+
+/* A consulta pública usa a folha do painel, mas fica fora das transições
+   entre páginas: quem consulta um PIN não está a atravessar o back office,
+   e a troca de conteúdo depois de submeter o formulário é instantânea. */
+@view-transition {
+    navigation: none;
+}
+
+
+/* =====================================================================
+   01. PÁGINA E CABEÇALHO
+   ===================================================================== */
+.pagina-publica {
+    background: var(--fundo);
+}
+
+.topo-publico {
+    background: var(--branco);
+    border-bottom: 1px solid var(--linha);
+}
+
+.topo-publico__interior {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    max-width: 780px;
+    min-height: var(--topbar-altura);
+    margin-inline: auto;
+    padding: 8px 16px;
+}
+
+.publico {
+    width: 100%;
+    max-width: 780px;
+    margin-inline: auto;
+    padding: 34px 16px 60px;
+}
+
+
+/* =====================================================================
+   02. HERO E CARTÃO DE CONSULTA
+   ===================================================================== */
+.hero {
+    max-width: 540px;
+    margin-inline: auto;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: clamp(1.6875rem, 1.35rem + 1.9vw, 2.375rem);
+    font-weight: 650;
+    line-height: 1.14;
+    letter-spacing: -.028em;
+    color: var(--tinta-900);
+    text-wrap: balance;
+}
+
+.hero__texto {
+    max-width: 46ch;
+    margin: 12px auto 0;
+    color: var(--tinta-500);
+    font-size: var(--texto-md);
+}
+
+/* Cartão central — a única superfície elevada da página. */
+.cartao {
+    margin-top: 24px;
+    padding: 20px;
+    border-radius: var(--raio-xl);
+    background: var(--branco);
+    box-shadow: var(--sombra-2);
+    text-align: left;
+}
+
+.cartao__campos {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+}
+
+/* Consulta por PIN: um só campo, que não parte a grelha em duas colunas
+   e fica centrado, como um código se lê. */
+.cartao__campos.cartao__campos--unico {
+    grid-template-columns: 1fr;
+    max-width: 264px;
+    margin-inline: auto;
+}
+
+.cartao__botao {
+    width: 100%;
+    height: 46px;
+    margin-top: 16px;
+}
+
+.cartao__nota {
+    margin-top: 10px;
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+    text-align: center;
+}
+
+/* O PIN é um código: dígitos separados, centrados e alinhados. */
+.entrada--pin {
+    text-align: center;
+    letter-spacing: .28em;
+    font-variant-numeric: tabular-nums;
+}
+
+.entrada--pin::placeholder {
+    letter-spacing: .28em;
+}
+
+.hero__nota {
+    max-width: 42ch;
+    margin: 18px auto 0;
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+
+/* =====================================================================
+   03. RESULTADO
+   ===================================================================== */
+.resultado {
+    margin-top: 34px;
+    padding: 22px 18px;
+    border-radius: var(--raio-xl);
+    background: var(--branco);
+    box-shadow: var(--sombra-1);
+}
+
+.resultado__titulo {
+    font-size: clamp(1.375rem, 1.2rem + .7vw, 1.625rem);
+    font-weight: 650;
+    line-height: 1.2;
+    letter-spacing: -.02em;
+    color: var(--tinta-900);
+    /* O estado é o que o cliente lê primeiro, e a este tamanho uma palavra
+       sem espaços atravessa o cartão em vez de quebrar — o mesmo tratamento
+       que a descrição dos painéis do back office leva. As palavras com
+       espaços continuam a quebrar nos mesmos sítios. */
+    overflow-wrap: anywhere;
+}
+
+.resultado__equipamento {
+    margin-top: 4px;
+    color: var(--tinta-500);
+    font-size: var(--texto-base);
+    /* O modelo vem da ficha e pode ser uma palavra só ("LenovoThinkPadT14"):
+       sem isto saía do cartão em vez de quebrar. */
+    overflow-wrap: anywhere;
+}
+
+/* «A seguir» — o próximo passo em texto, por baixo do percurso. */
+.resultado__seguinte {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--linha);
+    color: var(--tinta-700);
+    font-size: var(--texto-sm);
+    line-height: 1.55;
+}
+
+.resultado__seguinte-rotulo {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--tinta-900);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+
+.resultado__acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px 16px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--linha);
+}
+
+/* Explica a ausência do nome do cliente sem deixar um vazio estranho. */
+.resultado__nota {
+    max-width: 46ch;
+    margin-right: auto;
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+    line-height: 1.45;
+    /* A nota divide a linha com o «Terminar consulta»: sem isto, uma
+       palavra sem espaços empurrava a ligação em vez de quebrar. */
+    overflow-wrap: anywhere;
+}
+
+.ligacao-discreta {
+    border-radius: 4px;
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+}
+
+.ligacao-discreta:hover {
+    color: var(--tinta-900);
+}
+
+
+/* =====================================================================
+   04. STEPPER
+   Horizontal a partir de 640px; vertical abaixo disso.
+   A linha usa a variável --progresso definida pelo PHP (0/25/50/75/100%).
+   ===================================================================== */
+.progresso {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin: 22px 0 2px;
+    padding: 0;
+    list-style: none;
+}
+
+/* Linha vertical (mobile). */
+.progresso__passo {
+    position: relative;
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr);
+    align-items: start;
+    gap: 12px;
+    padding-bottom: 18px;
+}
+
+.progresso__passo:last-child {
+    padding-bottom: 0;
+}
+
+.progresso__passo:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 26px;
+    bottom: 0;
+    left: 12px;
+    width: 2px;
+    background: #DDE4EC;
+}
+
+.progresso__passo.is-concluido:not(:last-child)::after {
+    background: var(--azul-600);
+}
+
+.progresso__marca {
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border: 1.5px solid #CBD6E3;
+    border-radius: 50%;
+    background: var(--branco);
+    color: #fff;
+}
+
+.progresso__marca svg {
+    width: 13px;
+    height: 13px;
+    stroke-width: 2.6;
+}
+
+/* Nome da fase e a data em que o pedido lá entrou. */
+.progresso__texto {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    padding-top: 4px; /* centra a linha do nome nos 26px do marcador */
+}
+
+.progresso__nome {
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+    font-weight: 500;
+    line-height: 1.35;
+    /* O nome da fase é a mesma etiqueta que o título do resultado mostra
+       («Em diagnóstico»), e aí já quebra palavras sem espaços. Sem isto, uma
+       fase com uma palavra longa saía do cartão pelo percurso, mesmo com o
+       título a segurar-se. */
+    overflow-wrap: anywhere;
+}
+
+/* Data de entrada na fase: apoio, nunca a informação principal. */
+.progresso__data {
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+    font-weight: 450;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: .01em;
+    line-height: 1.3;
+}
+
+/* Concluído */
+.progresso__passo.is-concluido .progresso__marca {
+    border-color: var(--azul-600);
+    background: var(--azul-600);
+}
+
+.progresso__passo.is-concluido .progresso__nome {
+    color: var(--tinta-700);
+}
+
+/* Atual */
+.progresso__passo.is-atual .progresso__marca {
+    border: 2px solid var(--azul-600);
+    background: var(--branco);
+}
+
+.progresso__passo.is-atual .progresso__marca::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--azul-600);
+}
+
+.progresso__passo.is-atual .progresso__nome {
+    color: var(--tinta-900);
+    font-weight: 650;
+}
+
+
+/* =====================================================================
+   05. DETALHES
+   ===================================================================== */
+.detalhes {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin: 24px 0 0;
+}
+
+.detalhes__item {
+    min-width: 0;
+    padding: 11px 0;
+    border-top: 1px solid var(--linha);
+}
+
+.detalhes dt {
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    /* As etiquetas e os valores do dicionário quebram da mesma maneira: um
+       valor longo já era protegido, e a etiqueta não, na mesma linha. */
+    overflow-wrap: anywhere;
+}
+
+.detalhes dd {
+    margin: 3px 0 0;
+    color: var(--tinta-900);
+    font-size: var(--texto-base);
+    font-weight: 550;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.detalhes dd.detalhes__avaria {
+    font-weight: 500;
+    white-space: pre-line;
+}
+
+
+/* =====================================================================
+   06. MOVIMENTO
+   ===================================================================== */
+.resultado {
+    animation: resultado-entrar .38s cubic-bezier(.22, .61, .36, 1) both;
+}
+
+@keyframes resultado-entrar {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+
+/* =====================================================================
+   07. RESPONSIVIDADE
+   ===================================================================== */
+/* Em ecrãs muito estreitos a assinatura da marca sai para o nome
+   não partir em duas linhas dentro do cabeçalho. */
+@media (max-width: 379px) {
+    .topo-publico .marca__descricao {
+        display: none;
+    }
+}
+
+@media (min-width: 480px) {
+    .cartao__campos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 560px) {
+    .topo-publico__interior,
+    .publico {
+        padding-inline: 24px;
+    }
+
+    .cartao {
+        padding: 26px;
+    }
+}
+
+@media (min-width: 640px) {
+    /* Stepper horizontal */
+    .progresso {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        margin: 26px 0 4px;
+    }
+
+    .progresso::before {
+        content: "";
+        position: absolute;
+        top: 13px;
+        right: 10%;
+        left: 10%;
+        height: 2px;
+        border-radius: 1px;
+        background: linear-gradient(
+            to right,
+            var(--azul-600) 0 var(--progresso, 0%),
+            #DDE4EC var(--progresso, 0%) 100%
+        );
+    }
+
+    .progresso__passo {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding-bottom: 0;
+        text-align: center;
+    }
+
+    .progresso__passo:not(:last-child)::after {
+        display: none;
+    }
+
+    .progresso__marca {
+        position: relative;
+        z-index: 1;
+    }
+
+    .progresso__nome {
+        font-size: var(--texto-xs);
+    }
+
+    .progresso__texto {
+        align-items: center;
+        gap: 3px;
+        padding-top: 0;
+    }
+
+    /* Detalhes a duas colunas */
+    .detalhes {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 28px;
+    }
+
+    .detalhes__item--largo {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (min-width: 720px) {
+    .publico {
+        padding: 48px 28px 72px;
+    }
+
+    .topo-publico__interior {
+        padding-inline: 28px;
+    }
+
+    .resultado {
+        padding: 28px 30px;
+    }
+}
+
+
+/* =====================================================================
+   REVESTIMENTO — direcção do site (talão de oficina)
+   Esta folha desenha a consulta por PIN com os tokens do painel em todo
+   o lado. Aqui a página redefine-os localmente, para a consulta pertencer
+   ao mesmo mundo do resto do site. Nenhuma regra do painel é tocada:
+   --azul-* deixa de ser azul, mas só dentro de .pagina-publica.
+   ===================================================================== */
+.pagina-publica {
+    --fundo: #F3F6F9;
+    --branco: #FFFFFF;
+    --tinta-900: #101C28;
+    --tinta-700: #37475A;
+    --tinta-500: #5A6C80;
+    --tinta-400: #5A6C80;
+    --linha: #E4E9F0;
+    --azul-900: #0C2038;
+    --azul-800: #123A5F;
+    --azul-700: #17497A;
+    --azul-600: #1A5FA0;
+    --azul-500: #2472BC;
+    --azul-100: #E7EFF8;
+    --azul-50: #F2F7FC;
+    --raio-sm: 0;
+    --raio-md: 0;
+    --raio-lg: 0;
+    --raio-xl: 0;
+    --sombra-1: none;
+    --sombra-2: none;
+
+    background: var(--fundo);
+    color: var(--tinta-900);
+}
+
+.pagina-publica .topo-publico {
+    border-bottom: 2px solid var(--tinta-900);
+    background: var(--fundo);
+}
+
+.pagina-publica .marca__simbolo {
+    border-radius: 0;
+    background: var(--tinta-900);
+    box-shadow: none;
+}
+
+.pagina-publica .marca__nome {
+    color: var(--tinta-900);
+    font-weight: 800;
+    letter-spacing: -.035em;
+    text-transform: uppercase;
+}
+
+.pagina-publica .marca__descricao {
+    color: var(--tinta-500);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .625rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+}
+
+.pagina-publica .hero h1 {
+    font-weight: 800;
+    line-height: .95;
+    letter-spacing: -.045em;
+    text-transform: uppercase;
+}
+
+.pagina-publica .hero__texto {
+    padding-top: 16px;
+    border-top: 1px solid var(--linha);
+}
+
+.pagina-publica .cartao {
+    border: 2px solid var(--tinta-900);
+    background: var(--branco);
+}
+
+.pagina-publica .campo__rotulo {
+    color: var(--tinta-700);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+
+.pagina-publica .entrada {
+    border: 1.5px solid var(--tinta-900);
+    background-color: #FFFFFF;
+}
+
+.pagina-publica .entrada:focus {
+    border-color: var(--tinta-900);
+    outline: 2px solid #2472BC;
+    outline-offset: 1px;
+}
+
+.pagina-publica .botao {
+    border-radius: 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.pagina-publica .botao--primario {
+    color: var(--branco);
+    box-shadow: 6px 6px 0 #101C28;
+}
+
+.pagina-publica ::selection {
+    background: var(--tinta-900);
+    color: var(--branco);
+}
+
+/* Estados que o painel pinta à maneira dele: no site, caixa fechada e
+   botão desactivado sem carimbo. */
+.pagina-publica .alerta {
+    border: 2px solid #9B2C2C;
+    background: #FCEBEB;
+}
+
+.pagina-publica .alerta--sucesso {
+    border-color: #14603D;
+    background: #E8F6EE;
+}
+
+.pagina-publica .botao:disabled,
+.pagina-publica .botao[disabled] {
+    box-shadow: none;
+    background: #C9D4E1;
+    color: #3B4C5F;
+    border-color: #C9D4E1;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* O botão de imprimir é uma ligação discreta com comportamento de botão:
+   mesmo peso visual, mas accionável sem recarregar a página. */
+button.ligacao-discreta {
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+}
+
+/* --- Decisão do orçamento ------------------------------------------ */
+/* O único ponto da consulta em que o cliente age. Caixa fechada de 2px,
+   como o resto do site, e dois botões do mesmo tamanho. */
+.decisao {
+    margin-top: 22px;
+    padding: 18px;
+    border: 2px solid var(--tinta-900);
+    background: var(--branco);
+}
+
+.decisao__titulo {
+    color: var(--tinta-900);
+    font-size: 1.0625rem;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+.decisao__texto {
+    margin-top: 8px;
+    color: var(--tinta-700);
+    font-size: var(--texto-sm);
+    line-height: 1.55;
+}
+
+.decisao__acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.decisao__acoes .botao {
+    flex: 1 1 180px;
+    min-height: 48px;
+}
+
+/* O botão secundário é uma caixa aberta, não um botão desactivado: o cinza
+   do painel lia-se como «não podes carregar aqui». */
+.pagina-publica .decisao__acoes .botao {
+    border: 2px solid var(--tinta-900);
+    background: transparent;
+    color: var(--tinta-900);
+    box-shadow: none;
+}
+
+.pagina-publica .decisao__acoes .botao:hover {
+    border-color: var(--tinta-900);
+    background: var(--tinta-900);
+    color: #FFFFFF;
+}
+
+.pagina-publica .decisao__acoes .botao--primario {
+    border-color: var(--azul-600);
+    background: var(--azul-600);
+    color: #FFFFFF;
+    box-shadow: 6px 6px 0 #101C28;
+}
+
+.pagina-publica .decisao__acoes .botao--primario:hover {
+    background: var(--azul-500);
+    border-color: var(--azul-500);
+    color: #FFFFFF;
+}
+
+
+/* =====================================================================
+   08. IMPRESSÃO
+   O cliente leva o estado em papel. Sai a interface — cabeçalho,
+   formulário, botões — e fica o resultado, a preto sobre branco.
+   ===================================================================== */
+
+/* Cabeçalho do talão impresso: só existe no papel. */
+.resultado__impresso {
+    display: none;
+}
+
+@page {
+    margin: 16mm;
+}
+
+@media print {
+    .pagina-publica {
+        background: #FFFFFF;
+        color: #000000;
+    }
+
+    .pagina-publica .saltar-conteudo,
+    .pagina-publica .topo-publico,
+    .pagina-publica .hero,
+    .pagina-publica .decisao__acoes,
+    .pagina-publica .resultado__acoes {
+        display: none !important;
+    }
+
+    /* A decisão fica no papel como registo, sem os botões. */
+    .pagina-publica .decisao {
+        border-color: #000000;
+        background: #FFFFFF;
+    }
+
+    .pagina-publica .publico {
+        max-width: none;
+        padding: 0;
+    }
+
+    .pagina-publica .resultado {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        box-shadow: none;
+        animation: none;
+    }
+
+    .pagina-publica .resultado__impresso {
+        display: block;
+        margin-bottom: 14pt;
+        padding-bottom: 8pt;
+        border-bottom: 2px solid #000000;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 10pt;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+
+    .pagina-publica .resultado__titulo {
+        font-size: 18pt;
+    }
+
+    .pagina-publica .resultado__equipamento,
+    .pagina-publica .progresso__nome,
+    .pagina-publica .progresso__data,
+    .pagina-publica .detalhes dd {
+        color: #000000;
+    }
+
+    .pagina-publica .detalhes dt {
+        color: #333333;
+    }
+
+    /* A linha do percurso mantém a distinção entre feito e por fazer,
+       mas sem depender do azul. */
+    .pagina-publica .progresso::before {
+        background: linear-gradient(
+            to right,
+            #000000 0 var(--progresso, 0%),
+            #C4C4C4 var(--progresso, 0%) 100%
+        );
+    }
+
+    .pagina-publica .progresso__passo:not(:last-child)::after {
+        background: #C4C4C4;
+    }
+
+    .pagina-publica .progresso__passo.is-concluido:not(:last-child)::after {
+        background: #000000;
+    }
+
+    .pagina-publica .progresso__marca {
+        border-color: #000000 !important;
+        background: #FFFFFF !important;
+        color: #000000;
+    }
+
+    .pagina-publica .progresso__passo.is-concluido .progresso__marca {
+        background: #000000 !important;
+        color: #FFFFFF;
+    }
+
+    .pagina-publica .progresso__passo.is-atual .progresso__marca::after {
+        background: #000000;
+    }
+
+    /* Nada de meias fases ou meias fichas no fim de uma folha. */
+    .pagina-publica .progresso__passo,
+    .pagina-publica .detalhes__item {
+        break-inside: avoid;
+    }
+}

@@ -1,0 +1,18 @@
+# FixIt — robôs
+#
+# O site público é indexável. O back office, o código partilhado, o SQL e
+# os uploads não são. A consulta por PIN fica de fora mesmo estando no
+# front office: é uma página pessoal de estado, não conteúdo.
+
+User-agent: *
+Allow: /frontoffice/
+
+Disallow: /backoffice/
+Disallow: /nucleo/
+Disallow: /sql/
+Disallow: /uploads/
+Disallow: /frontoffice/consulta.php
+Disallow: /frontoffice/orcamento.php
+
+# Substituir pelo endereço absoluto depois de publicar:
+# Sitemap: https://exemplo.pt/frontoffice/sitemap.php
