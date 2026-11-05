@@ -312,7 +312,26 @@ h1, h2, h3, .cabecalho h1, .painel__titulo, .metrica__valor {
 
 .migalhas {
     color: var(--saas-suave);
+    font-family: var(--fonte);
     font-size: .8125rem;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+/* A marca da barra lateral: sobre papel branco, o nome tem de ser tinta.
+   O `!important` é aqui deliberado — há duas regras na folha antiga a
+   pintá-la de branco (a da barra e a do tema tinta), e esta camada não
+   deve depender da ordem delas para se ver. */
+.aplicacao .sidebar .marca .marca__nome {
+    color: var(--saas-tinta) !important;
+}
+
+.aplicacao .sidebar .marca .marca__descricao {
+    color: var(--saas-suave) !important;
+}
+
+.aplicacao .sidebar .marca .marca__simbolo {
+    color: var(--saas-azul);
 }
 
 .migalhas a {
@@ -435,8 +454,37 @@ a.metrica:hover {
     box-shadow: var(--saas-sombra-lift);
 }
 
+/* O cabeçalho dos painéis deixa de ser uma faixa de tinta: a superfície
+   do cartão é branca de cima a baixo e o título volta a ser texto. O raio
+   acompanha o do cartão, senão os cantos de cima ficavam direitos.
+   A regra do tema tinta vem depois, para o escuro continuar coerente. */
 .painel__cabecalho {
     border-bottom: 1px solid var(--saas-linha);
+    border-radius: var(--saas-raio-cartao) var(--saas-raio-cartao) 0 0;
+    background: var(--saas-superficie);
+    color: var(--saas-tinta);
+}
+
+.painel__cabecalho h2,
+.painel__cabecalho h3 {
+    color: var(--saas-tinta);
+    letter-spacing: -.02em;
+    text-transform: none;
+}
+
+.painel__descricao {
+    color: var(--saas-suave);
+}
+
+.aplicacao .sidebar .marca .marca__nome {
+    text-transform: none;
+    letter-spacing: -.02em;
+}
+
+[data-tema="tinta"] .painel__cabecalho {
+    background: var(--saas-superficie);
+    border-bottom-color: var(--saas-linha);
+    color: var(--saas-tinta);
 }
 
 /* O cabeçalho de página perde a faixa de tinta e a marca de 34×5 px. */
@@ -454,8 +502,10 @@ a.metrica:hover {
 }
 
 .cabecalho h1::before,
-.principal__cabecalho h1::before {
-    display: none;
+.principal__cabecalho h1::before,
+.painel__cabecalho h2::before,
+.seccao__topo h2::before {
+    display: none !important;
 }
 
 .cabecalho__descricao {
