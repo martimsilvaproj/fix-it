@@ -91,7 +91,12 @@
     text-decoration: none;
 }
 
-.porta__logotipo:focus-visible {
+/* Anel de foco em `:focus`, não em `:focus-visible`. O heurístico decide
+   sozinho quando acende, e já houve teclado a mover o foco sem ele acender;
+   um indicador de foco que às vezes não existe não serve. Aqui acende sempre
+   que o controlo tem foco, em todos os browsers. Custa um contorno a mais a
+   quem clica com o rato — e esse é o lado certo em que se erra. */
+.porta__logotipo:focus {
     outline: 2px solid var(--porta-apricot);
     outline-offset: 4px;
 }
@@ -308,7 +313,7 @@
     color: var(--porta-tinta);
 }
 
-.porta .tema-botao:focus-visible {
+.porta .tema-botao:focus {
     outline: 2px solid var(--porta-cobalto);
     outline-offset: 2px;
 }
@@ -329,7 +334,7 @@
     text-underline-offset: 3px;
 }
 
-.porta__voltar:focus-visible {
+.porta__voltar:focus {
     outline: 2px solid var(--porta-cobalto);
     outline-offset: 3px;
     border-radius: 3px;
@@ -469,7 +474,7 @@
     text-underline-offset: 3px;
 }
 
-.porta__revelar:focus-visible {
+.porta__revelar:focus {
     outline: 2px solid var(--porta-cobalto);
     outline-offset: 2px;
 }
@@ -528,7 +533,7 @@
     transform: translateY(1px);
 }
 
-.porta__botao:focus-visible {
+.porta__botao:focus {
     outline: 2px solid var(--porta-cobalto);
     outline-offset: 3px;
 }
@@ -566,7 +571,7 @@
     color: var(--porta-cobalto);
 }
 
-.porta__legal a:focus-visible {
+.porta__legal a:focus {
     outline: 2px solid var(--porta-cobalto);
     outline-offset: 3px;
     border-radius: 2px;
@@ -580,16 +585,17 @@
     left: 50%;
     z-index: 10;
     padding: 10px 16px;
+    border: 1px solid var(--porta-linha-campo);
     border-radius: 8px;
-    background: var(--porta-tinta);
-    color: var(--porta-fundo);
+    background: var(--porta-fundo);
+    color: var(--porta-tinta);
     font-size: .8125rem;
     font-weight: 600;
     text-decoration: none;
     transform: translate(-50%, -200%);
 }
 
-.porta__salto:focus-visible {
+.porta__salto:focus {
     outline: 2px solid var(--porta-cobalto);
     outline-offset: 2px;
     transform: translate(-50%, 0);
