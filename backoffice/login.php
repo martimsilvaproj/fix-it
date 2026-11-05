@@ -254,6 +254,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p>O equipamento é entregue e levantado na oficina. Não há recolha nem envio.</p>
                 <figcaption>FixIt · assistência técnica</figcaption>
             </figure>
+
+            <!-- As cinco fases do ciclo de vida, as mesmas que o cliente vê
+                 no talão. Decorativas para quem ouve a página: a informação
+                 está no site público e não acrescenta nada ao formulário. -->
+            <div class="porta__estagios" aria-hidden="true">
+                <ol>
+                    <li><span>01</span> Recebido</li>
+                    <li><span>02</span> Diagnóstico</li>
+                    <li><span>03</span> Reparação</li>
+                    <li><span>04</span> Pronto</li>
+                    <li><span>05</span> Entregue</li>
+                </ol>
+            </div>
         </div>
 
         <div class="porta__gama">
@@ -356,6 +369,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 aria-pressed="false" aria-controls="palavra_passe">Mostrar</button>
                     </div>
                     <p class="campo__erro" id="erro-palavra-passe" <?= $erroPassword === '' ? 'hidden' : '' ?>><?= h($erroPassword) ?></p>
+                    <p class="porta__aviso-caps" id="aviso-caps" role="status" hidden>
+                        A tecla Caps Lock está ligada.
+                    </p>
                 </div>
 
                 <p class="porta__ajuda">

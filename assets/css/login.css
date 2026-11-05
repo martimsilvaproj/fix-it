@@ -36,7 +36,9 @@
     --porta-cobalto-fundo: #1b34c9;
     --porta-apricot: #ffc95c;
     --porta-fundo: #ffffff;
+    --porta-campo: #ffffff;
     --porta-superficie: #f6f7fb;
+    --porta-aviso: #8a5a0f;
     --porta-tinta: #0d1117;
     --porta-tinta-suave: #5b6472;
     --porta-linha: #dfe2ea;
@@ -184,6 +186,48 @@
     font-size: .75rem;
 }
 
+/* As cinco fases, em linha: a pauta do talão que o cliente acompanha
+   pelo PIN. Só no ecrã largo — no telemóvel a faixa é para ser curta. */
+.porta__estagios ol {
+    display: flex;
+    gap: 0;
+    margin: 0;
+    padding: 16px 0 0;
+    border-top: 1px solid rgba(255, 255, 255, .3);
+    list-style: none;
+}
+
+.porta__estagios li {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    padding-top: 15px;
+    color: rgba(255, 255, 255, .78);
+    font-size: .625rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+/* O ponto assenta na régua: é ele que faz a linha do tempo. */
+.porta__estagios li::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 0;
+    width: 7px;
+    height: 7px;
+    background: var(--porta-apricot);
+}
+
+.porta__estagios li span {
+    display: block;
+    margin-bottom: 3px;
+    color: rgba(255, 255, 255, .5);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: .14em;
+}
+
 .porta__gama {
     margin-top: auto;
 }
@@ -239,7 +283,9 @@
 /* O botão do tema, na língua desta página: discreto, de canto. */
 .porta .tema-botao {
     height: 40px;
+    min-width: 40px;
     padding: 0 12px;
+    justify-content: center;
     border: 1px solid var(--porta-linha);
     border-radius: 8px;
     background: transparent;
@@ -350,7 +396,7 @@
     padding: 0 12px;
     border: 1px solid var(--porta-linha);
     border-radius: 10px;
-    background: var(--porta-fundo);
+    background: var(--porta-campo);
     transition: border-color .15s ease, box-shadow .15s ease;
 }
 
@@ -419,6 +465,14 @@
 .porta .campo__erro {
     margin: 6px 0 0;
     font-size: .8125rem;
+}
+
+/* Caps Lock: pequeno, ao lado do campo, e só enquanto a tecla está ligada. */
+.porta__aviso-caps {
+    margin: 7px 0 0;
+    color: var(--porta-aviso);
+    font-size: .8125rem;
+    font-weight: 500;
 }
 
 .porta__ajuda {
@@ -500,10 +554,11 @@
    03. ECRÃS
    ===================================================================== */
 @media (max-width: 899px) {
-    /* No telemóvel a marca é uma faixa: palavra, frase, fim. O bilhete e
-       a lista de equipamentos descem para fora — quem veio entrar quer o
-       formulário, não a apresentação. */
+    /* No telemóvel a marca é uma faixa: palavra, frase, fim. O bilhete,
+       a pauta das fases e a lista de equipamentos descem para fora —
+       quem veio entrar quer o formulário, não a apresentação. */
     .porta__facto,
+    .porta__estagios,
     .porta__gama,
     .porta__apoio {
         display: none;
@@ -542,7 +597,9 @@
 
 [data-tema="tinta"] .pagina-entrada {
     --porta-fundo: #0b1622;
-    --porta-superficie: #12202e;
+    --porta-campo: #12202e;
+    --porta-superficie: #16273a;
+    --porta-aviso: #e3b468;
     --porta-tinta: #e9eff5;
     --porta-tinta-suave: #9ab0c3;
     --porta-linha: #22374a;
