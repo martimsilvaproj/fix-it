@@ -1,0 +1,773 @@
+/* =====================================================================
+   FixIt — interior do painel, luz de produto
+
+   Esta folha é a camada de cima: carrega depois de `painel.css` e de
+   `formulario.css` e substitui o revestimento «talão» por uma linguagem
+   de produto — papel cinza-claro, cartões brancos de 24 px, sombras
+   curtas, azul de acção e etiquetas arredondadas.
+
+   O que NÃO muda: a geometria das páginas, as consultas, os formulários,
+   os estados e as tabelas. Só a pele, os raios, as sombras e a
+   tipografia. Quem estiver a ler `painel.css` para perceber o
+   comportamento continua a encontrar lá tudo.
+
+   Regra de conflito: tudo o que aqui aparece existe para sobrepor uma
+   regra do bloco 15 do `painel.css`. Se uma regra daqui desaparecer, o
+   painel volta ao revestimento de talão — não parte.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   Tipografia
+   A mesma disciplina da entrada: a fonte vive em `assets/fonts/` e é
+   servida por nós. Um ficheiro só, variável, com os pesos todos.
+   --------------------------------------------------------------------- */
+@font-face {
+    font-family: 'Plus Jakarta Sans';
+    src: url('../fonts/plus-jakarta-sans-latin.woff2') format('woff2');
+    font-weight: 400 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ---------------------------------------------------------------------
+   01. Tokens
+   --------------------------------------------------------------------- */
+:root {
+    --saas-fundo:      #f8f9fc;
+    --saas-superficie: #ffffff;
+    --saas-linha:      #f3f4f6;
+    --saas-tinta:      #1e293b;
+    --saas-suave:      #64748b;
+    --saas-azul:       #0d6efd;
+    --saas-azul-fundo: #eaf2ff;
+    --saas-laranja:    #f97316;
+    --saas-laranja-bg: #fff7ed;
+    --saas-verde:      #10b981;
+    --saas-verde-bg:   #e8faf3;
+    --saas-rosa:       #ec4899;
+    --saas-roxo:       #a855f7;
+
+    --saas-raio-cartao: 24px;
+    --saas-raio-botao: 12px;
+    --saas-raio-pill: 999px;
+
+    --saas-sombra-sm: 0 1px 2px rgba(30, 41, 59, .04),
+                      0 8px 24px -18px rgba(30, 41, 59, .28);
+    --saas-sombra-lift: 0 2px 4px rgba(30, 41, 59, .04),
+                        0 18px 34px -22px rgba(30, 41, 59, .38);
+    --saas-sombra-primario: 0 10px 22px -10px rgba(13, 110, 253, .65);
+
+    /* Os tokens antigos passam a apontar para os novos: o resto do painel
+       lê `--fundo`, `--branco`, `--linha`, `--tinta-*` e `--azul-*`, e
+       assim acompanha sem ser preciso reescrever componente a componente. */
+    --fundo: var(--saas-fundo);
+    --branco: var(--saas-superficie);
+    --linha: var(--saas-linha);
+    --tinta-900: var(--saas-tinta);
+    --tinta-700: #334155;
+    --tinta-500: var(--saas-suave);
+    --tinta-400: #94a3b8;
+    --azul-600: var(--saas-azul);
+    --azul-500: var(--saas-azul);
+    --azul-100: var(--saas-azul-fundo);
+    --azul-50: #f5f9ff;
+
+    --raio-sm: 10px;
+    --raio-md: var(--saas-raio-botao);
+    --raio-lg: 16px;
+    --raio-xl: var(--saas-raio-cartao);
+
+    --sombra-1: var(--saas-sombra-sm);
+    --sombra-2: var(--saas-sombra-lift);
+
+    --fonte: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system,
+             'Segoe UI', Roboto, sans-serif;
+
+    --sidebar-largura: 256px;
+}
+
+body {
+    background: var(--saas-fundo);
+    color: var(--saas-tinta);
+    font-family: var(--fonte);
+}
+
+h1, h2, h3, .cabecalho h1, .painel__titulo, .metrica__valor {
+    letter-spacing: -.025em;
+}
+
+/* Os números do painel contam-se; não dançam. */
+.metrica__valor,
+.tabela td,
+.navegacao__contagem {
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------------
+   02. A barra lateral
+   Folha branca encostada a um papel cinza. A ligação activa deixa de ser
+   uma placa: fica com véu azul e uma pílula vertical à esquerda.
+   --------------------------------------------------------------------- */
+.sidebar {
+    width: var(--sidebar-largura);
+    background: var(--saas-superficie);
+    border-right: 1px solid var(--saas-linha);
+    box-shadow: none;
+}
+
+/* O selector da oficina: o sítio onde ela se identifica, com o laranja
+   do secundário a marcar presença sem gritar. */
+.organizacao {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 4px 14px 18px;
+    padding: 10px 12px;
+    border: 1px solid #ffedd5;
+    border-radius: var(--saas-raio-botao);
+    background: var(--saas-laranja-bg);
+}
+
+.organizacao__ponto {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--saas-laranja);
+    box-shadow: 0 0 0 4px rgba(249, 115, 22, .16);
+}
+
+.organizacao__texto {
+    display: grid;
+    min-width: 0;
+    line-height: 1.25;
+}
+
+.organizacao__nome {
+    color: #9a3412;
+    font-size: .8125rem;
+    font-weight: 700;
+}
+
+.organizacao__nota {
+    overflow: hidden;
+    color: #c2410c;
+    font-size: .6875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.navegacao__titulo {
+    color: var(--saas-suave);
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.navegacao__ligacao {
+    position: relative;
+    gap: 12px;
+    min-height: 44px;
+    padding: 10px 12px;
+    border-radius: var(--saas-raio-botao);
+    color: #475569;
+    font-size: .875rem;
+    font-weight: 500;
+    transition: background-color .3s ease, color .3s ease, transform .3s ease;
+}
+
+.navegacao__ligacao:hover {
+    background: #f8fafc;
+    color: var(--saas-tinta);
+}
+
+.navegacao__ligacao svg {
+    width: 19px;
+    height: 19px;
+    color: #94a3b8;
+    transition: color .3s ease;
+}
+
+/* A pílula vertical: 3 px de azul à esquerda do item activo. */
+.navegacao__ligacao[aria-current="page"] {
+    background: var(--saas-azul-fundo);
+    color: var(--saas-azul);
+    font-weight: 600;
+    box-shadow: none;
+}
+
+.navegacao__ligacao[aria-current="page"]::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    width: 3px;
+    height: 20px;
+    border-radius: var(--saas-raio-pill);
+    background: var(--saas-azul);
+    transform: translateY(-50%);
+}
+
+.navegacao__ligacao[aria-current="page"] svg {
+    color: var(--saas-azul);
+}
+
+.navegacao__contagem {
+    min-width: 22px;
+    padding: 2px 7px;
+    border: 0;
+    border-radius: var(--saas-raio-pill);
+    background: #f1f5f9;
+    color: #475569;
+    font-size: .6875rem;
+    font-weight: 700;
+}
+
+.navegacao__ligacao[aria-current="page"] .navegacao__contagem {
+    background: var(--saas-azul);
+    color: #ffffff;
+}
+
+.sidebar__rodape {
+    gap: 14px;
+}
+
+.estado-sistema {
+    color: var(--saas-suave);
+    font-size: .6875rem;
+}
+
+/* O cartão do rodapé: um degradê curto e um selo de ícone a flutuar.
+   Leva à consulta pública — o único ecrã que o cliente também vê. */
+.destaque {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    margin: 0 14px 14px;
+    padding: 16px;
+    border: 1px solid #dbeafe;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #eff6ff, #eef2ff);
+    color: var(--saas-tinta);
+    text-decoration: none;
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.destaque:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--saas-sombra-lift);
+}
+
+.destaque:focus-visible {
+    outline: 2px solid var(--saas-azul);
+    outline-offset: 2px;
+}
+
+.destaque__icone {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #ffffff;
+    color: var(--saas-azul);
+    box-shadow: 0 6px 14px -8px rgba(13, 110, 253, .8);
+}
+
+.destaque__icone svg {
+    width: 16px;
+    height: 16px;
+}
+
+.destaque__titulo {
+    display: block;
+    font-size: .8125rem;
+    font-weight: 700;
+    letter-spacing: -.01em;
+}
+
+.destaque__texto {
+    display: block;
+    margin-top: 3px;
+    padding-right: 34px;
+    color: #475569;
+    font-size: .75rem;
+    line-height: 1.45;
+}
+
+/* ---------------------------------------------------------------------
+   03. Barra de topo
+   --------------------------------------------------------------------- */
+.topbar {
+    background: rgba(248, 249, 252, .88);
+    border-bottom: 1px solid var(--saas-linha);
+    box-shadow: none;
+    backdrop-filter: saturate(140%) blur(8px);
+}
+
+.migalhas {
+    color: var(--saas-suave);
+    font-size: .8125rem;
+}
+
+.migalhas a {
+    color: var(--saas-suave);
+}
+
+.migalhas a:hover {
+    color: var(--saas-azul);
+}
+
+.perfil {
+    min-height: 44px;
+    padding: 6px 10px 6px 6px;
+    border-radius: var(--saas-raio-pill);
+    transition: background-color .3s ease;
+}
+
+.perfil:hover {
+    background: #ffffff;
+    box-shadow: var(--saas-sombra-sm);
+}
+
+.perfil__avatar {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--saas-azul);
+    color: #ffffff;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+.perfil__nome {
+    color: var(--saas-tinta);
+    font-size: .8125rem;
+    font-weight: 600;
+}
+
+.perfil__cargo {
+    color: var(--saas-suave);
+    font-size: .6875rem;
+    font-weight: 500;
+}
+
+.tema-botao,
+.botao-icone {
+    border-radius: var(--saas-raio-botao);
+}
+
+.tema-botao:focus-visible,
+.botao-icone:focus-visible,
+.perfil:focus-visible {
+    outline: 2px solid var(--saas-azul);
+    outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------
+   04. Botões
+   --------------------------------------------------------------------- */
+.botao {
+    border-radius: var(--saas-raio-botao);
+    font-family: var(--fonte);
+    font-size: .8125rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    box-shadow: none;
+    transition: transform .3s ease, box-shadow .3s ease,
+                background-color .3s ease, color .3s ease;
+}
+
+.botao:active {
+    transform: translateY(1px);
+}
+
+.botao--primario {
+    border-color: transparent;
+    background: var(--saas-azul);
+    color: #ffffff;
+    box-shadow: var(--saas-sombra-primario);
+}
+
+.botao--primario:hover {
+    background: #0b5ed7;
+    box-shadow: 0 14px 26px -12px rgba(13, 110, 253, .8);
+    transform: translateY(-1px);
+}
+
+.botao--fantasma {
+    border: 1px solid var(--saas-linha);
+    background: #ffffff;
+    color: #475569;
+}
+
+.botao--fantasma:hover {
+    border-color: #e2e8f0;
+    background: #f8fafc;
+    color: var(--saas-tinta);
+}
+
+/* ---------------------------------------------------------------------
+   05. Cartões
+   O painel e as métricas passam a ser superfícies brancas de 24 px com
+   uma linha quase invisível. O hover levanta 2 px e nada mais.
+   --------------------------------------------------------------------- */
+.painel,
+.metrica {
+    border: 1px solid var(--saas-linha);
+    border-radius: var(--saas-raio-cartao);
+    background: var(--saas-superficie);
+    box-shadow: var(--saas-sombra-sm);
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.metrica:hover,
+a.metrica:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--saas-sombra-lift);
+}
+
+.painel__cabecalho {
+    border-bottom: 1px solid var(--saas-linha);
+}
+
+/* O cabeçalho de página perde a faixa de tinta e a marca de 34×5 px. */
+.cabecalho {
+    border-bottom: 0;
+    padding-bottom: 4px;
+}
+
+.cabecalho h1 {
+    color: var(--saas-tinta);
+    font-size: clamp(1.5rem, 1.2rem + .9vw, 1.875rem);
+    font-weight: 800;
+    letter-spacing: -.03em;
+    text-transform: none;
+}
+
+.cabecalho h1::before,
+.principal__cabecalho h1::before {
+    display: none;
+}
+
+.cabecalho__descricao {
+    color: var(--saas-suave);
+    font-size: .875rem;
+}
+
+/* Cartão de métrica com o ícone à esquerda do rótulo. */
+.metrica {
+    padding: 18px 20px;
+}
+
+.metrica__topo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 11px;
+}
+
+.metrica__icone {
+    order: -1;
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--saas-azul-fundo);
+    color: var(--saas-azul);
+    box-shadow: none;
+}
+
+.metrica__icone--ambar {
+    background: var(--saas-laranja-bg);
+    color: var(--saas-laranja);
+}
+
+.metrica__icone--verde {
+    background: var(--saas-verde-bg);
+    color: var(--saas-verde);
+}
+
+.metrica__icone svg {
+    width: 19px;
+    height: 19px;
+}
+
+.metrica__rotulo {
+    color: var(--saas-suave);
+    font-size: .75rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.metrica__valor {
+    margin-top: 10px;
+    color: var(--saas-tinta);
+    font-size: clamp(1.375rem, 1.2rem + .6vw, 1.75rem);
+    font-weight: 800;
+    letter-spacing: -.03em;
+}
+
+.metrica__nota {
+    color: var(--saas-suave);
+    font-size: .75rem;
+}
+
+.metrica__seta {
+    color: #cbd5e1;
+}
+
+/* ---------------------------------------------------------------------
+   06. Estados, etiquetas e tabelas
+   --------------------------------------------------------------------- */
+.estado {
+    border: 0;
+    border-radius: var(--saas-raio-pill);
+    padding: 4px 11px;
+    font-size: .6875rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.estado--recebido,
+.estado--nova {
+    background: #eef2ff;
+    color: #4338ca;
+}
+
+.estado--diagnostico,
+.estado--contacto {
+    background: var(--saas-laranja-bg);
+    color: #c2410c;
+}
+
+.estado--reparacao {
+    background: var(--saas-azul-fundo);
+    color: #1d4ed8;
+}
+
+.estado--pronto {
+    background: var(--saas-verde-bg);
+    color: #047857;
+}
+
+.estado--entregue,
+.estado--arquivada {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.estado--convertida {
+    background: #fdf2f8;
+    color: #be185d;
+}
+
+.tabela__contentor {
+    border: 1px solid var(--saas-linha);
+    border-radius: 18px;
+    background: var(--saas-superficie);
+    overflow: hidden;
+}
+
+.tabela thead th {
+    background: #fbfcfe;
+    color: var(--saas-suave);
+    border-bottom: 1px solid var(--saas-linha);
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+}
+
+.tabela td {
+    border-bottom: 1px solid #f8fafc;
+    color: #334155;
+}
+
+.tabela tbody tr:hover {
+    background: #fbfdff;
+}
+
+/* ---------------------------------------------------------------------
+   07. O gráfico
+   A barra de 12 px arredondada vive no canvas, mas a moldura acompanha:
+   o resumo da secção fica com o tom do papel.
+   --------------------------------------------------------------------- */
+.grafico__resumo,
+.receita__resumo {
+    color: var(--saas-suave);
+}
+
+.receita__vista[aria-pressed="true"] {
+    border-color: transparent;
+    border-radius: var(--saas-raio-pill);
+    background: var(--saas-azul);
+    color: #ffffff;
+    box-shadow: var(--saas-sombra-primario);
+}
+
+/* ---------------------------------------------------------------------
+   08. Movimento
+   --------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .navegacao__ligacao,
+    .botao,
+    .painel,
+    .metrica,
+    .destaque,
+    .perfil {
+        transition: none;
+    }
+
+    .metrica:hover,
+    a.metrica:hover,
+    .destaque:hover,
+    .botao--primario:hover,
+    .botao:active {
+        transform: none;
+    }
+}
+
+/* ---------------------------------------------------------------------
+   09. Tema tinta
+   A folha escura continua a existir e a mesma gramática: superfícies
+   azul-noite, linhas a 8% de branco, o azul de acção mais claro para
+   contrastar, e as etiquetas com o mesmo par cor de fundo/cor de texto.
+   --------------------------------------------------------------------- */
+[data-tema="tinta"] {
+    --saas-fundo: #0b1220;
+    --saas-superficie: #111a2b;
+    --saas-linha: #1e293b;
+    --saas-tinta: #e8eefc;
+    --saas-suave: #94a3b8;
+    --saas-azul: #4f8cff;
+    --saas-azul-fundo: #16233a;
+    --saas-verde-bg: #10261f;
+    --saas-laranja-bg: #2a1c10;
+
+    --azul-100: var(--saas-azul-fundo);
+    --azul-50: #131d2f;
+    --tinta-900: var(--saas-tinta);
+    --tinta-700: #cbd5e1;
+    --tinta-500: var(--saas-suave);
+}
+
+[data-tema="tinta"] body {
+    background: var(--saas-fundo);
+}
+
+[data-tema="tinta"] .topbar {
+    background: rgba(11, 18, 32, .9);
+    border-bottom-color: var(--saas-linha);
+}
+
+[data-tema="tinta"] .sidebar {
+    background: var(--saas-superficie);
+    border-right-color: var(--saas-linha);
+}
+
+[data-tema="tinta"] .navegacao__ligacao {
+    color: #b6c2d6;
+}
+
+[data-tema="tinta"] .navegacao__ligacao:hover {
+    background: #16233a;
+    color: #e8eefc;
+}
+
+[data-tema="tinta"] .navegacao__contagem {
+    background: #1e293b;
+    color: #cbd5e1;
+}
+
+[data-tema="tinta"] .destaque {
+    border-color: #1e3a5f;
+    background: linear-gradient(135deg, #12203a, #16233a);
+    color: #e8eefc;
+}
+
+[data-tema="tinta"] .destaque__texto,
+[data-tema="tinta"] .migalhas,
+[data-tema="tinta"] .metrica__rotulo,
+[data-tema="tinta"] .metrica__nota,
+[data-tema="tinta"] .cabecalho__descricao {
+    color: #9fb0c7;
+}
+
+[data-tema="tinta"] .destaque__icone {
+    background: #0b1220;
+    color: #93b8ff;
+}
+
+[data-tema="tinta"] .botao--fantasma {
+    border-color: #263449;
+    background: transparent;
+    color: #cbd5e1;
+}
+
+[data-tema="tinta"] .tabela thead th {
+    background: #131d2f;
+    color: #9fb0c7;
+}
+
+[data-tema="tinta"] .tabela td {
+    border-bottom-color: #16233a;
+    color: #cbd5e1;
+}
+
+[data-tema="tinta"] .tabela tbody tr:hover {
+    background: #16233a;
+}
+
+[data-tema="tinta"] .perfil:hover {
+    background: #16233a;
+}
+
+[data-tema="tinta"] .perfil__nome {
+    color: #e8eefc;
+}
+
+[data-tema="tinta"] .estado--recebido,
+[data-tema="tinta"] .estado--nova {
+    background: #1e2a4d;
+    color: #c7d2fe;
+}
+
+[data-tema="tinta"] .estado--diagnostico,
+[data-tema="tinta"] .estado--contacto {
+    background: #2a1c10;
+    color: #fdba74;
+}
+
+[data-tema="tinta"] .estado--reparacao {
+    background: #16233a;
+    color: #93b8ff;
+}
+
+[data-tema="tinta"] .estado--pronto {
+    background: #10261f;
+    color: #6ee7b7;
+}
+
+[data-tema="tinta"] .estado--entregue,
+[data-tema="tinta"] .estado--arquivada {
+    background: #1e293b;
+    color: #cbd5e1;
+}
+
+[data-tema="tinta"] .estado--convertida {
+    background: #2b1220;
+    color: #f9a8d4;
+}

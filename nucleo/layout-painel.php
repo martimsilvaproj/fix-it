@@ -119,8 +119,15 @@ function painelAbrir(
 
     <!-- Tipografia do sistema (sem pedidos externos). Para usar uma fonte
          própria, define @font-face e troca a variável --fonte no CSS. -->
+    <!-- A fonte da interface vem de casa: um .woff2 variável em
+         assets/fonts/, pré-carregado para o texto não trocar a meio. -->
+    <link rel="preload" href="../assets/fonts/plus-jakarta-sans-latin.woff2" as="font"
+          type="font/woff2" crossorigin>
+
     <link rel="stylesheet" href="../assets/css/painel.css">
     <link rel="stylesheet" href="../assets/css/formulario.css">
+    <!-- A camada de cima: a pele de produto do interior do painel. -->
+    <link rel="stylesheet" href="../assets/css/painel-saas.css">
 </head>
 <body>
 
@@ -250,6 +257,17 @@ function painelAbrir(
             </button>
         </div>
 
+        <!-- A oficina identifica-se aqui. Não é um menu: há uma só
+             unidade, e um botão a fingir de selector seria uma promessa
+             que não se cumpre. -->
+        <div class="organizacao">
+            <span class="organizacao__ponto" aria-hidden="true"></span>
+            <span class="organizacao__texto">
+                <span class="organizacao__nome">FixIt</span>
+                <span class="organizacao__nota">Oficina · todos os pedidos</span>
+            </span>
+        </div>
+
         <nav class="navegacao" aria-label="Secções do painel">
             <p class="navegacao__titulo" id="grupo-operacao">Operação</p>
             <ul class="navegacao__lista" aria-labelledby="grupo-operacao">
@@ -280,6 +298,16 @@ function painelAbrir(
         </nav>
 
         <div class="sidebar__rodape">
+            <!-- Leva à consulta pública: o único ecrã que o cliente vê, e
+                 a forma de confirmar o que ele está a ver neste momento. -->
+            <a class="destaque" href="../frontoffice/consulta.php">
+                <span class="destaque__icone" aria-hidden="true">
+                    <svg><use href="#icone-visao-geral"/></svg>
+                </span>
+                <span class="destaque__titulo">Consulta por PIN</span>
+                <span class="destaque__texto">Abre o ecrã do cliente para confirmar o que ele vê.</span>
+            </a>
+
             <p class="estado-sistema<?= $erroDados !== '' ? ' estado-sistema--erro' : '' ?>">
                 <?= $erroDados !== '' ? 'Sem ligação à base de dados' : 'Ligado à base de dados' ?>
             </p>

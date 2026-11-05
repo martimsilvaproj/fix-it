@@ -75,6 +75,22 @@
         return valor !== '' ? valor : reserva;
     }
 
+    /**
+     * A cor da barra segue a vista: azul na receita, laranja nos pedidos,
+     * verde nos clientes. Vem dos tokens do tema, para a folha ser a única
+     * a decidir cor — aqui não há um hexadecimal escrito à mão.
+     */
+    function corDaVista(qual) {
+        var mapa = {
+            receita:  ['--saas-azul', '#0d6efd'],
+            pedidos:  ['--saas-laranja', '#f97316'],
+            clientes: ['--saas-verde', '#10b981']
+        };
+        var par = mapa[qual] || mapa.receita;
+
+        return token(par[0], par[1]);
+    }
+
     /** #1A5FA0 + alfa → rgba(26, 95, 160, alfa). */
     function paraRgba(cor, alfa) {
         var hex = cor.replace('#', '');
@@ -223,9 +239,10 @@
         var ano = grafico.data.datasets[0];
         var anterior = grafico.data.datasets[1];
 
-        ano.borderColor = cores.azul;
-        ano.backgroundColor = gradiente(cores.azul);
-        ano.pointHoverBackgroundColor = cores.azul;
+        ano.borderColor = corDaVista(vista);
+        ano.backgroundColor = corDaVista(vista);
+        ano.hoverBackgroundColor = corDaVista(vista);
+        ano.pointHoverBackgroundColor = corDaVista(vista);
         ano.pointHoverBorderColor = cores.fundo;
 
         anterior.borderColor = cores.suave;
@@ -296,25 +313,30 @@
     var coresIniciais = paleta();
 
     grafico = new Chart(canvas, {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: dados.meses,
             datasets: [
                 {
                     label: 'Este ano',
                     data: dados.atual.receita.slice(),
-                    borderColor: coresIniciais.azul,
-                    backgroundColor: gradiente(coresIniciais.azul),
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.35,
-                    pointRadius: 0,
-                    pointHoverRadius: 4,
-                    pointHoverBackgroundColor: coresIniciais.azul,
-                    pointHoverBorderColor: coresIniciais.fundo,
-                    pointHoverBorderWidth: 2
+
+                    // Barra de 12 px de raio em cima e assente no eixo:
+                    // `borderSkipped: false` impede o Chart.js de cortar
+                    // os cantos de baixo. A espessura tem tecto para doze
+                    // barras não virarem uma parede.
+                    backgroundColor: corDaVista('receita'),
+                    borderRadius: 12,
+                    borderSkipped: false,
+                    maxBarThickness: 26,
+                    hoverBackgroundColor: corDaVista('receita')
                 },
                 {
+                    // O ano anterior fica linha: uma barra ao lado da outra
+                    // duplicava a largura de cada mês e escondia o mês em
+                    // curso. Tracejado por cima das barras, lê-se como
+                    // referência e não como mais um valor do mesmo ano.
+                    type: 'line',
                     label: 'Ano anterior',
                     data: dados.anterior.receita.slice(),
                     borderColor: coresIniciais.suave,
@@ -438,6 +460,9 @@
 
         grafico.data.datasets[0].data = dados.atual[qual].slice();
         grafico.data.datasets[1].data = dados.anterior[qual].slice();
+        grafico.data.datasets[0].backgroundColor = corDaVista(qual);
+        grafico.data.datasets[0].borderColor = corDaVista(qual);
+        grafico.data.datasets[0].hoverBackgroundColor = corDaVista(qual);
         ajustarEixo();
         grafico.update();
         resumo(qual);
@@ -482,7 +507,7 @@
 
         temporizador = window.setTimeout(function () {
             ajustarEixo();
-            grafico.data.datasets[0].backgroundColor = gradiente(paleta().azul);
+            grafico.data.datasets[0].backgroundColor = corDaVista(vista);
             grafico.update('none');
         }, 180);
     });
