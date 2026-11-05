@@ -182,6 +182,23 @@ os filtros, a faixa desaparece e fica papel. Um fundo escuro atrás de chips e
 selects esconde exactamente aquilo que se pode tocar. O `:has()` faz a escolha;
 navegadores sem ele ficam com a faixa, que continua legível.
 
+### A receita
+
+A secção da receita é a mais larga do painel: doze meses de pedidos entregues,
+com o mesmo período do ano anterior por trás em tracejado suave. Três vistas —
+receita, pedidos, clientes — trocam a série sem trocar de gráfico, e o resumo
+por cima do desenho acompanha. A dica mostra o valor exato e a variação em
+relação ao mês anterior; essa conta vive em `nucleo/metricas.php`, é feita uma
+vez no servidor e está coberta por 19 verificações em `testes/correr.php` — o
+JavaScript só a mostra, não a refaz.
+
+Na vista da receita o eixo fala em euros; nas outras, em contagens. Abaixo do
+gráfico há uma tabela com os mesmos números: é o caminho de quem não vê o
+canvas, e o que fica quando o CDN do Chart.js não carrega.
+
+A receita é a soma dos orçamentos dos pedidos entregues no mês. A base não
+guarda pagamentos, por isso o painel não promete «recebido»: diz «entregue».
+
 ### Os dois temas
 
 O painel tem duas luzes e é a mesma casa nas duas. «Papel» é a folha clara, a de

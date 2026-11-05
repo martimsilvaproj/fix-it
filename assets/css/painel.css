@@ -5061,3 +5061,194 @@ body {
     background: #0A1420;
     color: var(--tinta-900);
 }
+
+/* =====================================================================
+   22. RECEITA — a área dos últimos doze meses
+
+   A secção mais larga do painel. O gráfico é um só e troca de dados; por
+   isso a moldura, o resumo e a chave ficam em HTML e só a área é canvas.
+   Nenhuma cor nova: o azul da casa para o ano corrente, a tinta suave
+   para o tracejado do ano anterior.
+   ===================================================================== */
+.receita__corpo {
+    display: grid;
+    gap: 14px;
+    padding: 18px;
+}
+
+.receita__resumo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 14px;
+}
+
+.receita__total {
+    font-family: var(--fonte-mono);
+    font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -.04em;
+    font-variant-numeric: tabular-nums;
+    color: var(--tinta-900);
+}
+
+.receita__nota {
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+/* A chave das duas linhas vive à direita do resumo, em mono pequeno. */
+.receita__chave {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin: 0 0 0 auto;
+    padding: 0;
+    list-style: none;
+    color: var(--tinta-500);
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.receita__chave li {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.receita__amostra {
+    display: inline-block;
+    width: 24px;
+    height: 0;
+}
+
+.receita__amostra--atual {
+    border-top: 3px solid var(--azul-600);
+}
+
+.receita__amostra--anterior {
+    border-top: 2px dashed var(--tinta-400);
+}
+
+/* O canvas fica com a largura toda; a altura vem da proporção que o
+   Chart.js mantém (2,5:1 no ecrã grande, 1,45:1 no telemóvel). */
+.receita__tela {
+    position: relative;
+    width: 100%;
+}
+
+.receita__tela canvas {
+    display: block;
+    width: 100%;
+}
+
+.receita__falha,
+.receita__aviso {
+    margin: 0;
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+.receita__aviso {
+    padding-top: 2px;
+    border-top: 1px solid var(--linha);
+}
+
+/* --- As três vistas -------------------------------------------------- */
+/* Vivem na faixa de tinta, por isso nascem claras sobre escuro. O
+   aria-pressed é o estado: um bloco de papel com tinta dentro. */
+.receita__vistas {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.receita__vista {
+    padding: 7px 12px;
+    border: 2px solid var(--banda-texto);
+    border-left-width: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--banda-texto);
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color .12s ease, color .12s ease;
+}
+
+.receita__vista:first-child {
+    border-left-width: 2px;
+}
+
+.receita__vista:hover {
+    background: rgba(255, 255, 255, .14);
+}
+
+.receita__vista[aria-pressed="true"] {
+    background: var(--banda-texto);
+    color: var(--banda);
+}
+
+.receita__vista:focus-visible {
+    outline: 2px solid var(--azul-500);
+    outline-offset: 2px;
+}
+
+/* --- A tabela dos números ------------------------------------------- */
+.receita__tabela {
+    border-top: 2px solid var(--traco);
+}
+
+.receita__tabela summary {
+    padding: 12px 18px;
+    color: var(--tinta-700);
+    font-family: var(--fonte-mono);
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.receita__tabela summary:hover {
+    background: var(--realce-suave);
+}
+
+.receita__tabela-envolucro {
+    overflow-x: auto;
+}
+
+.receita__tabela .tabela {
+    min-width: 520px;
+}
+
+.receita__tabela .tabela tfoot th,
+.receita__tabela .tabela tfoot td {
+    border-top: 2px solid var(--traco);
+    border-bottom: 0;
+    background: var(--realce-suave);
+    color: var(--tinta-900);
+    font-weight: 700;
+}
+
+/* No telemóvel o resumo deixa de ter a chave à direita: a chave desce
+   para a sua linha, alinhada à esquerda com o total. */
+@media (max-width: 560px) {
+    .receita__chave {
+        margin-left: 0;
+    }
+
+    .receita__vistas {
+        width: 100%;
+    }
+
+    .receita__vista {
+        flex: 1 1 auto;
+        text-align: center;
+    }
+}

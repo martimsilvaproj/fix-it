@@ -25,6 +25,7 @@ require_once __DIR__ . '/../nucleo/estado-pedido.php';
 require_once __DIR__ . '/../nucleo/sessao.php';
 require_once __DIR__ . '/../nucleo/layout-painel.php';
 require_once __DIR__ . '/../nucleo/solicitacoes.php';
+require_once __DIR__ . '/../nucleo/metricas.php';
 
 // A área da oficina exige sessão: sem login válido, Sessao::exigir()
 // manda para o login.php antes de qualquer consulta. A mesma sessão
@@ -817,6 +818,114 @@ try {
     $erroDados = 'Confirma que o servidor MySQL está ligado e que a base de dados fixit foi importada.';
 }
 
+// ---------------------------------------------------------------------
+// Receita: os 12 meses que se veem e os 12 do ano anterior.
+//
+// A janela tem 24 meses para que a comparação com o ano anterior seja
+// uma leitura direta do mesmo array, sem deslocar índices à mão. A série
+// fica alinhada com a janela por metricasPreencher(): um mês sem pedidos
+// entregues vale zero, e não desaparece do eixo.
+//
+// A receita é a soma dos orçamentos dos pedidos entregues no mês — o
+// valor que saiu da oficina com o equipamento. Não é o que o cliente
+// pagou: a base não guarda pagamentos, e o gráfico não inventa esse dado.
+// A legenda da secção di-lo por palavras.
+// ---------------------------------------------------------------------
+$receitaErro = '';
+$mesesJanela = metricasJanela(24);
+$mapaReceita = [];
+$mapaClientes = [];
+$primeiroRegisto = null;
+
+try {
+    $pdo = obterConexao();
+    $inicioJanela = $mesesJanela[0]['chave'] . '-01 00:00:00';
+
+    // Pedidos entregues por mês de conclusão (ou de entrada, num pedido
+    // anterior à coluna data_conclusao).
+    $consulta = $pdo->prepare(
+        "SELECT DATE_FORMAT(COALESCE(data_conclusao, data_entrada), '%Y-%m') AS mes,
+                COUNT(*) AS pedidos,
+                SUM(COALESCE(orcamento, 0)) AS receita
+           FROM pedidos
+          WHERE estado = 'Entregue'
+            AND COALESCE(data_conclusao, data_entrada) >= ?
+       GROUP BY mes"
+    );
+    $consulta->execute([$inicioJanela]);
+
+    foreach ($consulta->fetchAll() as $linha) {
+        $mapaReceita[(string) $linha['mes']] = [
+            'pedidos' => (int) $linha['pedidos'],
+            'receita' => (float) $linha['receita'],
+        ];
+    }
+
+    // Clientes novos por mês de registo.
+    $consulta = $pdo->prepare(
+        "SELECT DATE_FORMAT(criado_em, '%Y-%m') AS mes, COUNT(*) AS total
+           FROM clientes
+          WHERE criado_em >= ?
+       GROUP BY mes"
+    );
+    $consulta->execute([$inicioJanela]);
+
+    foreach ($consulta->fetchAll() as $linha) {
+        $mapaClientes[(string) $linha['mes']] = (int) $linha['total'];
+    }
+
+    // Desde quando há registos: a frase da secção diz o que a base tem,
+    // para ninguém ler uma linha a cero como se fosse uma queda.
+    $consulta = $pdo->query('SELECT MIN(data_entrada) FROM pedidos');
+    $primeiroRegisto = $consulta->fetchColumn() ?: null;
+} catch (Throwable $excecao) {
+    error_log('[FixIt][Painel][Receita] ' . $excecao->getMessage());
+    $receitaErro = 'Não foi possível ler os valores do gráfico de receita. Tenta novamente daqui a pouco.';
+}
+
+$serieReceita  = metricasPreencher($mesesJanela, $mapaReceita, 'receita');
+$seriePedidos  = metricasPreencher($mesesJanela, $mapaReceita, 'pedidos');
+$serieClientes = metricasPreencher($mesesJanela, $mapaClientes);
+
+$receita = [
+    'meses'   => array_column(array_slice($mesesJanela, 12), 'curto'),
+    'longos'  => array_column(array_slice($mesesJanela, 12), 'longo'),
+    'atual'   => [
+        'receita'  => array_slice($serieReceita, 12),
+        'pedidos'  => array_slice($seriePedidos, 12),
+        'clientes' => array_slice($serieClientes, 12),
+    ],
+    'anterior' => [
+        'receita'  => array_slice($serieReceita, 0, 12),
+        'pedidos'  => array_slice($seriePedidos, 0, 12),
+        'clientes' => array_slice($serieClientes, 0, 12),
+    ],
+    'variacoes' => [
+        'receita'  => array_slice(metricasVariacoes($serieReceita), 12),
+        'pedidos'  => array_slice(metricasVariacoes($seriePedidos), 12),
+        'clientes' => array_slice(metricasVariacoes($serieClientes), 12),
+    ],
+    'totais' => [
+        'receita'  => array_sum(array_slice($serieReceita, 12)),
+        'pedidos'  => array_sum(array_slice($seriePedidos, 12)),
+        'clientes' => array_sum(array_slice($serieClientes, 12)),
+    ],
+];
+
+// Há algum registo na janela do ano anterior? Se não houver, a linha
+// tracejada fica colada ao eixo e o texto da secção diz porquê.
+$receita['temAnoAnterior'] = array_sum($receita['anterior']['receita'])
+    + array_sum($receita['anterior']['pedidos'])
+    + array_sum($receita['anterior']['clientes']) > 0;
+
+// Total do último mês da janela, para a frase que os leitores de ecrã ouvem.
+$ultimoIndice = count($receita['meses']) - 1;
+$resumoReceita = 'Receita por mês nos últimos 12 meses. Total de '
+    . metricasMoeda((float) $receita['totais']['receita']) . '. '
+    . 'O mês mais recente é ' . $receita['longos'][$ultimoIndice] . ', com '
+    . metricasMoeda((float) $receita['atual']['receita'][$ultimoIndice]) . '. '
+    . 'Os valores de cada mês estão na tabela abaixo do gráfico.';
+
 // A legenda do gráfico abre nos dois lados da oficina, como o resumo da
 // barra da lista: o que está na oficina e o que já saiu. Um entregue não
 // pede nada a ninguém e, lido na mesma lista dos que estão em trabalho,
@@ -1098,6 +1207,112 @@ $descricaoTopo = $erroDados === '' && $totalPedidos === 0
                     <span class="visualmente-oculto">Ver todos os clientes</span>
                 </a>
 
+            </section>
+
+            <!-- =====================================================
+                 RECEITA — os últimos 12 meses, com o ano anterior
+                 por trás. O gráfico é desenhado por
+                 assets/js/grafico-receita.js a partir do JSON que vai no
+                 fim da página; a tabela em baixo é a mesma informação,
+                 para quem não vê o canvas ou está sem JavaScript.
+                 ===================================================== -->
+            <section class="painel receita" id="receita" aria-labelledby="titulo-receita">
+                <div class="painel__cabecalho">
+                    <div>
+                        <h2 id="titulo-receita">Receita</h2>
+                        <p class="painel__descricao">
+                            Pedidos entregues nos últimos 12 meses, com o mesmo período do ano
+                            anterior por trás.
+                            <?php if ($primeiroRegisto !== null): ?>
+                                Registos desde <?= h(dataCurta((string) $primeiroRegisto)) ?>.
+                            <?php endif; ?>
+                        </p>
+                    </div>
+
+                    <!-- Três vistas do mesmo gráfico. O aria-pressed diz
+                         qual está escolhida; o teclado chega às três. -->
+                    <div class="receita__vistas" role="group" aria-label="Métrica do gráfico">
+                        <button class="receita__vista" type="button" data-vista="receita"
+                                aria-pressed="true">Receita</button>
+                        <button class="receita__vista" type="button" data-vista="pedidos"
+                                aria-pressed="false">Pedidos</button>
+                        <button class="receita__vista" type="button" data-vista="clientes"
+                                aria-pressed="false">Clientes</button>
+                    </div>
+                </div>
+
+                <?php if ($receitaErro !== ''): ?>
+                    <div class="receita__corpo">
+                        <div class="alerta alerta--erro" role="alert">
+                            <p class="alerta__texto"><?= h($receitaErro) ?></p>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <div class="receita__corpo">
+                        <div class="receita__resumo">
+                            <p class="receita__total" id="receita-total"><?= h(metricasMoeda((float) $receita['totais']['receita'])) ?></p>
+                            <p class="receita__nota" id="receita-nota">em 12 meses · <?= (int) $receita['totais']['pedidos'] ?> pedidos entregues</p>
+
+                            <ul class="receita__chave">
+                                <li><span class="receita__amostra receita__amostra--atual" aria-hidden="true"></span>Este ano</li>
+                                <li><span class="receita__amostra receita__amostra--anterior" aria-hidden="true"></span>Ano anterior</li>
+                            </ul>
+                        </div>
+
+                        <div class="receita__tela">
+                            <canvas id="grafico-receita" role="img" aria-label="<?= h($resumoReceita) ?>"></canvas>
+
+                            <p class="receita__falha" id="receita-falha" hidden>
+                                O gráfico não pôde ser desenhado. Os valores estão na tabela abaixo.
+                            </p>
+                        </div>
+
+                        <?php if (!$receita['temAnoAnterior']): ?>
+                            <p class="receita__aviso">
+                                Não há pedidos entregues no período homólogo: a linha tracejada
+                                fica sobre o eixo.
+                            </p>
+                        <?php endif; ?>
+                    </div>
+
+                    <details class="receita__tabela">
+                        <summary>Ver os números destes 12 meses</summary>
+
+                        <div class="receita__tabela-envolucro">
+                            <table class="tabela">
+                                <caption class="visualmente-oculto">
+                                    Receita, pedidos entregues e clientes novos, mês a mês.
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Mês</th>
+                                        <th scope="col">Receita</th>
+                                        <th scope="col">Pedidos</th>
+                                        <th scope="col">Clientes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($receita['meses'] as $indice => $mes): ?>
+                                        <tr>
+                                            <th scope="row"><?= h($receita['longos'][$indice]) ?></th>
+                                            <td><?= h(metricasMoeda((float) $receita['atual']['receita'][$indice])) ?></td>
+                                            <td><?= h(metricasNumero((float) $receita['atual']['pedidos'][$indice])) ?></td>
+                                            <td><?= h(metricasNumero((float) $receita['atual']['clientes'][$indice])) ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th scope="row">Total</th>
+                                        <td><?= h(metricasMoeda((float) $receita['totais']['receita'])) ?></td>
+                                        <td><?= h(metricasNumero((float) $receita['totais']['pedidos'])) ?></td>
+                                        <td><?= h(metricasNumero((float) $receita['totais']['clientes'])) ?></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </details>
+                <?php endif; ?>
             </section>
 
             <?php if ($totalPedidos > 0): ?>
@@ -1790,5 +2005,22 @@ $descricaoTopo = $erroDados === '' && $totalPedidos === 0
 })();
 </script>
 <?php endif; ?>
+
+<!-- Os números do gráfico de receita: um só sítio, escrito por PHP e lido
+     por assets/js/grafico-receita.js. JSON_HEX_TAG impede que um `</script>`
+     dentro de um valor feche o bloco antes do tempo. -->
+<script type="application/json" id="dados-receita"><?= json_encode(
+    [
+        'meses'     => $receita['meses'],
+        'longos'    => $receita['longos'],
+        'atual'     => $receita['atual'],
+        'anterior'  => $receita['anterior'],
+        'variacoes' => $receita['variacoes'],
+        'totais'    => $receita['totais'],
+        'erro'      => $receitaErro !== '',
+    ],
+    JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+) ?></script>
+<script src="../assets/js/grafico-receita.js" defer></script>
 </body>
 </html>
