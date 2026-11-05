@@ -1354,3 +1354,13 @@
         scroll-behavior: auto !important;
     }
 }
+
+/* --- Rodapé: ligações de navegação, não texto corrido ---
+   Tinham 38 px de altura. São destinos autónomos numa coluna, por isso
+   levam o alvo de 44 px do produto; as ligações dentro de frases (a nota
+   de privacidade, por exemplo) mantêm o alvo do próprio texto. */
+.site-rodape__coluna a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+}

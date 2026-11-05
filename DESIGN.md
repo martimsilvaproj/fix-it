@@ -170,3 +170,29 @@ dentro de `.pagina-publica`, para a consulta pública não herdar o painel.
   não tem porta de entrada pública; só o PIN do talão abre o estado do pedido.
 - O painel e o site partilham a paleta **e** a gramática (ver §10), mas não o
   conteúdo: o painel é software interno e não tem porta de entrada pública.
+
+## 10. Acessibilidade medida, não prometida
+
+O `PRODUCT.md` promete alvos a partir de 44 px e contraste WCAG AA. Estas são
+as decisões que fazem disso uma afirmação verificável:
+
+- **Alvos de 44 px em todos os controlos.** Botões, botão de ícone, ligações do
+  menu, marca, pílulas da fila, ligação do gráfico, acções de tabela e o campo
+  de técnico dentro da lista. A densidade do talão perde 4 a 12 px por peça; o
+  polegar ganha o dobro.
+- **Números tabulares.** Contadores, PIN, orçamento, IDs e valores de tabela
+  usam `font-variant-numeric: tabular-nums`: os dígitos não dançam quando o
+  valor muda e as colunas alinham à direita sem truques.
+- **Cursor de texto na paleta.** `caret-color` no azul institucional, em vez do
+  azul do sistema.
+- **Selecção de texto** definida por superfície (`::selection` no painel, no
+  site e nas páginas públicas).
+- **Foco sempre visível** e alvos de teclado na ordem do documento; o menu
+  lateral abre e fecha com Escape.
+- **Movimento** respeita `prefers-reduced-motion` — três blocos, incluindo a
+  animação do gráfico.
+
+A auditoria corre no browser a 390 e a 1440 px: sem transbordo horizontal, um
+`h1` por página, imagens com `alt`, nenhum texto abaixo de 4,5:1 (3:1 em texto
+grande) e nenhum controlo abaixo de 44 px. Ligações dentro de frases ficam com
+o alvo do próprio texto, como a WCAG 2.5.8 admite para ligações em linha.

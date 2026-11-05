@@ -190,8 +190,9 @@ button {
     gap: 8px;
     /* Altura mínima, não altura fixa: com o texto ampliado a 200% a linha
        do rótulo fica mais alta do que a caixa e o texto era cortado por
-       cima e por baixo. No tamanho normal a caixa continua nos 40 px. */
-    min-height: 40px;
+       cima e por baixo. No tamanho normal a caixa continua nos 44 px — que
+       é o alvo mínimo de toque que o PRODUCT.md promete, e não 40. */
+    min-height: 44px;
     padding: 4px 14px;
     border: 1px solid transparent;
     border-radius: var(--raio-md);
@@ -267,8 +268,8 @@ button {
 .botao-icone {
     display: grid;
     place-items: center;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     padding: 0;
     border: 0;
     border-radius: var(--raio-md);
@@ -4469,6 +4470,8 @@ a.metrica:active {
         transform: none;
         box-shadow: 4px 4px 0 var(--tinta-900);
     }
+}
+
 /* =====================================================================
    16. INTERIOR — a folha de serviço
    O que fica dentro do painel: cabeçalho de página com marca de
@@ -4664,4 +4667,91 @@ a.metrica:active {
     font-size: var(--texto-xs);
     letter-spacing: 0.04em;
     text-transform: uppercase;
+}
+
+/* ---------------------------------------------------------------------
+   Alvos de toque
+   O PRODUCT.md promete alvos a partir de 44 px. Os botões principais já
+   nascem assim; as peças que a densidade do talão mantinha a 32–40 px
+   crescem aqui. `min-height` só conta em caixas de bloco ou flex, por isso
+   as ligações passam a `inline-flex` — sem isso a regra seria decorativa.
+   --------------------------------------------------------------------- */
+.navegacao__ligacao,
+.atalho,
+.grafico__ver,
+.botao--pequeno,
+.marca {
+    min-height: 44px;
+}
+
+.atalho,
+.botao--pequeno {
+    padding-block: 8px;
+}
+
+.grafico__ver {
+    display: flex;
+    align-items: center;
+    padding-block: 0;
+}
+
+.grafico__ligacao,
+.ligacao-seta,
+.tabela__ligacao,
+.ligacao-acao,
+.historico__etiqueta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+}
+
+.historico__etiqueta {
+    padding-block: 10px;
+}
+
+/* A lista atribui técnico num <select> de 34 px — o controlo mais usado
+   da tabela e o mais difícil de acertar com o dedo. */
+.atribuir--painel .entrada--tabela,
+.tabela .atribuir .entrada--tabela {
+    height: auto;
+    min-height: 44px;
+}
+
+/* O cursor de texto é uma superfície do browser que se desenha: sem isto
+   fica o azul do sistema a meio de uma paleta azul institucional. */
+.entrada,
+textarea,
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="search"],
+input[type="number"] {
+    caret-color: var(--azul-700);
+}
+
+/* Filtros da lista: em ecrã estreito os campos e o botão desciam a 40 px
+   (a media query de 720 px), abaixo do alvo prometido. E os links que
+   vivem dentro de linhas de tabela — idade da consulta, estado — eram
+   texto solto de 18 a 21 px. */
+.filtros .entrada,
+.filtros__acoes .botao {
+    min-height: 44px;
+}
+
+a.tabela__consultas-idade,
+a.consulta__idade,
+a.estado {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+}
+
+/* Migalhas do painel: a ligação "Painel" media 13 px de altura. É
+   navegação — o caminho de volta —, não texto corrido, por isso leva o
+   mesmo alvo dos restantes controlos. */
+.migalhas a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
 }
