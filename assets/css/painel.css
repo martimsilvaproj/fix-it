@@ -4620,3 +4620,48 @@ a.metrica:active {
 .consulta__nota {
     color: var(--tinta-700);
 }
+
+/* ---------------------------------------------------------------------
+   Galeria de fotografias da receção (ficha do pedido)
+   As imagens são o registo do estado à entrada: grelha simples, moldura
+   de 2 px e legenda com a data, na mesma linguagem do talão.
+   --------------------------------------------------------------------- */
+.galeria {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.galeria__item {
+    margin: 0;
+}
+
+.galeria__ligacao {
+    display: block;
+    border: 2px solid var(--linha);
+    background: var(--azul-900, #0C2038);
+    line-height: 0;
+}
+
+.galeria__ligacao:hover,
+.galeria__ligacao:focus-visible {
+    border-color: var(--azul-600, #1D5FA8);
+}
+
+.galeria__imagem {
+    display: block;
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.galeria__legenda {
+    margin: 6px 0 0;
+    color: var(--tinta-500);
+    font-size: var(--texto-xs);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}

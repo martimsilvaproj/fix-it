@@ -13,6 +13,15 @@
 # repositório. A pasta fica, vazia, porque a aplicação precisa dela.
 uploads/*
 !uploads/.gitkeep
+# A única excepção é a fotografia de demonstração, referida em
+# sql/dados-demonstracao.sql: sem ela, a galeria da ficha nasce vazia numa
+# instalação nova. O Git não entra numa pasta excluída, por isso cada nível
+# do caminho tem de ser reaberto até chegar ao ficheiro.
+!uploads/pedidos/
+uploads/pedidos/*
+!uploads/pedidos/6/
+uploads/pedidos/6/*
+!uploads/pedidos/6/estado-entrada-1.png
 
 # --- Lixo de sistema e de editores ---------------------------------------
 *.log

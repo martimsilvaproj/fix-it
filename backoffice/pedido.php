@@ -282,6 +282,24 @@ try {
             $consulta->execute([$idPedido]);
             $historicoEstados = $consulta->fetchAll();
 
+            // Fotografias anexadas na receção. Opcional como as restantes: numa
+            // base anterior à migração a tabela não existe e a ficha continua a
+            // mostrar o resto em vez de falhar por completo.
+            $fotosPedido = [];
+
+            try {
+                $consulta = $pdo->prepare(
+                    'SELECT id, caminho_foto, descricao, data_upload
+                       FROM fotos_equipamento
+                      WHERE pedido_id = ?
+                   ORDER BY id'
+                );
+                $consulta->execute([$idPedido]);
+                $fotosPedido = $consulta->fetchAll();
+            } catch (PDOException $excecao) {
+                error_log('[FixIt][Pedido][Fotos] ' . $excecao->getMessage());
+            }
+
             // Histórico de alterações ao orçamento. Numa base anterior à
             // migração a tabela não existe: a página continua a mostrar o
             // histórico de estados em vez de falhar por completo.
@@ -1167,6 +1185,41 @@ $tituloPedido = $pedido !== null
                             <p class="avaria"><?= h($pedido['descricao_avaria']) ?></p>
                         <?php else: ?>
                             <p class="avaria avaria--vazia">Sem descrição registada neste pedido.</p>
+                        <?php endif; ?>
+                    </div>
+                </section>
+
+                <section class="painel" id="fotografias" aria-labelledby="titulo-fotografias">
+                    <div class="painel__cabecalho">
+                        <div>
+                            <h2 id="titulo-fotografias">Fotografias</h2>
+                            <p class="painel__descricao">
+                                O estado do equipamento à entrada, tal como foi fotografado no balcão.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="painel__corpo">
+                        <?php if ($fotosPedido !== []): ?>
+                            <ul class="galeria">
+                                <?php foreach ($fotosPedido as $indiceFoto => $fotoPedido): ?>
+                                    <li class="galeria__item">
+                                        <a class="galeria__ligacao" href="../<?= h($fotoPedido['caminho_foto']) ?>"
+                                           target="_blank" rel="noopener">
+                                            <img class="galeria__imagem"
+                                                 src="../<?= h($fotoPedido['caminho_foto']) ?>"
+                                                 alt="<?= h(trim((string) $fotoPedido['descricao']) !== ''
+                                                     ? (string) $fotoPedido['descricao']
+                                                     : 'Fotografia ' . ($indiceFoto + 1) . ' do equipamento') ?>"
+                                                 loading="lazy">
+                                        </a>
+                                        <p class="galeria__legenda">
+                                            <?= h(date('d/m/Y', strtotime((string) $fotoPedido['data_upload']))) ?>
+                                        </p>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php else: ?>
+                            <p class="avaria avaria--vazia">Sem fotografias anexadas a este pedido.</p>
                         <?php endif; ?>
                     </div>
                 </section>

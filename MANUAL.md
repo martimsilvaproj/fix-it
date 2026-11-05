@@ -132,6 +132,10 @@ A ficha reúne tudo o que se sabe do pedido:
 - **Orçamento** — valor actual e histórico de todos os valores anteriores.
 - **Histórico de estados**, com quem fez cada mudança.
 - **PIN** — o actual, quantas vezes foi consultado e o botão para o renovar.
+- **Fotografias** — as imagens tiradas no balcão à entrada do equipamento.
+  Clicar numa abre-a em tamanho real.
+
+![Fotografias na ficha do pedido](screenshots/manual-ficha-fotografias.png)
 
 ### Mudar o estado
 

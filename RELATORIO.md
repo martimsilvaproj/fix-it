@@ -241,11 +241,15 @@ Verificado com `curl` e no browser, com sessão iniciada:
 | Limite do formulário público | 6 tentativas inválidas não bloqueiam; um pedido válido grava |
 | CSP em execução | zero violações na consola; gráfico desenha |
 | Dados de demonstração | aplicados duas vezes sem duplicar |
+| Upload de fotografias | imagem real aceite e visível na ficha; ficheiro falso recusado |
 
 ### O que não foi testado
 
-- **Fotografias**: o upload está implementado, mas nunca foi exercitado com
-  ficheiros reais — a base tem `fotos_equipamento` vazia.
+- **Fotografias**: o envio foi testado a sério — ficheiro real, linha na base,
+  ficheiro em `uploads/` e imagem servida a 200 — e revelou um defeito: a ficha
+  do pedido não mostrava as fotografias que gravava. Passou a mostrar, numa
+  galeria com as imagens em tamanho real. Ficam por testar o limite de cinco
+  ficheiros e o comportamento com ficheiros demasiado grandes.
 - **Impressão do talão** e **decisão do orçamento pelo cliente** com dados
   reais.
 - **Conversões simultâneas** do mesmo pedido do site.

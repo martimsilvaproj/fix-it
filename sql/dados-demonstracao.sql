@@ -174,3 +174,22 @@ SELECT e.id,
        'Deixou de carregar depois de uma trovoada. Cheira a queimado junto à ficha.',
        'Recebido', NULL, '273418', '2026-11-05 09:05:00', NULL
   FROM equipamentos e WHERE e.numero_serie = 'C02F9KQMD6M';
+
+-- ---------------------------------------------------------------------
+--  4. Fotografia de demonstração
+--  O ficheiro vem no repositório (a única excepção ao .gitignore dentro
+--  de uploads/) para a galeria da ficha não nascer vazia numa instalação
+--  nova. Se a imagem não existir no disco, a linha fica na mesma e a
+--  ficha mostra a moldura vazia em vez de falhar.
+-- ---------------------------------------------------------------------
+INSERT INTO `fotos_equipamento` (`pedido_id`, `caminho_foto`, `descricao`)
+SELECT p.id,
+       'uploads/pedidos/6/estado-entrada-1.png',
+       'Estado à entrada: tampa riscada no canto inferior direito.'
+  FROM pedidos p
+ WHERE p.pin_consulta = '482913'
+   AND NOT EXISTS (
+       SELECT 1 FROM fotos_equipamento f
+        WHERE f.pedido_id = p.id
+          AND f.caminho_foto = 'uploads/pedidos/6/estado-entrada-1.png'
+   );
