@@ -322,6 +322,9 @@ function painelAbrir(
                 </div>
             </div>
         </header>
+
+        <!-- A gaveta do menu é uma só, servida a todas as páginas. -->
+        <script src="../assets/js/menu-painel.js" defer></script>
 <?php
 }
 
