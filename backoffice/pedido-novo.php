@@ -1106,6 +1106,10 @@ $tituloPagina = $pedidoCriado ? 'Pedido registado' : 'Novo pedido';
 
                 <ul class="miniaturas" id="miniaturas" aria-label="Fotografias escolhidas"></ul>
 
+                <?php if (isset($erros['fotos'])): ?>
+                    <p class="campo__erro" id="erro-fotos"><?= h($erros['fotos']) ?></p>
+                <?php endif; ?>
+
                 <p class="campo__ajuda" id="ajuda-fotos">
                     <?php if ($erros !== []): ?>
                         Se escolheste fotografias, volta a anexá-las depois de corrigir os restantes campos.
