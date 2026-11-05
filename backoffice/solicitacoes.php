@@ -26,11 +26,13 @@ require_once __DIR__ . '/../nucleo/conexao.php';
 require_once __DIR__ . '/../nucleo/sessao.php';
 require_once __DIR__ . '/../nucleo/texto.php';
 require_once __DIR__ . '/../nucleo/solicitacoes.php';
+require_once __DIR__ . '/../nucleo/layout-painel.php';
 
 Sessao::iniciar();
 
-// Cabeçalhos de segurança: esta página tem layout próprio, por isso não
-// passa pelo layout-painel.php que os envia pelas outras.
+// Cabeçalhos de segurança: o layout-painel.php também os envia (é o único
+// ficheiro que todas as páginas carregam), mas esta página pode falhar
+// antes de o incluir — ficam aqui, e repetir o header não faz mal.
 Sessao::cabecalhosSeguranca();
 
 /** @var array{id: int, nome: string, email: string, cargo: string} $utilizador */
@@ -355,33 +357,27 @@ if ($pesquisa !== '' || $estadoFiltro !== '') {
         'estado' => $estadoFiltro,
     ]));
 }
+// A moldura é a mesma das outras páginas do painel: barra lateral com o
+// menu, barra de topo com as migalhas e o perfil. Esta página chegou a
+// desenhar o seu próprio <head> e um <div class="conteudo"> sem o menu —
+// quem entrava aqui ficava sem navegação nenhuma.
+painelAbrir(
+    'solicitacoes',
+    'Pedidos do site',
+    'Pedidos de orçamento enviados pelo formulário público do site.',
+    [
+        ['Painel', 'painel.php'],
+        ['Pedidos do site', null],
+    ],
+    $erroDados,
+    true
+);
 ?>
-<!DOCTYPE html>
-<html lang="pt-PT">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pedidos do site — FixIt</title>
-    <meta name="robots" content="noindex">
-    <link rel="stylesheet" href="../assets/css/painel.css">
-    <link rel="stylesheet" href="../assets/css/formulario.css">
-</head>
-<body>
 
-<a class="saltar-conteudo" href="#conteudo">Saltar para o conteúdo</a>
-
-<div class="conteudo" style="margin-left:0">
-    <main class="principal" id="conteudo" tabindex="-1">
+<main class="principal" id="conteudo" tabindex="-1">
 
         <header class="principal__cabecalho">
             <div>
-                <p class="migalhas">
-                    <a href="painel.php">Visão geral</a>
-                    <span aria-hidden="true">/</span>
-                    <a href="pedidos.php">Pedidos</a>
-                    <span aria-hidden="true">/</span>
-                    <span aria-current="page">Pedidos do site</span>
-                </p>
                 <h1>Pedidos do site</h1>
                 <p class="principal__descricao">
                     Pedidos de orçamento enviados pelo formulário público.
@@ -691,7 +687,10 @@ if ($pesquisa !== '' || $estadoFiltro !== '') {
         <?php endif; ?>
 
     </main>
-</div>
+
+    </div><!-- /.conteudo -->
+
+</div><!-- /.aplicacao -->
 
 </body>
 </html>
