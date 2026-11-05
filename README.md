@@ -225,8 +225,9 @@ faz parte do repositório.
 - **Não há envio de email.** O pedido de orçamento é lido na caixa de entrada
   da oficina; o cliente é contactado pelo telefone ou email que deixou.
 - **A impressão do talão e a decisão do orçamento pelo cliente** continuam por
-  testar com dados reais. O upload de fotografias foi testado e a ficha passou
-  a mostrar a galeria, mas o limite de cinco ficheiros ainda não.
+  testar com dados reais. O upload de fotografias foi testado — incluindo o
+  limite de cinco ficheiros e um ficheiro acima do limite do servidor — e a
+  ficha mostra a galeria.
 - **Sem paginação** nas listagens: foram pensadas para o volume de uma oficina.
 - Casos-limite não testados: conversões simultâneas do mesmo pedido do site e
   texto com codificação inválida enviado por `POST` forjado.
