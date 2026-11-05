@@ -4665,3 +4665,399 @@ a.estado {
     border-color: var(--traco);
     background-color: #0A1420;
 }
+
+/* =====================================================================
+   21. A FOLHA DE SERVIÇO — o tema do painel
+
+   A gramática continua a do talão: papel, tinta, régua de 2px, sombra de
+   carimbo, mono maiúsculas. O que muda é o peso de cada peça. O painel
+   deixa de ser uma pilha de cartões todos iguais — cada painel ganha uma
+   faixa de tinta com o título, como a cabeça de uma folha de serviço, e o
+   fundo ganha a pontuação das folhas pautadas.
+
+   Nenhuma cor nova entra: a paleta é a mesma do site. O que muda é onde
+   cada uma aparece e quanto pesa. As faixas usam a tinta como fundo, o
+   azul fica só para a marca, a acção e o foco, e os estados continuam a
+   ter os seus quatro pares.
+
+   Nada aqui mexe na geometria do painel: as mesmas grelhas, os mesmos
+   componentes, a mesma marcação. Só a pele.
+   ===================================================================== */
+:root {
+    /* A faixa dos painéis: tinta no papel claro, tinta funda no escuro. */
+    --banda: var(--tinta-900);
+    --banda-texto: #FFFFFF;
+    --banda-suave: rgba(255, 255, 255, .74);
+
+    /* A pontuação do papel, quase invisível: dá textura sem competir. */
+    --pontilhado: rgba(16, 28, 40, .06);
+}
+
+[data-tema="tinta"] {
+    --banda: #0A1420;
+    --banda-texto: #E9EFF5;
+    --banda-suave: rgba(233, 239, 245, .68);
+    --pontilhado: rgba(233, 239, 245, .05);
+}
+
+
+/* =====================================================================
+   21.1 O PAPEL
+   A folha pontilhada por trás dos cartões. Só se vê nas calhas entre
+   eles, que é onde o olho precisa de saber que há uma superfície.
+   ===================================================================== */
+body {
+    background-image: radial-gradient(var(--pontilhado) 1px, transparent 1.1px);
+    background-size: 22px 22px;
+}
+
+/* A barra de topo fica opaca por cima do papel, com a régua de sempre e um
+   fio de sombra que a separa do conteúdo quando há scroll. */
+.topbar {
+    border-bottom: 2px solid var(--traco);
+    box-shadow: 0 8px 18px -16px rgba(16, 28, 40, .55);
+}
+
+.migalhas {
+    font-size: .625rem;
+    letter-spacing: .12em;
+}
+
+/* A barra lateral ganha o fio que separa a marca do menu. */
+.sidebar__topo {
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, .12);
+}
+
+.navegacao__ligacao {
+    gap: 12px;
+    padding: 10px 12px;
+    font-weight: 550;
+    letter-spacing: .004em;
+}
+
+.navegacao__ligacao[aria-current="page"] {
+    font-weight: 600;
+}
+
+
+/* =====================================================================
+   21.2 O CABEÇALHO DA PÁGINA
+   A marca azul de 5px diz «começa aqui» sem escrever nada; o título sobe
+   de tamanho e a régua fecha o bloco.
+   ===================================================================== */
+.cabecalho {
+    padding-bottom: 22px;
+    border-bottom: 2px solid var(--traco);
+}
+
+.cabecalho__texto {
+    position: relative;
+    padding-top: 15px;
+}
+
+.cabecalho__texto::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 34px;
+    height: 5px;
+    background: var(--azul-600);
+}
+
+.cabecalho h1 {
+    font-size: clamp(1.75rem, 1.35rem + 1.3vw, 2.25rem);
+}
+
+.cabecalho__descricao {
+    max-width: 66ch;
+    margin-top: 8px;
+    font-size: var(--texto-base);
+}
+
+
+/* =====================================================================
+   21.3 OS CARTÕES DE MÉTRICAS
+   O selo do ícone passa a ser um quadrado de tinta com a figura em papel:
+   lê-se como um carimbo, não como um adesivo. A cor do estado não se
+   perde — vive na etiqueta da nota, onde tem texto para a explicar.
+   ===================================================================== */
+.metricas {
+    gap: 16px;
+}
+
+.metrica {
+    gap: 16px;
+    padding: 20px;
+}
+
+.metrica__icone,
+.metrica__icone--azul,
+.metrica__icone--ambar,
+.metrica__icone--verde {
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--tinta-900);
+    background: var(--tinta-900);
+    color: var(--branco);
+}
+
+.metrica__icone svg {
+    width: 18px;
+    height: 18px;
+}
+
+.metrica__rotulo {
+    font-size: .6875rem;
+    letter-spacing: .14em;
+    color: var(--tinta-700);
+}
+
+.metrica__valor {
+    font-size: 2.75rem;
+    letter-spacing: -.04em;
+}
+
+.tendencia {
+    padding: 3px 8px 3px 6px;
+    font-size: .6875rem;
+}
+
+
+/* =====================================================================
+   21.4 OS PAINÉIS
+   A faixa de tinta com o título é o que transforma um cartão num
+   formulário. O conteúdo continua em papel, com a régua de 2px a fechar.
+   ===================================================================== */
+.painel__cabecalho {
+    padding: 14px 18px;
+    border-bottom: 0;
+    background: var(--banda);
+    color: var(--banda-texto);
+}
+
+.painel__cabecalho h2 {
+    font-size: .9375rem;
+    font-weight: 800;
+    letter-spacing: .015em;
+    text-transform: uppercase;
+    color: var(--banda-texto);
+}
+
+/* A marca que antecede o título fica azul sobre a tinta: é o único azul
+   da faixa, e é ele que guia o olho. */
+.painel__cabecalho h2::before {
+    width: 20px;
+    height: 4px;
+    background: var(--azul-500);
+}
+
+.painel__cabecalho .painel__descricao {
+    margin-top: 4px;
+    color: var(--banda-suave);
+}
+
+/* O que está dentro da faixa e leva a algum lado: claro sobre tinta. */
+.painel__cabecalho a,
+.painel__cabecalho .atalho,
+.painel__cabecalho .botao,
+.painel__cabecalho .ordenacao__rotulo,
+.painel__cabecalho .ordenacao__atual {
+    color: var(--banda-texto);
+}
+
+.painel__cabecalho .atalho,
+.painel__cabecalho .botao {
+    border-color: var(--banda-texto);
+}
+
+.painel__cabecalho .atalho:hover,
+.painel__cabecalho .botao:hover {
+    background: var(--banda-texto);
+    color: var(--banda);
+}
+
+.painel__cabecalho .nota-ordem {
+    color: var(--banda-suave);
+}
+
+/* A faixa é colada ao topo do painel: a régua de baixo separa o título do
+   conteúdo, para o papel não parecer solto. */
+.painel__cabecalho + * {
+    border-top: 2px solid var(--traco);
+}
+
+
+/* =====================================================================
+   21.5 A TABELA
+   Cabeçalho em papel rebaixado, mono maiúsculas, régua de 2px. As linhas
+   respiram mais e o número do pedido fica em mono, para se encontrar de
+   imediato na coluna.
+   ===================================================================== */
+.tabela th {
+    padding-block: 10px;
+    background: var(--realce-suave);
+    color: var(--tinta-700);
+    letter-spacing: .14em;
+}
+
+.tabela td {
+    padding-block: 14px;
+}
+
+.tabela tbody tr:hover {
+    background: var(--realce-suave);
+}
+
+.tabela__id {
+    letter-spacing: .02em;
+}
+
+
+/* =====================================================================
+   21.6 BOTÕES E ACÇÕES
+   O carimbo fica em 4px: a 6px pesava mais do que o botão.
+   ===================================================================== */
+.botao--primario,
+.botao--perigo {
+    box-shadow: 4px 4px 0 var(--carimbo);
+}
+
+.botao--primario:active,
+.botao--perigo:active {
+    box-shadow: 1px 1px 0 var(--carimbo);
+}
+
+.botao--pequeno {
+    padding-inline: 12px;
+}
+
+.botao--fantasma:hover {
+    background: var(--tinta-900);
+    color: var(--branco);
+}
+
+
+/* =====================================================================
+   21.7 AVISOS
+   A barra à esquerda é a mesma régua de 2px, mais grossa: o aviso lê-se
+   como uma anotação à margem do formulário.
+   ===================================================================== */
+.aviso,
+.alerta {
+    border: 2px solid var(--traco);
+    border-left-width: 6px;
+    border-radius: 0;
+}
+
+.aviso--erro,
+.alerta--erro {
+    border-left-color: var(--vermelho-fg);
+}
+
+.alerta--sucesso,
+.aviso--sucesso {
+    border-left-color: var(--verde-fg);
+}
+
+
+/* =====================================================================
+   21.8 O RODAPÉ DO PAINEL
+   Fecha a folha sem competir com o título.
+   ===================================================================== */
+.painel__rodape {
+    border-top: 2px solid var(--traco);
+    font-family: var(--fonte-mono);
+    font-size: .6875rem;
+    letter-spacing: .04em;
+    color: var(--tinta-500);
+}
+
+
+/* =====================================================================
+   21.9 MOVIMENTO
+   As superfícies mudam de cor com o tema; o resto do painel não ganha
+   animação nova. Quem pediu menos movimento não vê transição nenhuma.
+   ===================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+    .painel__cabecalho {
+        transition: background-color .2s ease, color .2s ease;
+    }
+
+    .metrica__icone {
+        transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+    }
+}
+
+/* --- Cabeçalhos que também são barras de controlo ---------------------
+   A faixa de tinta é para títulos. Quando o mesmo cabeçalho traz a
+   ordenação ou os filtros, o fundo volta a papel: o que se pode tocar
+   fica sempre sobre a superfície clara, e a faixa não come os chips.
+   Navegadores sem :has() ficam com a faixa — legível, só mais pesada. */
+.painel__cabecalho:has(.ordenacao),
+.painel__cabecalho:has(.ordenacao__grupo),
+.painel__cabecalho:has(.filtros) {
+    border-bottom: 2px solid var(--traco);
+    background: transparent;
+    color: var(--tinta-900);
+}
+
+.painel__cabecalho:has(.ordenacao) h2,
+.painel__cabecalho:has(.ordenacao__grupo) h2,
+.painel__cabecalho:has(.filtros) h2 {
+    color: var(--tinta-900);
+}
+
+.painel__cabecalho:has(.ordenacao) .painel__descricao,
+.painel__cabecalho:has(.ordenacao__grupo) .painel__descricao,
+.painel__cabecalho:has(.filtros) .painel__descricao {
+    color: var(--tinta-500);
+}
+
+.painel__cabecalho:has(.ordenacao) a,
+.painel__cabecalho:has(.ordenacao__grupo) a,
+.painel__cabecalho:has(.filtros) a {
+    color: var(--tinta-900);
+}
+
+/* A régua de baixo já fecha o cabeçalho: o conteúdo não leva outra. */
+.painel__cabecalho:has(.ordenacao) + *,
+.painel__cabecalho:has(.ordenacao__grupo) + *,
+.painel__cabecalho:has(.filtros) + * {
+    border-top: 0;
+}
+
+/* Nos cabeçalhos de controlo, tudo o que estava claro sobre a tinta volta
+   à tinta sobre papel — incluindo os rótulos da ordenação, que são texto
+   e não ligações. Sem isto, os chips e os rótulos desapareciam: branco
+   sobre branco. */
+.painel__cabecalho:has(.ordenacao) :is(a, .botao, .atalho, .filtro,
+    .ordenacao__rotulo, .ordenacao__atual),
+.painel__cabecalho:has(.ordenacao__grupo) :is(a, .botao, .atalho, .filtro,
+    .ordenacao__rotulo, .ordenacao__atual),
+.painel__cabecalho:has(.filtros) :is(a, .botao, .atalho, .filtro,
+    .ordenacao__rotulo, .ordenacao__atual) {
+    border-color: var(--tinta-900);
+    color: var(--tinta-900);
+}
+
+.painel__cabecalho:has(.ordenacao) :is(.botao, .atalho, .filtro):hover,
+.painel__cabecalho:has(.ordenacao__grupo) :is(.botao, .atalho, .filtro):hover,
+.painel__cabecalho:has(.filtros) :is(.botao, .atalho, .filtro):hover {
+    background: var(--tinta-900);
+    color: var(--branco);
+}
+
+/* No escuro o selo não inverte para papel: sobre o cartão fundo, três
+   quadrados claros brilhavam mais do que os números. Fica um selo da cor
+   da faixa, com a figura clara e o traço da régua — a mesma ideia (um
+   carimbo sólido), com o peso certo para o papel escuro. */
+[data-tema="tinta"] .metrica__icone,
+[data-tema="tinta"] .metrica__icone--azul,
+[data-tema="tinta"] .metrica__icone--ambar,
+[data-tema="tinta"] .metrica__icone--verde {
+    border-color: var(--traco);
+    background: #0A1420;
+    color: var(--tinta-900);
+}

@@ -163,6 +163,25 @@ levam a algum lado. A barra lateral passou de azul-marinho a tinta.
 A paleta não mudou — já era esta. O que mudou foi a forma, e nada disso toca a
 geometria do painel: os componentes são os mesmos, só vestidos de outra maneira.
 
+### A folha de serviço
+
+O painel veste-se como uma folha de serviço impressa. Cada painel abre com uma
+faixa de tinta: título a branco em maiúsculas, uma marca azul de 20×4 px a
+anteceder e a descrição em tinta suave. É o único sítio do painel onde a tinta
+funciona como fundo — e é isso que separa um formulário de um cartão qualquer.
+
+O papel tem uma pontuação quase invisível (um ponto de 1 px a cada 22 px), que
+só se lê nas calhas entre os cartões. O cabeçalho de página ganha uma marca azul
+de 34×5 px acima do título, o título sobe de tamanho e a régua de 2 px fecha o
+bloco. Os selos das métricas passam a quadrados de tinta com a figura em papel,
+como um carimbo; a cor do estado vive na etiqueta da nota, onde há texto para a
+explicar. O carimbo dos botões baixou de 6 para 4 px.
+
+Uma excepção deliberada: quando o cabeçalho do painel também traz a ordenação ou
+os filtros, a faixa desaparece e fica papel. Um fundo escuro atrás de chips e
+selects esconde exactamente aquilo que se pode tocar. O `:has()` faz a escolha;
+navegadores sem ele ficam com a faixa, que continua legível.
+
 ### Os dois temas
 
 O painel tem duas luzes e é a mesma casa nas duas. «Papel» é a folha clara, a de
