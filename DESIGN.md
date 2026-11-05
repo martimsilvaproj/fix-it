@@ -159,9 +159,13 @@ dentro de `.pagina-publica`, para a consulta pública não herdar o painel.
 
 ## 10. Limites
 
-- Sem fotografia. As imagens são desenhos de linha em SVG escritos dentro do
-  documento (as quatro abas de `servicos.php`): nenhum ficheiro externo, nenhum
-  CDN, nada que falhe offline.
+- Sem fotografia. As oficinas não têm imagem própria e o `PRODUCT.md`
+  proíbe inventá-la. O que existe são desenhos: as quatro abas de
+  `servicos.php` escrevem o SVG dentro do documento, e o talão da página
+  inicial e o detalhe do PIN são ficheiros em `assets/img/` servidos pelo
+  próprio site — nenhum ficheiro externo, nenhum CDN, nada que falhe
+  offline. A moldura (`figura`) repete a gramática do papel: regra de 2px,
+  cantos vivos e sombra de carimbo.
 - O cabeçalho é fixo (`position: sticky`), para o PIN e o pedido estarem sempre
   ao alcance depois do scroll.
 - Sem animação de entrada de página: tem de abrir depressa num telemóvel antigo.

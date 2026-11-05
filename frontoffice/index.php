@@ -87,6 +87,15 @@ pagina_inicio(
         </form>
     </div>
 
+    <figure class="figura figura--entrada faixa__figura">
+        <img class="figura__imagem" src="../assets/img/talao.svg"
+             width="480" height="620" decoding="async"
+             alt="Talão de entrada: o equipamento, o PIN de seis algarismos e as cinco fases do percurso, numeradas de 01 a 05.">
+        <figcaption class="figura__legenda">
+            Exemplo de talão: o PIN e o percurso, no mesmo papel
+        </figcaption>
+    </figure>
+
     <ol class="percurso" aria-label="Percurso de uma reparação">
         <span class="percurso__regua" aria-hidden="true"></span>
 

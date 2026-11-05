@@ -20,6 +20,7 @@
      06. Formulário e avisos
      07. Rodapé
      08. Movimento
+     09. Imagens de documento
    ===================================================================== */
 
 
@@ -1363,4 +1364,84 @@
     display: inline-flex;
     align-items: center;
     min-height: 44px;
+}
+
+
+/* =====================================================================
+   09. IMAGENS DE DOCUMENTO
+
+   O mundo do site é o talão de oficina, e o talão tem desenho. As duas
+   imagens desta secção são esse artefacto — o papel que sai do balcão e o
+   campo do PIN ampliado — guardadas em assets/img/ e servidas pelo próprio
+   site: nada vem de fora, nada falha offline.
+
+   Não há fotografia. A oficina não forneceu nenhuma e o PRODUCT.md proíbe
+   inventá-la; a imagem é o documento, não a loja. A moldura é a mesma nos
+   dois casos: regra de 2px, papel de campo e sombra de carimbo.
+   ===================================================================== */
+.figura {
+    margin: 0;
+    padding: 16px;
+    border: 2px solid var(--b-tinta);
+    background: var(--b-papel-campo);
+    box-shadow: 6px 6px 0 var(--b-tinta);
+}
+
+.figura__imagem {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.figura__legenda {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--b-regra);
+    color: var(--b-tinta-70);
+    font-family: var(--b-fonte-mono);
+    font-size: .6875rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    line-height: 1.55;
+    text-transform: uppercase;
+}
+
+/* Na primeira dobra o talão acompanha a promessa; por baixo dos 480 px
+   fica alinhado à esquerda como o resto da coluna. */
+.figura--entrada {
+    max-width: 480px;
+    margin-top: 30px;
+}
+
+.figura--detalhe {
+    max-width: 460px;
+    margin-top: 26px;
+}
+
+/* Em ecrã largo o talão sobe para o lado do título, em vez de empurrar o
+   percurso para baixo de uma coluna de texto estreita. O percurso e o
+   botão continuam a atravessar as duas colunas. */
+@media (min-width: 1060px) {
+    .faixa {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(320px, 400px);
+        column-gap: 48px;
+        align-items: start;
+    }
+
+    .faixa > * {
+        grid-column: 1;
+    }
+
+    .faixa__figura {
+        grid-row: 1 / span 4;
+        grid-column: 2;
+        align-self: center;
+        margin-top: 0;
+    }
+
+    .percurso,
+    .faixa__acoes {
+        grid-column: 1 / -1;
+    }
 }

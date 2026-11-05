@@ -81,6 +81,15 @@ pagina_inicio(
             fase, o equipamento, a avaria tal como foi descrita, o orçamento e a
             data de entrada.
         </p>
+        <figure class="figura figura--detalhe">
+            <img class="figura__imagem" src="../assets/img/talao-pin.svg"
+                 width="420" height="240" loading="lazy" decoding="async"
+                 alt="O campo do PIN no talão, ampliado: seis algarismos, escritos sem espaços.">
+            <figcaption class="figura__legenda">
+                O campo do PIN, como está impresso no talão
+            </figcaption>
+        </figure>
+
         <p>
             <strong>Não mostra o teu nome.</strong> Quem tem o PIN vê o pedido,
             mas não vê quem é o dono — por isso guarda o talão como guardarias um

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 240" width="420" height="240">
+  <rect x="24" y="24" width="372" height="112" fill="none" stroke="#101C28" stroke-width="2"/>
+  <text x="44" y="54" fill="#1A5FA0" font-family="ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="700" letter-spacing="2.2">PIN</text>
+  <text x="44" y="112" fill="#101C28" font-family="ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" font-size="46" font-weight="700" letter-spacing="9">482071</text>
+  <text x="24" y="176" fill="#5A6C80" font-family="ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" font-size="10" letter-spacing="1.4">6 ALGARISMOS · SEM ESPAÇOS</text>
+  <rect x="24" y="196" width="372" height="2" fill="#101C28"/>
+  <text x="24" y="222" fill="#101C28" font-family="ui-sans-serif, system-ui, 'Segoe UI', Arial, sans-serif" font-size="15" font-weight="600">É este o código que abre a consulta.</text>
+</svg>
