@@ -1,0 +1,14 @@
+# --- Fins de linha -------------------------------------------------------
+# O repositório guarda texto em LF. Sem esta regra, o Git no Windows avisa em
+# cada commit que vai converter LF em CRLF, e o ficheiro muda sem ninguém lhe
+# tocar.
+* text=auto eol=lf
+
+# --- Binários ------------------------------------------------------------
+# O Git não tenta tratar estes como texto: nada de conversões, nada de diff.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary

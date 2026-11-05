@@ -1,0 +1,34 @@
+name: Testes
+
+# Os testes não tocam na base de dados: só o que é puro (contagem e corte de
+# texto, leitura de contactos, constantes dos estados). Por isso não há
+# serviço de MySQL aqui — um teste que precisa da base não corre em CI, é uma
+# promessa.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  testes:
+    name: PHP 8.3
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+
+      - name: Sintaxe de todos os ficheiros PHP
+        run: |
+          falhou=0
+          while IFS= read -r ficheiro; do
+            php -l "$ficheiro" > /dev/null || { echo "erro de sintaxe: $ficheiro"; falhou=1; }
+          done < <(git ls-files '*.php')
+          exit $falhou
+
+      - name: Bateria de testes
+        run: php testes/correr.php

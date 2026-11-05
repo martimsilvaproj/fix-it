@@ -546,6 +546,20 @@ O site é a montra da oficina. Não tem login e não mostra nada do back office.
 | **Pedir orçamento** | Formulário que cai na caixa de entrada |
 | **Consultar estado** | PIN de 6 dígitos |
 
+### O talão desenhado
+
+A página inicial mostra o próprio talão de entrada: o equipamento, o PIN de
+seis algarismos, as cinco fases numeradas e o carimbo da marca. Em **Como
+funciona**, o mesmo desenho aparece ampliado no campo do PIN.
+
+Não é fotografia. A oficina não tem imagens próprias e o projecto não inventa
+nenhuma: as duas imagens são desenhos guardados em `assets/img/` e servidos pelo
+próprio site. Não vêm de fora e continuam a aparecer sem internet.
+
+![Página inicial com o talão de entrada](screenshots/manual-site-inicio.png)
+
+![O campo do PIN ampliado](screenshots/manual-site-pin.png)
+
 ### Pedir orçamento pelo site
 
 1. Abre **Pedir orçamento**.
