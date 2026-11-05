@@ -4487,6 +4487,12 @@ a.estado {
     color: #8FC0EC;
 }
 
+/* A etiqueta «Nova» da caixa de entrada tem o mesmo par do «Em reparação»:
+   azul de papel com tinta de papel, que no escuro precisa da tinta clara. */
+[data-tema="tinta"] .estado--nova {
+    color: #8FC0EC;
+}
+
 /* Campos: no tema claro já são brancos sobre papel; aqui são a
    superfície, com o traço da régua. A especificidade (atributo + classe)
    ganha ao formulario.css, que é carregado depois. */
@@ -4878,6 +4884,30 @@ body {
     color: var(--banda);
 }
 
+/* As pílulas de cor têm tinta própria, e o texto claro da faixa apagava-as:
+   branco sobre o âmbar pálido dá 1,1:1 — o pior contraste do painel, e a
+   razão pela qual os atalhos de «Pedidos abertos» desapareciam no tema
+   papel. O fundo pálido é sólido e já as separa da tinta; o texto e a
+   borda voltam a ser os do seu tom, como nas etiquetas de estado. O realce
+   branco do rato continua — é estado, não repouso. */
+.painel__cabecalho .atalho--atribuir,
+.painel__cabecalho .atalho--consultar,
+.painel__cabecalho .atalho--entregue {
+    border-color: var(--cinza-fg);
+    color: var(--cinza-fg);
+}
+
+.painel__cabecalho .atalho--espera,
+.painel__cabecalho .atalho--pin {
+    border-color: var(--ambar-fg);
+    color: var(--ambar-fg);
+}
+
+.painel__cabecalho .atalho--consultados {
+    border-color: var(--azul-700);
+    color: var(--azul-700);
+}
+
 .painel__cabecalho .nota-ordem {
     color: var(--banda-suave);
 }
@@ -5259,5 +5289,140 @@ body {
     .receita__vista {
         flex: 1 1 auto;
         text-align: center;
+    }
+}
+
+
+/* =====================================================================
+   23. PEDIDOS DO SITE — a caixa de entrada dos orçamentos
+
+   A página usa o molde das outras listas: barra de filtros, tabela de
+   talão e ficha em papel. O que aqui se acrescenta é só o que ela tem de
+   próprio: as quatro etiquetas da caixa de entrada, a marca e a avaria
+   por baixo do equipamento, e a ficha da solicitação.
+   ===================================================================== */
+
+/* --- As etiquetas dos quatro estados -------------------------------- */
+/* Azul no que acabou de chegar (é o que pede trabalho), âmbar no que
+   espera resposta da oficina, verde no que já virou pedido e cinza no
+   arquivo — os mesmos pares dos estados da oficina. */
+.estado--nova {
+    background: var(--azul-100);
+    color: #1B4C8C;
+}
+
+.estado--contacto {
+    background: var(--ambar-bg);
+    color: var(--ambar-fg);
+}
+
+.estado--convertida {
+    background: var(--verde-bg);
+    color: var(--verde-fg);
+}
+
+.estado--arquivada {
+    background: var(--cinza-bg);
+    color: var(--cinza-fg);
+}
+
+/* O número do pedido ao lado da etiqueta «Convertida»: mono, para se ler
+   como o número que é, e não como mais uma palavra do estado. */
+.solicitacao__pedido {
+    margin-left: 8px;
+    font-family: var(--fonte-mono);
+    font-size: var(--texto-sm);
+    font-variant-numeric: tabular-nums;
+}
+
+/* A data de entrada numa linha só, em mono: é um registo, e não uma frase
+   — «05/11/2026 12:00» partido ao meio lê-se como duas datas. */
+.solicitacao__quando {
+    font-family: var(--fonte-mono);
+    font-size: var(--texto-sm);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* --- A coluna do equipamento ---------------------------------------- */
+.solicitacao__marca {
+    display: block;
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+/* A avaria em duas linhas, cortada com reticências: é o que distingue dois
+   pedidos do mesmo portátil e chega para reconhecer o cliente ao balcão.
+   O texto inteiro continua na ficha. */
+.solicitacao__avaria {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    margin-top: 3px;
+    max-width: 46ch;
+    color: var(--tinta-700);
+    font-size: var(--texto-sm);
+    line-height: 1.4;
+}
+
+/* --- A ficha da solicitação ----------------------------------------- */
+/* O corpo respira como o das outras fichas: o painel não tem padding
+   próprio, porque a tabela da lista vai de bordo a bordo. */
+.solicitacao__corpo {
+    display: grid;
+    gap: 16px;
+    padding: 18px;
+}
+
+/* Nome, contacto, equipamento e avaria: uma coluna de rótulos e outra de
+   valores. No telemóvel passa a uma coluna, com o rótulo por cima. */
+.solicitacao__dados {
+    display: grid;
+    grid-template-columns: minmax(9rem, auto) minmax(0, 1fr);
+    gap: 10px 24px;
+    margin: 0;
+}
+
+.solicitacao__dados dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.solicitacao__nota {
+    color: var(--tinta-500);
+}
+
+.solicitacao__dica {
+    margin: 0;
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+.solicitacao__acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* O formulário da conversão é uma coluna de blocos: o respiro entre eles
+   vem daqui, e não de margens escritas à mão em cada campo. */
+.solicitacao__corpo form {
+    display: grid;
+    gap: 14px;
+}
+
+.solicitacao__corpo h3 {
+    margin: 0;
+}
+
+@media (max-width: 560px) {
+    .solicitacao__dados {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2px;
+    }
+
+    .solicitacao__dados dd {
+        margin-bottom: 10px;
     }
 }

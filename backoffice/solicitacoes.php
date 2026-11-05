@@ -437,22 +437,23 @@ painelAbrir(
                         </p>
                     </div>
 
-                    <dl style="display:grid;grid-template-columns:minmax(9rem,auto) 1fr;gap:.5rem 1.5rem;margin:0 0 1.5rem">
+                    <div class="solicitacao__corpo">
+                    <dl class="solicitacao__dados">
                         <dt class="campo__rotulo">Nome</dt>
-                        <dd style="margin:0"><?= h($ficha['nome']) ?></dd>
+                        <dd><?= h($ficha['nome']) ?></dd>
 
                         <dt class="campo__rotulo">Contacto</dt>
-                        <dd style="margin:0">
+                        <dd>
                             <?= h($ficha['contacto']) ?>
                             <?php if ($contacto['tipo'] === 'telefone'): ?>
-                                <span style="color:var(--tinta-500)">· telefone</span>
+                                <span class="solicitacao__nota">· telefone</span>
                             <?php elseif ($contacto['tipo'] === 'email'): ?>
-                                <span style="color:var(--tinta-500)">· email</span>
+                                <span class="solicitacao__nota">· email</span>
                             <?php endif; ?>
                         </dd>
 
                         <dt class="campo__rotulo">Equipamento</dt>
-                        <dd style="margin:0">
+                        <dd>
                             <?= h($ficha['equipamento']) ?>
                             <?php if (!empty($ficha['marca_modelo'])): ?>
                                 · <?= h($ficha['marca_modelo']) ?>
@@ -460,11 +461,11 @@ painelAbrir(
                         </dd>
 
                         <dt class="campo__rotulo">O que está avariado</dt>
-                        <dd style="margin:0;max-width:70ch"><?= nl2br(h($ficha['descricao'])) ?></dd>
+                        <dd><?= nl2br(h($ficha['descricao'])) ?></dd>
 
                         <?php if ($ficha['pedido_id'] !== null): ?>
                             <dt class="campo__rotulo">Pedido aberto</dt>
-                            <dd style="margin:0">
+                            <dd>
                                 <a href="pedido.php?id=<?= (int) $ficha['pedido_id'] ?>">
                                     #<?= (int) $ficha['pedido_id'] ?>
                                 </a>
@@ -474,7 +475,7 @@ painelAbrir(
                     </dl>
 
                     <?php if ($ficha['pedido_id'] === null): ?>
-                        <div class="principal__acao" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem">
+                        <div class="principal__acao solicitacao__acoes">
                             <?php foreach (SOLICITACOES_ESTADOS_MANUAIS as $opcao): ?>
                                 <?php if ($ficha['estado'] === $opcao) { continue; } ?>
                                 <form method="post" action="solicitacoes.php">
@@ -492,8 +493,8 @@ painelAbrir(
                         <!-- =============================================
                              Conversão em pedido de reparação
                              ============================================= -->
-                        <h3 style="margin-top:0">Abrir pedido de reparação</h3>
-                        <p class="painel__descricao" style="margin-bottom:1.25rem">
+                        <h3>Abrir pedido de reparação</h3>
+                        <p class="painel__descricao">
                             O site não pede NIF nem confirma o telefone. Completa o que falta
                             com o cliente à frente: o pedido nasce em «Recebido», com PIN novo,
                             sem técnico atribuído, e a solicitação fica marcada como convertida.
@@ -520,7 +521,7 @@ painelAbrir(
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
-                                <p class="campo__erro" style="color:inherit">
+                                <p class="solicitacao__dica">
                                     Com um cliente escolhido, os campos abaixo são ignorados.
                                 </p>
                             </div>
@@ -538,8 +539,7 @@ painelAbrir(
                                 ?>
                             </div>
 
-                            <div class="campo<?= isset($errosCampos['descricao']) ? ' campo--invalido' : '' ?>"
-                                 style="margin-top:1rem">
+                            <div class="campo<?= isset($errosCampos['descricao']) ? ' campo--invalido' : '' ?>">
                                 <label class="campo__rotulo" for="conv-descricao">Avaria comunicada</label>
                                 <textarea class="entrada" id="conv-descricao" name="descricao" rows="5"
                                           maxlength="2000"
@@ -548,7 +548,7 @@ painelAbrir(
                                    <?= isset($errosCampos['descricao']) ? '' : 'hidden' ?>><?= h($errosCampos['descricao'] ?? '') ?></p>
                             </div>
 
-                            <div class="principal__acao" style="margin-top:1.25rem">
+                            <div class="principal__acao">
                                 <a class="botao botao--fantasma" href="<?= h($urlLista) ?>">Cancelar</a>
                                 <button class="botao botao--primario" type="submit">
                                     Abrir pedido e continuar
@@ -562,13 +562,14 @@ painelAbrir(
                             Para o corrigir, usa a ficha do pedido.
                         </p>
                     <?php endif; ?>
+                    </div><!-- /.solicitacao__corpo -->
                 </section>
             <?php endif; ?>
 
             <!-- =========================================================
                  Lista e filtros
                  ========================================================= -->
-            <section class="painel" aria-labelledby="titulo-lista">
+            <section class="painel" id="lista" aria-labelledby="titulo-lista">
                 <div class="painel__cabecalho">
                     <div>
                         <h2 id="titulo-lista">Recebidos</h2>
@@ -581,44 +582,61 @@ painelAbrir(
                     </div>
                 </div>
 
-                <p style="display:flex;gap:.75rem;flex-wrap:wrap;margin:0 0 1.25rem">
-                    <?php
-                    $opcoes = ['' => 'Todas (' . $total . ')'];
+                <?php
+                // A barra de filtros veste o mesmo molde da lista de pedidos:
+                // pesquisa, acções e, por baixo, o resumo por estado com as
+                // contagens — cada número é o atalho para esse recorte. Antes
+                // disto era uma linha de ligações soltas e um formulário com
+                // margens escritas à mão, que não seguia o resto do painel.
+                $rotulosEstado = ['' => 'Todas'] + array_combine(
+                    SOLICITACOES_ESTADOS,
+                    SOLICITACOES_ESTADOS
+                );
+                ?>
 
-                    foreach ($contagens as $nomeEstado => $quantidade) {
-                        $opcoes[$nomeEstado] = $nomeEstado . ' (' . $quantidade . ')';
-                    }
-                    ?>
-                    <?php foreach ($opcoes as $valorEstado => $rotulo): ?>
-                        <?php
-                        $url = 'solicitacoes.php?' . http_build_query(array_filter([
-                            'q'      => $pesquisa,
-                            'estado' => $valorEstado,
-                        ]));
-                        $atual = $estadoFiltro === $valorEstado;
-                        ?>
-                        <a href="<?= h($url) ?>"
-                           <?= $atual ? 'aria-current="true" style="font-weight:700"' : '' ?>>
-                            <?= h($rotulo) ?>
-                        </a>
-                    <?php endforeach; ?>
-                </p>
-
-                <form method="get" action="solicitacoes.php"
-                      style="display:flex;gap:.75rem;align-items:flex-end;flex-wrap:wrap;margin-bottom:1.5rem">
+                <form class="filtros filtros--pesquisa" method="get" action="solicitacoes.php#lista"
+                      role="search" aria-label="Filtrar pedidos do site">
                     <?php if ($estadoFiltro !== ''): ?>
                         <input type="hidden" name="estado" value="<?= h($estadoFiltro) ?>">
                     <?php endif; ?>
-                    <div class="campo" style="flex:1 1 18rem;margin:0">
+
+                    <div class="campo filtros__campo filtros__campo--pesquisa">
                         <label class="campo__rotulo" for="filtro-q">Procurar</label>
-                        <input class="entrada" id="filtro-q" name="q" type="search"
+                        <input class="entrada" type="search" id="filtro-q" name="q"
                                value="<?= h($pesquisa) ?>"
-                               placeholder="Nome, contacto, equipamento ou avaria">
+                               placeholder="Nome, contacto, equipamento ou avaria"
+                               autocomplete="off">
                     </div>
-                    <button class="botao" type="submit">Procurar</button>
-                    <?php if ($pesquisa !== '' || $estadoFiltro !== ''): ?>
-                        <a class="botao botao--fantasma" href="solicitacoes.php">Limpar</a>
-                    <?php endif; ?>
+
+                    <div class="filtros__acoes">
+                        <button class="botao botao--primario" type="submit">Procurar</button>
+                        <?php if ($pesquisa !== '' || $estadoFiltro !== ''): ?>
+                            <a class="botao botao--fantasma" href="solicitacoes.php#lista">Limpar</a>
+                        <?php endif; ?>
+                    </div>
+
+                    <p class="filtros__resumo">
+                        <span class="filtros__resumo-rotulo">Estado</span>
+                        <?php $primeiroEstado = true; ?>
+                        <?php foreach ($rotulosEstado as $valorEstado => $rotuloEstado): ?>
+                            <?php if (!$primeiroEstado): ?><span aria-hidden="true">·</span><?php endif; ?>
+                            <?php $primeiroEstado = false; ?>
+                            <?php
+                            $contagem = $valorEstado === ''
+                                ? $total
+                                : (int) ($contagens[$valorEstado] ?? 0);
+                            $urlEstado = 'solicitacoes.php?' . http_build_query(array_filter([
+                                'q'      => $pesquisa,
+                                'estado' => $valorEstado,
+                            ])) . '#lista';
+                            ?>
+                            <?php if ($estadoFiltro === $valorEstado): ?>
+                                <span class="filtros__resumo-atual"><?= h($rotuloEstado) ?> <strong><?= $contagem ?></strong></span>
+                            <?php else: ?>
+                                <a href="<?= h($urlEstado) ?>"><?= h($rotuloEstado) ?> <strong><?= $contagem ?></strong><span class="visualmente-oculto"> — mostrar só estes pedidos</span></a>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </p>
                 </form>
 
                 <?php if ($solicitacoes === []): ?>
@@ -651,22 +669,38 @@ painelAbrir(
                             <tbody>
                                 <?php foreach ($solicitacoes as $linha): ?>
                                     <tr>
-                                        <td data-rotulo="Quando"><?= h(dataHoraCurta($linha['criado_em'])) ?></td>
+                                        <td data-rotulo="Quando" class="solicitacao__quando"><?= h(dataHoraCurta($linha['criado_em'])) ?></td>
                                         <td data-rotulo="Cliente"><?= h($linha['nome']) ?></td>
                                         <td data-rotulo="Contacto"><?= h($linha['contacto']) ?></td>
                                         <td data-rotulo="Equipamento">
                                             <?= h($linha['equipamento']) ?>
                                             <?php if (!empty($linha['marca_modelo'])): ?>
-                                                <span style="display:block;color:var(--tinta-500);font-size:.8125rem"><?= h($linha['marca_modelo']) ?></span>
+                                                <span class="solicitacao__marca"><?= h($linha['marca_modelo']) ?></span>
+                                            <?php endif; ?>
+                                            <?php if (trim((string) $linha['descricao']) !== ''): ?>
+                                                <span class="solicitacao__avaria"><?= h($linha['descricao']) ?></span>
                                             <?php endif; ?>
                                         </td>
                                         <td data-rotulo="Estado">
+                                            <?php
+                                            // A etiqueta diz o estado da caixa de
+                                            // entrada e, quando já houve conversão, o
+                                            // número do pedido ao lado. O estado
+                                            // continua a ser «Convertida», que é o que
+                                            // o resumo por estado conta.
+                                            $classeEstado = match ((string) $linha['estado']) {
+                                                'Nova'        => 'estado--nova',
+                                                'Em contacto' => 'estado--contacto',
+                                                'Convertida'  => 'estado--convertida',
+                                                'Arquivada'   => 'estado--arquivada',
+                                                default       => '',
+                                            };
+                                            ?>
+                                            <span class="estado <?= h($classeEstado) ?>"><?= h($linha['estado']) ?></span>
                                             <?php if ($linha['pedido_id'] !== null): ?>
-                                                <a href="pedido.php?id=<?= (int) $linha['pedido_id'] ?>">
-                                                    Convertida no #<?= (int) $linha['pedido_id'] ?>
-                                                </a>
-                                            <?php else: ?>
-                                                <?= h($linha['estado']) ?>
+                                                <a class="solicitacao__pedido"
+                                                   href="pedido.php?id=<?= (int) $linha['pedido_id'] ?>"
+                                                   aria-label="Abrir o pedido #<?= (int) $linha['pedido_id'] ?>">#<?= (int) $linha['pedido_id'] ?></a>
                                             <?php endif; ?>
                                         </td>
                                         <td data-rotulo="Abrir">
