@@ -163,6 +163,25 @@ levam a algum lado. A barra lateral passou de azul-marinho a tinta.
 A paleta não mudou — já era esta. O que mudou foi a forma, e nada disso toca a
 geometria do painel: os componentes são os mesmos, só vestidos de outra maneira.
 
+### Os dois temas
+
+O painel tem duas luzes e é a mesma casa nas duas. «Papel» é a folha clara, a de
+origem. «Tinta» é a mesma folha à noite: papel escuro, texto claro, o mesmo
+traço de 2px e a mesma sombra de carimbo, agora preta. Não muda um único
+componente de sítio — mudam os valores dos tokens, e a página acompanha.
+
+Três tokens existem para isso: `--traco` desenha as réguas, `--carimbo` faz a
+sombra e `--realce-suave` é o fundo das linhas sob o cursor. No tema claro valem
+exactamente o que valiam antes do tema existir, por isso a folha clara não
+mudou de aspecto.
+
+O botão está na barra de topo e na entrada, e a escolha guarda-se no browser
+(`localStorage`), não na conta: quem partilha o computador da receção não muda o
+ecrã do colega. O atributo é escrito antes do primeiro desenho, para a página
+não aparecer clara e escurecer a seguir. O item activo da barra lateral deixou
+de ser uma placa azul preenchida — era a única superfície assim no painel — e
+passou a régua branca à esquerda com um véu claro, como uma marca de papel.
+
 Duas notas de implementação: `painel.css` é a primeira folha a carregar, por isso
 as regras de campo vivem em `formulario.css` e a do botão de entrada em
 `login.css` — é aí que fecham a cascata. E `consulta.php` continua a sobrepor-se

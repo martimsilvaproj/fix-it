@@ -193,6 +193,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../assets/css/painel.css">
     <link rel="stylesheet" href="../assets/css/formulario.css">
     <link rel="stylesheet" href="../assets/css/login.css">
+
+    <!-- O tema escolhido vive neste browser, não na conta. É lido antes do
+         primeiro desenho para a página não aparecer clara e escurecer logo
+         a seguir; o botão que o troca está no canto da folha. -->
+    <script>
+        try {
+            var temaGuardado = localStorage.getItem('fixit-tema');
+            if (temaGuardado === 'tinta' || temaGuardado === 'papel') {
+                document.documentElement.setAttribute('data-tema', temaGuardado);
+            }
+        } catch (e) {}
+    </script>
 </head>
 <body class="pagina-entrada">
 
@@ -216,9 +228,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </span>
         </a>
 
-        <p class="acesso__frase">
-            Cada pedido, orçamento e reparação com o histórico à mão.
-        </p>
+        <div class="acesso__miolo">
+            <p class="acesso__etiqueta">Oficina · back office</p>
+
+            <p class="acesso__frase">
+                Cada pedido, orçamento e reparação com o histórico à mão.
+            </p>
+
+            <!-- O mesmo ciclo de vida que o cliente lê no talão. É
+                 decorativo para quem ouve a página: a informação está no
+                 site público, e a lista não acrescenta nada ao formulário. -->
+            <ol class="acesso__fluxo" aria-hidden="true">
+                <li><span>01</span> Recebido</li>
+                <li><span>02</span> Em diagnóstico</li>
+                <li><span>03</span> Em reparação</li>
+                <li><span>04</span> Pronto</li>
+                <li><span>05</span> Entregue</li>
+            </ol>
+        </div>
 
         <p class="acesso__rodape">
             <a href="../frontoffice/index.php">Consulta pública de reparações</a>
@@ -230,7 +257,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
          ============================================================= -->
     <section class="acesso__zona" aria-labelledby="titulo-entrada">
 
+        <button class="tema-botao acesso__tema" type="button" data-alternar-tema
+                aria-pressed="false" aria-label="Tema escuro (tinta)">
+            <svg class="tema-botao__sol" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="3.6"/>
+                <path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6"/>
+            </svg>
+            <svg class="tema-botao__lua" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2Z"/>
+            </svg>
+            <span class="tema-botao__texto">Tema</span>
+        </button>
+
         <div class="acesso__caixa">
+
+            <p class="acesso__cartao-etiqueta">Acesso à oficina</p>
 
             <h1 id="titulo-entrada">Entra na oficina</h1>
             <p class="acesso__sub">
@@ -293,9 +336,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </button>
             </form>
 
+            <p class="acesso__nota">
+                Ainda não tens conta? Um administrador cria-a em
+                <span>Utilizadores</span>, dentro do painel.
+            </p>
+
         </div>
     </section>
 </main>
+
+<script src="../assets/js/tema.js" defer></script>
 
 </body>
 </html>

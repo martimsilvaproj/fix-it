@@ -1,8 +1,10 @@
 /* =====================================================================
-   FixIt — Entrada na área da oficina
+   FixIt — Entrada na oficina
    Só esta página. Os tokens, botões e campos vêm de painel.css e
-   formulario.css; aqui fica o esqueleto de duas colunas (marca escura à
-   esquerda, formulário à direita), que no telemóvel passa a uma coluna.
+   formulario.css; aqui fica o desenho da porta: à esquerda o talão escuro
+   com o ciclo de vida de um pedido, à direita a folha onde se entra. No
+   telemóvel fica uma coluna, e a lista do ciclo sai — quem está a entrar
+   quer o formulário, não a explicação.
    ===================================================================== */
 
 /* Herda a folha do painel, mas a entrada não é uma página do back office:
@@ -26,25 +28,80 @@
 
 /* =====================================================================
    01. COLUNA DA MARCA
-   O mesmo azul da barra lateral, para que a entrada pareça a porta da
-   área que vem a seguir.
+   A mesma tinta da barra lateral, para que a entrada pareça a porta da
+   área que vem a seguir. As linhas horizontais são a pauta do talão,
+   desenhada com um gradiente — nenhuma imagem, nenhum pedido de rede.
    ===================================================================== */
 .acesso__apresentacao {
     display: flex;
     flex-direction: column;
-    gap: 26px;
-    padding: 20px 20px 22px;
-    background: var(--azul-900);
+    gap: 22px;
+    padding: 22px 20px 24px;
+    background-color: #101C28;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, .055) 0 1px,
+        transparent 1px 30px
+    );
+    border-bottom: 2px solid var(--carimbo);
+    color: #C9D6E3;
+}
+
+.acesso__apresentacao .marca__nome,
+.acesso__apresentacao .marca__descricao {
+    color: #FFFFFF;
+}
+
+.acesso__miolo {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.acesso__etiqueta {
+    color: #7FB8EC;
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
 }
 
 .acesso__frase {
-    max-width: 26ch;
-    color: #fff;
-    font-size: 1.25rem;
-    font-weight: 600;
-    line-height: 1.3;
-    letter-spacing: -.02em;
+    max-width: 24ch;
+    color: #FFFFFF;
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.18;
+    letter-spacing: -.022em;
     text-wrap: balance;
+}
+
+/* O ciclo de vida, como sai impresso no talão do cliente. */
+.acesso__fluxo {
+    display: none;
+    margin: 8px 0 0;
+    padding: 0;
+    border-top: 1px solid rgba(255, 255, 255, .22);
+    list-style: none;
+}
+
+.acesso__fluxo li {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .22);
+    color: #B7C8D8;
+    font-family: var(--fonte-mono);
+    font-size: .6875rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+
+.acesso__fluxo li span {
+    color: #7FB8EC;
+    font-weight: 700;
 }
 
 .acesso__rodape {
@@ -53,13 +110,16 @@
 
 .acesso__rodape a {
     color: #A9BCCE;
-    font-size: var(--texto-sm);
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    letter-spacing: .1em;
     text-decoration-thickness: 1px;
-    text-underline-offset: 3px;
+    text-underline-offset: 4px;
+    text-transform: uppercase;
 }
 
 .acesso__rodape a:hover {
-    color: #fff;
+    color: #FFFFFF;
 }
 
 
@@ -67,54 +127,99 @@
    02. FORMULÁRIO
    ===================================================================== */
 .acesso__zona {
+    position: relative;
     display: grid;
     place-items: center;
-    padding: 30px 20px 48px;
+    padding: 66px 20px 48px;
+}
+
+/* O mesmo botão de tema do painel, no canto da folha: quem prefere o
+   escuro escolhe-o já na entrada, e a escolha vale para o painel. */
+.acesso__tema {
+    position: absolute;
+    top: 18px;
+    right: 18px;
 }
 
 .acesso__caixa {
     width: 100%;
-    max-width: 384px;
+    max-width: 420px;
+    padding: 30px 26px 26px;
+    border: 2px solid var(--traco);
+    background: var(--branco);
+    box-shadow: 6px 6px 0 var(--carimbo);
+}
+
+.acesso__cartao-etiqueta {
+    margin-bottom: 10px;
+    color: var(--tinta-500);
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
 }
 
 .acesso__caixa h1 {
     color: var(--tinta-900);
-    font-size: 1.625rem;
-    font-weight: 650;
-    line-height: 1.2;
-    letter-spacing: -.022em;
+    font-size: clamp(1.5rem, 1.25rem + 1vw, 1.75rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -.035em;
+    text-transform: uppercase;
 }
 
 .acesso__sub {
-    max-width: 40ch;
-    margin-top: 6px;
+    max-width: 42ch;
+    margin-top: 10px;
     color: var(--tinta-500);
-    font-size: var(--texto-md);
+    font-size: var(--texto-base);
 }
 
 .acesso__alerta {
-    margin-top: 20px;
+    margin-top: 18px;
     margin-bottom: 0;
 }
 
 .acesso__formulario {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 16px;
     margin-top: 22px;
 }
 
 .acesso__submeter {
     width: 100%;
-    height: 46px;
-    margin-top: 2px;
-    font-family: inherit;
-    font-size: var(--texto-md);
+    height: 48px;
+    margin-top: 4px;
+    font-family: var(--fonte-mono);
+    font-size: var(--texto-xs);
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
 }
 
 .pagina-entrada .acesso__submeter:focus-visible {
     outline: 2px solid var(--azul-500);
-    outline-offset: 2px;
+    outline-offset: 3px;
+}
+
+/* A nota de quem cria as contas: sem ela, quem não tem conta fica a olhar
+   para um formulário que nunca vai aceitar o email dele. */
+.acesso__nota {
+    margin-top: 22px;
+    padding-top: 14px;
+    border-top: 1px solid var(--linha);
+    color: var(--tinta-500);
+    font-size: var(--texto-sm);
+}
+
+.acesso__nota span {
+    color: var(--tinta-700);
+    font-family: var(--fonte-mono);
+    font-size: .6875rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
 }
 
 
@@ -122,30 +227,27 @@
    03. ECRÃS MAIORES
    A marca passa a coluna fixa, como a barra lateral do painel.
    ===================================================================== */
-@media (min-width: 860px) {
+@media (min-width: 900px) {
     .acesso {
-        grid-template-columns: minmax(300px, 380px) 1fr;
+        grid-template-columns: minmax(320px, 38%) 1fr;
     }
 
     .acesso__apresentacao {
         gap: 30px;
-        padding: 30px 32px 26px;
+        padding: 32px 34px 28px;
+        border-right: 2px solid var(--carimbo);
+        border-bottom: 0;
     }
 
     .acesso__frase {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
+    }
+
+    .acesso__fluxo {
+        display: block;
     }
 
     .acesso__zona {
-        padding: 48px 40px;
+        padding: 56px 40px;
     }
-}
-/* A entrada carrega esta folha em último lugar: é aqui que o botão
-   recupera a tipografia do talão, sem depender da ordem das outras. */
-.acesso__submeter {
-    font-family: var(--fonte-mono);
-    font-size: var(--texto-xs);
-    font-weight: 700;
-    letter-spacing: .09em;
-    text-transform: uppercase;
 }

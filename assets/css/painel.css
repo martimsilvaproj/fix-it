@@ -132,7 +132,7 @@ button {
 /* Seleção de texto e cursor também fazem parte do sistema. */
 ::selection {
     background: #CFE0F5;
-    color: var(--azul-900);
+    color: var(--tinta-900);
 }
 
 /* Foco visível e consistente para navegação por teclado. */
@@ -1183,7 +1183,7 @@ a.metrica:focus-visible .metrica__seta {
     gap: 12px 14px;
     padding: 14px 16px 16px;
     border-bottom: 1px solid var(--linha);
-    background: #FAFBFD;
+    background: var(--realce-suave);
 }
 
 .filtros__campo {
@@ -1524,7 +1524,7 @@ a.metrica:focus-visible .metrica__seta {
 .tabela th {
     padding: 11px 16px;
     border-bottom: 1px solid var(--linha);
-    background: #FAFBFD;
+    background: var(--realce-suave);
     color: var(--tinta-500);
     font-size: var(--texto-xs);
     font-weight: 600;
@@ -1550,7 +1550,7 @@ a.metrica:focus-visible .metrica__seta {
 }
 
 .tabela tbody tr:hover {
-    background: #FAFBFD;
+    background: var(--realce-suave);
 }
 
 .tabela__id {
@@ -3694,7 +3694,7 @@ details[open] > .consulta__gerar-botao svg {
 
     /* Elevação: sombra de carimbo, nunca desfoque. */
     --sombra-1: none;
-    --sombra-2: 6px 6px 0 var(--tinta-900);
+    --sombra-2: 6px 6px 0 var(--carimbo);
 
     /* A barra lateral deixa de ser azul-marinho e passa a tinta. */
     --azul-900: #101C28;
@@ -3711,7 +3711,7 @@ details[open] > .consulta__gerar-botao svg {
 
 /* --- Botões --------------------------------------------------------- */
 .botao {
-    border: 2px solid var(--tinta-900);
+    border: 2px solid var(--traco);
     border-radius: 0;
     background: transparent;
     color: var(--tinta-900);
@@ -3726,7 +3726,7 @@ details[open] > .consulta__gerar-botao svg {
     border-color: var(--azul-600);
     background: var(--azul-600);
     color: #FFFFFF;
-    box-shadow: 6px 6px 0 var(--tinta-900);
+    box-shadow: 6px 6px 0 var(--carimbo);
 }
 
 .botao--primario:hover {
@@ -3736,7 +3736,7 @@ details[open] > .consulta__gerar-botao svg {
 
 .botao--primario:active {
     transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 var(--tinta-900);
+    box-shadow: 2px 2px 0 var(--carimbo);
 }
 
 .botao--fantasma {
@@ -3754,7 +3754,7 @@ details[open] > .consulta__gerar-botao svg {
     border-color: var(--vermelho-fg);
     background: var(--vermelho-fg);
     color: #FFFFFF;
-    box-shadow: 6px 6px 0 var(--tinta-900);
+    box-shadow: 6px 6px 0 var(--carimbo);
 }
 
 .botao--perigo:hover {
@@ -3764,7 +3764,7 @@ details[open] > .consulta__gerar-botao svg {
 
 .botao--perigo:active {
     transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 var(--tinta-900);
+    box-shadow: 2px 2px 0 var(--carimbo);
 }
 
 .botao--perigo-fantasma {
@@ -3788,7 +3788,7 @@ details[open] > .consulta__gerar-botao svg {
 }
 
 .saltar-conteudo {
-    border: 2px solid var(--tinta-900);
+    border: 2px solid var(--traco);
     border-radius: 0;
 }
 
@@ -3856,7 +3856,7 @@ details[open] > .consulta__gerar-botao svg {
 
 /* --- Cabeçalho superior --------------------------------------------- */
 .topbar {
-    border-bottom: 2px solid var(--tinta-900);
+    border-bottom: 2px solid var(--traco);
 }
 
 .migalhas {
@@ -3871,9 +3871,9 @@ details[open] > .consulta__gerar-botao svg {
 }
 
 .perfil__avatar {
-    border: 2px solid var(--tinta-900);
+    border: 2px solid var(--traco);
     border-radius: 0;
-    background: #FFFFFF;
+    background: var(--branco);
     color: var(--tinta-900);
     font-family: var(--fonte-mono);
     font-weight: 700;
@@ -3901,20 +3901,20 @@ details[open] > .consulta__gerar-botao svg {
 
 /* --- Cartões de métricas -------------------------------------------- */
 .metrica {
-    border: 2px solid var(--tinta-900);
+    border: 2px solid var(--traco);
     border-radius: 0;
-    background: #FFFFFF;
+    background: var(--branco);
     box-shadow: none;
 }
 
 a.metrica:hover {
     transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 var(--tinta-900);
+    box-shadow: 6px 6px 0 var(--carimbo);
 }
 
 a.metrica:active {
     transform: translate(0, 0);
-    box-shadow: 2px 2px 0 var(--tinta-900);
+    box-shadow: 2px 2px 0 var(--carimbo);
 }
 
 .metrica__rotulo {
@@ -3945,13 +3945,13 @@ a.metrica:active {
 
 /* --- Painel, lista e tabela ----------------------------------------- */
 .painel {
-    border: 2px solid var(--tinta-900);
+    border: 2px solid var(--traco);
     border-radius: 0;
     box-shadow: none;
 }
 
 .painel__cabecalho {
-    border-bottom: 2px solid var(--tinta-900);
+    border-bottom: 2px solid var(--traco);
 }
 
 .painel__cabecalho h2 {
@@ -3961,7 +3961,7 @@ a.metrica:active {
 }
 
 .painel__rodape {
-    border-top: 2px solid var(--tinta-900);
+    border-top: 2px solid var(--traco);
     font-family: var(--fonte-mono);
     font-size: .6875rem;
     letter-spacing: .04em;
@@ -3989,12 +3989,12 @@ a.metrica:active {
 }
 
 .filtros {
-    border-bottom: 2px solid var(--tinta-900);
+    border-bottom: 2px solid var(--traco);
     background: var(--fundo);
 }
 
 .filtro {
-    border: 2px solid var(--tinta-900);
+    border: 2px solid var(--traco);
     border-radius: 0;
     box-shadow: none;
 }
@@ -4005,7 +4005,7 @@ a.metrica:active {
 }
 
 .tabela th {
-    border-bottom: 2px solid var(--tinta-900);
+    border-bottom: 2px solid var(--traco);
     background: transparent;
     font-family: var(--fonte-mono);
     font-size: .625rem;
@@ -4013,397 +4013,7 @@ a.metrica:active {
 }
 
 .tabela tbody tr:hover {
-    background: #F7FAFD;
-}
-
-.tabela__id,
-.tabela__numero,
-.tabela__data,
-.tabela__nif,
-.tabela__serie {
-    font-family: var(--fonte-mono);
-}
-
-/* As pílulas de estado passam a etiquetas de talão: caixa fechada na
-   própria cor, maiúsculas mono e um quadrado em vez de um ponto. */
-.estado {
-    padding: 2px 8px;
-    border: 2px solid currentColor;
-    border-radius: 0;
-    font-family: var(--fonte-mono);
-    font-size: .625rem;
-    font-weight: 700;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-}
-
-.estado::before {
-    width: 5px;
-    height: 5px;
-    border-radius: 0;
-}
-
-.cargo {
-    border-radius: 0;
-    font-family: var(--fonte-mono);
-    font-size: .625rem;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-}
-
-.tabela__espera--longa,
-.tabela__data-idade--longa,
-.tabela__consultas-idade--longa,
-.tabela__consultas-idade--entregue,
-.consulta__idade--longa {
-    border-radius: 0;
-    font-family: var(--fonte-mono);
-}
-
-/* --- Formulários --------------------------------------------
-
-/* =====================================================================
-   15. REVESTIMENTO — a estética do talão
-   O painel passa a ser desenhado como o site: papel, tinta, regras de
-   2px, cantos vivos e etiquetas monoespaçadas. Nada aqui inventa
-   componentes — só veste os que existem, para quem trabalha no back
-   office e quem consulta no front office reconhecerem a mesma casa.
-
-   A paleta não muda: já era esta. O que muda é a forma.
-   ===================================================================== */
-
-:root {
-    --fonte-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo,
-                  Consolas, "Liberation Mono", monospace;
-
-    /* Formas: zero raios, em todo o lado. */
-    --raio-sm: 0;
-    --raio-md: 0;
-    --raio-lg: 0;
-    --raio-xl: 0;
-
-    /* Elevação: sombra de carimbo, nunca desfoque. */
-    --sombra-1: none;
-    --sombra-2: 6px 6px 0 var(--tinta-900);
-
-    /* A barra lateral deixa de ser azul-marinho e passa a tinta. */
-    --azul-900: #101C28;
-}
-
-::selection {
-    background: var(--tinta-900);
-    color: #FFFFFF;
-}
-
-:where(a, button, summary, [tabindex]):focus-visible {
-    border-radius: 0;
-}
-
-/* --- Botões --------------------------------------------------------- */
-.botao {
-    border: 2px solid var(--tinta-900);
-    border-radius: 0;
-    background: transparent;
-    color: var(--tinta-900);
-    font-family: var(--fonte-mono);
-    font-size: var(--texto-xs);
-    font-weight: 700;
-    letter-spacing: .09em;
-    text-transform: uppercase;
-}
-
-.botao--primario {
-    border-color: var(--azul-600);
-    background: var(--azul-600);
-    color: #FFFFFF;
-    box-shadow: 6px 6px 0 var(--tinta-900);
-}
-
-.botao--primario:hover {
-    border-color: var(--azul-700);
-    background: var(--azul-700);
-}
-
-.botao--primario:active {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 var(--tinta-900);
-}
-
-.botao--fantasma {
-    border-color: var(--tinta-900);
-    background: transparent;
-    color: var(--tinta-900);
-}
-
-.botao--fantasma:hover {
-    background: var(--tinta-900);
-    color: #FFFFFF;
-}
-
-.botao--perigo {
-    border-color: var(--vermelho-fg);
-    background: var(--vermelho-fg);
-    color: #FFFFFF;
-    box-shadow: 6px 6px 0 var(--tinta-900);
-}
-
-.botao--perigo:hover {
-    border-color: #7C1D1D;
-    background: #7C1D1D;
-}
-
-.botao--perigo:active {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 var(--tinta-900);
-}
-
-.botao--perigo-fantasma {
-    border-color: var(--vermelho-fg);
-    background: transparent;
-    color: var(--vermelho-fg);
-}
-
-.botao--perigo-fantasma:hover {
-    background: var(--vermelho-fg);
-    color: #FFFFFF;
-}
-
-.botao-icone {
-    border-radius: 0;
-}
-
-.botao-icone:hover {
-    background: var(--tinta-900);
-    color: #FFFFFF;
-}
-
-.saltar-conteudo {
-    border: 2px solid var(--tinta-900);
-    border-radius: 0;
-}
-
-/* --- Barra lateral -------------------------------------------------- */
-.sidebar {
-    border-right: 2px solid #000000;
-    background: var(--tinta-900);
-    color: #C9D6E3;
-}
-
-.marca__simbolo {
-    border-radius: 0;
-    box-shadow: none;
-}
-
-.marca__nome {
-    font-weight: 800;
-    letter-spacing: -.035em;
-    text-transform: uppercase;
-}
-
-.marca__descricao {
-    font-family: var(--fonte-mono);
-    font-size: .625rem;
-    font-weight: 600;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-}
-
-.navegacao__titulo {
-    font-family: var(--fonte-mono);
-    font-size: .625rem;
-    letter-spacing: .18em;
-}
-
-.navegacao__ligacao {
-    border-left: 2px solid transparent;
-    border-radius: 0;
-}
-
-.navegacao__ligacao[aria-current="page"] {
-    border-left-color: #FFFFFF;
-    box-shadow: none;
-}
-
-.navegacao__contagem {
-    border-radius: 0;
-    font-family: var(--fonte-mono);
-}
-
-.sidebar__rodape {
-    border-top: 1px solid rgba(255, 255, 255, .16);
-}
-
-.estado-sistema {
-    font-family: var(--fonte-mono);
-    font-size: .625rem;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-}
-
-.estado-sistema::before {
-    border-radius: 0;
-}
-
-/* --- Cabeçalho superior --------------------------------------------- */
-.topbar {
-    border-bottom: 2px solid var(--tinta-900);
-}
-
-.migalhas {
-    font-family: var(--fonte-mono);
-    font-size: .6875rem;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-}
-
-.perfil {
-    border-radius: 0;
-}
-
-.perfil__avatar {
-    border: 2px solid var(--tinta-900);
-    border-radius: 0;
-    background: #FFFFFF;
-    color: var(--tinta-900);
-    font-family: var(--fonte-mono);
-    font-weight: 700;
-}
-
-.perfil[aria-current="page"] {
-    background: var(--azul-50);
-}
-
-.botao-sair {
-    border-radius: 0;
-}
-
-/* --- Conteúdo ------------------------------------------------------- */
-.cabecalho h1 {
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: -.035em;
-    text-transform: uppercase;
-}
-
-.cabecalho__descricao {
-    color: var(--tinta-700);
-}
-
-/* --- Cartões de métricas -------------------------------------------- */
-.metrica {
-    border: 2px solid var(--tinta-900);
-    border-radius: 0;
-    background: #FFFFFF;
-    box-shadow: none;
-}
-
-a.metrica:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 var(--tinta-900);
-}
-
-a.metrica:active {
-    transform: translate(0, 0);
-    box-shadow: 2px 2px 0 var(--tinta-900);
-}
-
-.metrica__rotulo {
-    font-family: var(--fonte-mono);
-    font-size: .6875rem;
-    font-weight: 700;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--tinta-700);
-}
-
-.metrica__icone {
-    border: 2px solid currentColor;
-    border-radius: 0;
-    background: transparent;
-}
-
-.metrica__valor {
-    font-family: var(--fonte-mono);
-    font-weight: 700;
-}
-
-.tendencia {
-    border-radius: 0;
-    font-family: var(--fonte-mono);
-    letter-spacing: .04em;
-}
-
-/* --- Painel, lista e tabela ----------------------------------------- */
-.painel {
-    border: 2px solid var(--tinta-900);
-    border-radius: 0;
-    box-shadow: none;
-}
-
-.painel__cabecalho {
-    border-bottom: 2px solid var(--tinta-900);
-}
-
-.painel__cabecalho h2 {
-    font-weight: 800;
-    letter-spacing: -.02em;
-    text-transform: uppercase;
-}
-
-.painel__rodape {
-    border-top: 2px solid var(--tinta-900);
-    font-family: var(--fonte-mono);
-    font-size: .6875rem;
-    letter-spacing: .04em;
-}
-
-.atalho {
-    border: 2px solid currentColor;
-    border-radius: 0;
-    font-family: var(--fonte-mono);
-    font-size: .625rem;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-}
-
-.ordenacao__rotulo,
-.ordenacao__atual {
-    font-family: var(--fonte-mono);
-    letter-spacing: .08em;
-    text-transform: uppercase;
-}
-
-.ordenacao__atual {
-    font-size: var(--texto-xs);
-    font-weight: 700;
-}
-
-.filtros {
-    border-bottom: 2px solid var(--tinta-900);
-    background: var(--fundo);
-}
-
-.filtro {
-    border: 2px solid var(--tinta-900);
-    border-radius: 0;
-    box-shadow: none;
-}
-
-.filtro__remover {
-    border-radius: 0;
-    font-family: var(--fonte-mono);
-}
-
-.tabela th {
-    border-bottom: 2px solid var(--tinta-900);
-    background: transparent;
-    font-family: var(--fonte-mono);
-    font-size: .625rem;
-    letter-spacing: .12em;
-}
-
-.tabela tbody tr:hover {
-    background: #F7FAFD;
+    background: var(--realce-suave);
 }
 
 .tabela__id,
@@ -4472,9 +4082,9 @@ a.metrica:active {
 
 /* --- Entrada (login) ------------------------------------------------ */
 .acesso__caixa {
-    border: 2px solid var(--tinta-900);
+    border: 2px solid var(--traco);
     border-radius: 0;
-    box-shadow: 6px 6px 0 var(--tinta-900);
+    box-shadow: 6px 6px 0 var(--carimbo);
 }
 
 .acesso__caixa h1 {
@@ -4491,7 +4101,7 @@ a.metrica:active {
 @media (prefers-reduced-motion: reduce) {
     a.metrica:hover {
         transform: none;
-        box-shadow: 4px 4px 0 var(--tinta-900);
+        box-shadow: 4px 4px 0 var(--carimbo);
     }
 }
 
@@ -4511,7 +4121,7 @@ a.metrica:active {
    impressão do site, para cada ecrã do painel se ler como uma folha. */
 .cabecalho {
     padding-bottom: 16px;
-    border-bottom: 2px solid var(--tinta-900);
+    border-bottom: 2px solid var(--traco);
 }
 
 .cabecalho h1::before {
@@ -4539,11 +4149,11 @@ a.metrica:active {
 /* Linha alternada: numa lista de vinte pedidos, o olho perde a linha a
    meio. O tom é o do papel, um degrau abaixo do branco do painel. */
 .tabela tbody tr:nth-child(even) {
-    background: #F8FBFE;
+    background: var(--realce-suave);
 }
 
 .tabela tbody tr:hover {
-    background: #EFF5FB;
+    background: var(--realce-suave);
 }
 
 .tabela td {
@@ -4576,9 +4186,9 @@ a.metrica:active {
 }
 
 .grafico__tela {
-    border: 2px solid var(--tinta-900);
+    border: 2px solid var(--traco);
     border-radius: 0;
-    background: #FFFFFF;
+    background: var(--branco);
 }
 
 /* --- Estados vazios ------------------------------------------------ */
@@ -4777,4 +4387,271 @@ a.estado {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
+}
+
+
+/* =====================================================================
+   18. TEMAS — duas luzes para a mesma oficina
+
+   «Papel» é a folha clara do talão e é o tema de origem. «Tinta» é a
+   mesma casa à noite: papel escuro, texto claro, o mesmo traço de 2px e
+   a mesma sombra de carimbo. Nada muda de sítio — só os tokens mudam de
+   valor, e a página inteira acompanha.
+
+   O tema vive no browser (localStorage), não na conta: quem partilha o
+   computador da receção não muda o ecrã do colega. Um script no <head>
+   lê-o antes do primeiro desenho (layout-painel.php e login.php), para
+   não haver um clarão branco ao abrir; o botão que o troca está na barra
+   de topo e em assets/js/tema.js.
+
+   Três tokens novos existem porque a tinta deixa de servir para tudo no
+   escuro: --traco desenha as réguas, --carimbo faz a sombra (preta, não
+   branca) e --realce-suave é o fundo das linhas sob o cursor. No tema
+   claro valem exatamente o que valiam antes.
+   ===================================================================== */
+:root {
+    color-scheme: light;
+
+    --traco: var(--tinta-900);
+    --carimbo: var(--tinta-900);
+    --realce-suave: #F7FAFD;
+}
+
+[data-tema="tinta"] {
+    color-scheme: dark;
+
+    /* Papel, superfícies e réguas. */
+    --fundo: #0B1622;
+    --branco: #12202E;
+    --linha: #24384B;
+    --traco: #4A6685;
+    --carimbo: #040B12;
+    --realce-suave: #16273A;
+
+    /* Texto: o mesmo escalão de contraste, do avesso. */
+    --tinta-900: #E9EFF5;
+    --tinta-700: #C3D1DE;
+    --tinta-500: #9AB0C3;
+    --tinta-400: #7C90A3;
+
+    /* Azuis mais claros: sobre papel escuro, o azul de ação do tema claro
+       não chega a 4.5:1. */
+    --azul-900: #060F18;
+    --azul-700: #4C93D9;
+    --azul-600: #3E86CC;
+    --azul-500: #7FB8EC;
+    --azul-100: #16324A;
+    --azul-50:  #112536;
+
+    /* Estados: o fundo desce, o texto sobe. */
+    --verde-bg: #0F2E1E;    --verde-fg: #6FD6A0;
+    --ambar-bg: #32250F;    --ambar-fg: #E3B468;
+    --vermelho-bg: #35161A; --vermelho-fg: #F1A0A0;
+    --cinza-bg: #1B2A38;    --cinza-fg: #AFC0D0;
+}
+
+/* A barra lateral já era tinta: no escuro fica mais funda que a folha,
+   como a lombada de um livro. Sem a sobreposição, herdava o --tinta-900
+   invertido e ficava branca. */
+[data-tema="tinta"] .sidebar {
+    background: #071019;
+    color: #AFC0D0;
+}
+
+[data-tema="tinta"] .sidebar .marca__nome,
+[data-tema="tinta"] .sidebar .marca__descricao {
+    color: #F4F8FB;
+}
+
+/* Os botões que se invertem (fundo tinta, texto branco) passam a fundo
+   claro com texto escuro — a mesma inversão, na direção certa. */
+[data-tema="tinta"] .botao--fantasma:hover,
+[data-tema="tinta"] .botao-icone:hover {
+    background: var(--tinta-900);
+    color: #0B1622;
+}
+
+[data-tema="tinta"] ::selection {
+    background: var(--tinta-900);
+    color: #0B1622;
+}
+
+/* Etiquetas de estado com cor fixa no tema claro (o recebido tinha um
+   cinza-azul escrito à mão) precisam do par escuro. */
+[data-tema="tinta"] .estado--recebido {
+    background: #22374A;
+    color: #C3D1DE;
+}
+
+[data-tema="tinta"] .estado--reparacao {
+    color: #8FC0EC;
+}
+
+/* Campos: no tema claro já são brancos sobre papel; aqui são a
+   superfície, com o traço da régua. A especificidade (atributo + classe)
+   ganha ao formulario.css, que é carregado depois. */
+[data-tema="tinta"] .entrada,
+[data-tema="tinta"] .selecao,
+[data-tema="tinta"] select,
+[data-tema="tinta"] textarea {
+    border-color: var(--traco);
+    background: #0E1B27;
+    color: var(--tinta-900);
+}
+
+[data-tema="tinta"] .entrada::placeholder {
+    color: #6C8095;
+}
+
+[data-tema="tinta"] .alerta {
+    border-color: var(--traco);
+    background: #182A3B;
+}
+
+[data-tema="tinta"] .alerta--sucesso {
+    background: #10301F;
+}
+
+/* A troca de tema não é um corte: as superfícies grandes escurecem num
+   instante, sem que o conteúdo se mexa. Quem pediu menos movimento no
+   sistema não vê transição nenhuma. */
+@media (prefers-reduced-motion: no-preference) {
+    body,
+    .topbar,
+    .sidebar,
+    .entrada,
+    .acesso__apresentacao {
+        transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+    }
+}
+
+
+/* =====================================================================
+   19. O BOTÃO DO TEMA
+   Fica na barra de topo e na entrada. Duas figuras no mesmo botão: o CSS
+   mostra a que corresponde ao estado, e o aria-pressed diz o resto a quem
+   ouve a página.
+   ===================================================================== */
+.tema-botao {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 34px;
+    padding: 0 10px;
+    border: 2px solid var(--traco);
+    border-radius: 0;
+    background: transparent;
+    color: var(--tinta-900);
+    font-family: var(--fonte-mono);
+    font-size: .625rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color .12s ease, color .12s ease, border-color .12s ease;
+}
+
+.tema-botao:hover {
+    background: var(--tinta-900);
+    color: var(--branco);
+}
+
+.tema-botao svg {
+    width: 15px;
+    height: 15px;
+    flex: none;
+}
+
+.tema-botao__lua {
+    display: none;
+}
+
+.tema-botao[aria-pressed="true"] .tema-botao__lua {
+    display: block;
+}
+
+.tema-botao[aria-pressed="true"] .tema-botao__sol {
+    display: none;
+}
+
+/* No telemóvel o rótulo sai e fica a figura: a barra de topo tem de
+   caber numa linha só, e o alvo de toque mantém-se acima de 34px. */
+@media (max-width: 640px) {
+    .tema-botao {
+        padding: 0 9px;
+    }
+
+    .tema-botao__texto {
+        display: none;
+    }
+}
+
+
+/* =====================================================================
+   20. ACABAMENTO
+   O último milímetro do papel: a régua que fecha o cabeçalho de página e
+   a linha que responde ao teclado, como já responde ao rato.
+   ===================================================================== */
+.cabecalho {
+    padding-bottom: 18px;
+    border-bottom: 2px solid var(--traco);
+}
+
+.cabecalho__descricao {
+    max-width: 68ch;
+}
+
+.tabela tbody tr:focus-within {
+    background: var(--realce-suave);
+}
+
+/* --- O item activo da navegação ---------------------------------------
+   Era a única superfície azul preenchida do painel — uma placa de
+   software de gestão no meio de uma folha de talão. Passa a ser uma
+   marca de papel: régua branca à esquerda, um véu claro e o texto a
+   branco. Continua a distinguir-se do resto da lista, mas pelo traço e
+   não pelo bloco. */
+.navegacao__ligacao[aria-current="page"] {
+    border-left-color: #FFFFFF;
+    background: rgba(255, 255, 255, .07);
+    color: #FFFFFF;
+    box-shadow: none;
+}
+
+/* --- Tema escuro: as tintas que estavam escritas à mão ---------------
+   Os ícones das métricas usam verdes e âmbares de texto pensados para
+   papel claro; sobre o cartão escuro esses tons afundam-se. */
+[data-tema="tinta"] .metrica__icone--verde {
+    color: #6FD6A0;
+}
+
+[data-tema="tinta"] .metrica__icone--ambar {
+    color: #E3B468;
+}
+
+[data-tema="tinta"] .metrica__icone--azul {
+    color: #8FC0EC;
+}
+
+[data-tema="tinta"] .cargo--administrador {
+    color: #8FC0EC;
+}
+
+/* --- O azul de acção no escuro ---------------------------------------
+   O #3E86CC que serve de texto e de realce sobre papel escuro não chega
+   para levar texto branco por cima (3,83:1). O botão escurece para
+   4,88:1 e o realce de texto fica com o tom claro que já tem. */
+[data-tema="tinta"] .botao--primario {
+    border-color: #2E74B8;
+    background: #2E74B8;
+    color: #FFFFFF;
+}
+
+[data-tema="tinta"] .botao--primario:hover {
+    border-color: #2568A8;
+    background: #2568A8;
+}
+
+[data-tema="tinta"] .botao--primario:active {
+    box-shadow: 2px 2px 0 var(--carimbo);
 }

@@ -104,6 +104,19 @@ function painelAbrir(
     <?php endif; ?>
     <meta name="theme-color" content="#0C2038">
 
+    <!-- A luz da oficina: «papel» (claro) ou «tinta» (escuro). O atributo
+         tem de existir antes do primeiro desenho, senão a página aparece
+         clara e só depois escurece. O botão que o troca vive na barra de
+         topo; a memória é deste browser (assets/js/tema.js). -->
+    <script>
+        try {
+            var temaGuardado = localStorage.getItem('fixit-tema');
+            if (temaGuardado === 'tinta' || temaGuardado === 'papel') {
+                document.documentElement.setAttribute('data-tema', temaGuardado);
+            }
+        } catch (e) {}
+    </script>
+
     <!-- Tipografia do sistema (sem pedidos externos). Para usar uma fonte
          própria, define @font-face e troca a variável --fonte no CSS. -->
     <link rel="stylesheet" href="../assets/css/painel.css">
@@ -302,6 +315,20 @@ function painelAbrir(
                 </div>
 
                 <div class="topbar__direita">
+                    <button class="tema-botao" type="button" data-alternar-tema
+                            aria-pressed="false" aria-label="Tema escuro (tinta)">
+                        <svg class="tema-botao__sol" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="3.6"/>
+                            <path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6"/>
+                        </svg>
+                        <svg class="tema-botao__lua" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2Z"/>
+                        </svg>
+                        <span class="tema-botao__texto">Tema</span>
+                    </button>
+
                     <a class="perfil" href="conta.php"<?= $ativo === 'conta' ? ' aria-current="page"' : '' ?> aria-label="A minha conta: <?= painelEsc($nome) ?>">
                         <span class="perfil__avatar" aria-hidden="true"><?= painelEsc(Sessao::iniciais($nome)) ?></span>
                         <span class="perfil__texto">
@@ -323,8 +350,11 @@ function painelAbrir(
             </div>
         </header>
 
-        <!-- A gaveta do menu é uma só, servida a todas as páginas. -->
+        <!-- A gaveta do menu é uma só, servida a todas as páginas; o tema
+             também, para o botão da barra de topo funcionar em qualquer
+             ecrã do painel. -->
         <script src="../assets/js/menu-painel.js" defer></script>
+        <script src="../assets/js/tema.js" defer></script>
 <?php
 }
 
