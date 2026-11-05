@@ -14,6 +14,10 @@
  *     dica mostra.
  *   • A tabela em baixo do gráfico tem os mesmos valores: é o caminho de
  *     quem não vê o canvas, e o que fica quando o CDN do Chart.js falha.
+ *   • O eixo dos valores encolhe à medida que os números crescem: passa a
+ *     abreviado («4 mil»), desce o corpo da letra e deixa menos marcas,
+ *     para a escala nunca comer a área do desenho. O valor exato não se
+ *     perde — fica na dica, no resumo e na tabela.
  *   • Sem Chart.js (rede em baixo), o canvas esconde-se e aparece o aviso;
  *     a tabela continua lá.
  */
@@ -103,6 +107,40 @@
     });
 
     var contagem = new Intl.NumberFormat('pt-PT');
+
+    var milhar = new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 1 });
+
+    /**
+     * Um número grande, curto: «12,4 mil» e «1,2 M».
+     *
+     * O eixo tem de caber ao lado da área, e um «12 480» ocupa o dobro de
+     * um «12 mil». A abreviação é só da escala: o valor exato vive na
+     * dica, no resumo e na tabela.
+     */
+    function abreviar(valor) {
+        var absoluto = Math.abs(valor);
+
+        if (absoluto >= 1000000) {
+            return milhar.format(valor / 1000000) + ' M';
+        }
+
+        if (absoluto >= 1000) {
+            return milhar.format(valor / 1000) + ' mil';
+        }
+
+        return null;
+    }
+
+    /** O rótulo de uma marca do eixo, conforme a vista. */
+    function rotuloEixo(valor) {
+        var curto = abreviar(valor);
+
+        if (curto !== null) {
+            return vista === 'receita' ? curto + ' €' : curto;
+        }
+
+        return vista === 'receita' ? moedaEixo.format(valor) : contagem.format(valor);
+    }
 
     /** Formata um valor conforme a vista. */
     function formatar(qual, valor) {
@@ -208,6 +246,53 @@
         grafico.update('none');
     }
 
+    /**
+     * O eixo dos valores encolhe à medida que os números crescem.
+     *
+     * Quanto mais alto o pico, mais algarismos leva cada marca e mais
+     * largura a escala rouba à área do gráfico. Aqui ela responde: os
+     * números grandes passam a abreviados, o corpo da letra desce e ficam
+     * menos marcas — o desenho inteiro continua visível. O limite é a
+     * moldura: num ecrã estreito a escala aperta mais cedo, porque há
+     * menos largura para dividir.
+     */
+    function ajustarEixo() {
+        var series = grafico.data.datasets;
+        var maximo = 0;
+
+        for (var d = 0; d < series.length; d++) {
+            for (var i = 0; i < series[d].data.length; i++) {
+                var valor = Number(series[d].data[i]);
+
+                if (!isNaN(valor) && valor > maximo) {
+                    maximo = valor;
+                }
+            }
+        }
+
+        var algarismos = String(Math.round(maximo)).length;
+        var comprimento = rotuloEixo(maximo).length;
+        var largura = canvas.parentNode ? canvas.parentNode.clientWidth : 0;
+        var tamanho = 11;
+        var limite = 5;
+
+        if (algarismos >= 5 || comprimento >= 6 || largura < 460) {
+            tamanho = 10;
+            limite = 4;
+        }
+
+        if (algarismos >= 7 || comprimento >= 9 || largura < 360) {
+            tamanho = 9;
+            limite = 3;
+        }
+
+        var eixo = grafico.options.scales.y.ticks;
+
+        eixo.font.size = tamanho;
+        eixo.maxTicksLimit = limite;
+        eixo.padding = tamanho >= 11 ? 8 : 4;
+    }
+
     var coresIniciais = paleta();
 
     grafico = new Chart(canvas, {
@@ -282,11 +367,12 @@
                         // Contagens não têm meios pedidos: sem isto o eixo
                         // dos pedidos e dos clientes escrevia «0,5».
                         precision: 0,
-                        callback: function (valor) {
-                            return vista === 'receita'
-                                ? moedaEixo.format(valor)
-                                : contagem.format(valor);
-                        }
+
+                        // O mesmo callback nas três vistas: a vista decide
+                        // a unidade, a grandeza decide a abreviação. O corpo
+                        // da letra e o número de marcas vêm do
+                        // `ajustarEixo`, chamado a cada troca de vista.
+                        callback: rotuloEixo
                     }
                 }
             },
@@ -340,6 +426,8 @@
         }
     });
 
+    ajustarEixo();
+
     /** Troca a vista: o mesmo gráfico, outra série. */
     function escolher(qual) {
         if (!VISTAS[qual]) {
@@ -350,6 +438,7 @@
 
         grafico.data.datasets[0].data = dados.atual[qual].slice();
         grafico.data.datasets[1].data = dados.anterior[qual].slice();
+        ajustarEixo();
         grafico.update();
         resumo(qual);
 
@@ -392,6 +481,7 @@
         window.clearTimeout(temporizador);
 
         temporizador = window.setTimeout(function () {
+            ajustarEixo();
             grafico.data.datasets[0].backgroundColor = gradiente(paleta().azul);
             grafico.update('none');
         }, 180);
